@@ -47,7 +47,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     Future.delayed(Duration.zero, () async {
@@ -64,12 +63,12 @@ class _MyHomePageState extends State<MyHomePage> {
     final isWebMobile = kIsWeb &&
         (defaultTargetPlatform == TargetPlatform.iOS ||
             defaultTargetPlatform == TargetPlatform.android);
-    final isWebDesktop = kIsWeb;
+    const isWebDesktop = kIsWeb;
 
     isWebMobile == true
-        ? Get.to(OnConstructionMobile())
+        ? Get.to(const OnConstructionMobile())
         : isWebDesktop == true
             ? Get.to(LoginPageDesktop())
-            : Get.to(OnConstructionMobile());
+            : Get.to(const OnConstructionMobile());
   }
 }
