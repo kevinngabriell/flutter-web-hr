@@ -1,14 +1,169 @@
+// ignore_for_file: must_be_immutable, avoid_print, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hr_systems_web/forgot-pass.dart';
 import 'package:hr_systems_web/web-version/full-access/index.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-class LoginPageDesktop extends StatelessWidget {
-  LoginPageDesktop({super.key});
+class LoginPageDesktop extends StatefulWidget {
+  const LoginPageDesktop({super.key});
 
+  @override
+  State<LoginPageDesktop> createState() => _LoginPageDesktopState();
+}
+
+class _LoginPageDesktopState extends State<LoginPageDesktop> {
   TextEditingController txtUsername = TextEditingController();
   TextEditingController txtPassword = TextEditingController();
+  bool isLoading = false;
+
+  Future<void> loginUser() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    var apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/account/login.php';
+    var client = http.Client();
+    
+    try {
+      var response = await client.post(
+        Uri.parse(apiUrl),
+        body: {
+          'username': txtUsername.text,
+          'password': txtPassword.text,
+        },
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json',
+        },
+      );
+
+
+      if (response.statusCode == 200) {
+        var result = json.decode(response.body);
+
+        if(txtPassword.text == '123456'){
+          Get.to(ForgotPassWeb(username: txtUsername.text));
+        } else {
+          GetStorage().write('employee_id', result['employee_id']);
+          GetStorage().write('company_id', result['company_id']);
+          GetStorage().write('username', result['username']);
+
+          checkPosition();
+        }
+
+      } else if (response.statusCode == 400) {
+        Get.snackbar('Error', 'Silahkan periksa kembali username dan password anda');
+      } else {
+        print('Error: ${response.statusCode}');
+        Get.snackbar('Error', 'An error occurred. Please try again later.');
+      }
+    } catch (e) {
+      showDialog(
+        context: context, 
+        builder: (_){
+          return AlertDialog(
+            title: const Text('Server Error'),
+            content: const Text('Silahkan hubungi dept IT untuk pemeriksaan server'),
+            actions: [
+              TextButton(
+                onPressed: (){
+                  Get.back();
+                }, 
+                child: const Text('Oke')
+              )
+            ],
+          );
+        }
+      );
+    } finally {
+      client.close();
+
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> checkPosition() async{
+    setState(() {
+      isLoading = true;
+    });
+
+    var apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-systems-data-v.1/PositionSelectionMethod.php';
+
+    try {
+      var response = await http.post(
+        Uri.parse(apiUrl),
+        body: {
+          'username': txtUsername.text,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        var result = json.decode(response.body);
+        
+        final storage = GetStorage();
+
+        var employeeId = storage.read('employee_id');
+        GetStorage().write('position_id', result['position_id']);
+
+        getProfileImage();
+      } else {
+        print('Response body: ${response.body}');
+        Get.snackbar('Error', 'An error occurred. Please try again later.');
+      }
+    } catch (e) {
+      print('Exception: $e ini ya yg error');
+      Get.snackbar('Error', 'An error occurred. Please try again later.');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> getProfileImage() async{
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final storage = GetStorage();
+
+      var employeeId = storage.read('employee_id');
+      String imageUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/account/getprofilepicture.php?employee_id=$employeeId';
+      final response = await http.get(Uri.parse(imageUrl));
+
+      if (response.statusCode == 200) {
+        // Decode base64 image
+        Map<String, dynamic> data = json.decode(response.body);
+        String profilePictureBased64 = data['photo'];
+
+        GetStorage().write('photo', profilePictureBased64);
+        final storage = GetStorage();
+
+        var employeeId = storage.read('employee_id');
+        Get.to(FullIndexWeb(employeeId));
+        
+        
+      } else {
+        // Handle error
+        print('Failed to load image. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Handle exception
+      print('Error: $error');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +177,7 @@ class LoginPageDesktop extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              //crossAxisAlignment: CrossAxisAlignment.start,
+
               children: [
                 Text(
                   'Masuk',
@@ -123,7 +278,21 @@ class LoginPageDesktop extends StatelessWidget {
                           EdgeInsets.only(top: 1.w, left: 130.w, bottom: 10.w),
                       child: GestureDetector(
                         onTap: () {
-                          Get.to(ForgotPassWeb());
+                          showDialog(
+                                      context: context, 
+                                      builder: (_) {
+                                        return AlertDialog(
+                                          title: const Text("Error"),
+                                          content: const Text('Anda tidak dapat mengganti password anda. Silahkan hubungi HRD atau tim IT support untuk melakukan reset password'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () {Get.back();},
+                                              child: const Text('Oke'),
+                                            ),
+                                          ],
+                                        );
+                                      }
+                                    );
                         },
                         child: Text('Lupa password',
                             style: TextStyle(
@@ -137,8 +306,8 @@ class LoginPageDesktop extends StatelessWidget {
                 ),
                 ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(const Color(0xff4ec3fc)),
+                    backgroundColor: MaterialStateProperty.all(const Color(0xff4ec3fc)),
+                    foregroundColor: MaterialStateProperty.all(const Color(0xFFFFFFFF)),
                   ),
                   child: Container(
                     width: MediaQuery.of(context).size.width / 2.8,
@@ -161,8 +330,9 @@ class LoginPageDesktop extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 550.sp),
+                              padding: EdgeInsets.symmetric(horizontal: 350.sp),
                               child: Container(
+                                width: MediaQuery.of(context).size.width,
                                 decoration: const BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.all(
@@ -170,7 +340,7 @@ class LoginPageDesktop extends StatelessWidget {
                                   ),
                                 ),
                                 child: Padding(
-                                  padding: EdgeInsets.all(20.0.sp),
+                                  padding: EdgeInsets.all(10.0.sp),
                                   child: Material(
                                     color: Colors.white,
                                     child: Column(
@@ -195,25 +365,20 @@ class LoginPageDesktop extends StatelessWidget {
                                           children: [
                                             Expanded(
                                               child: ElevatedButton(
-                                                child: const Text(
-                                                  'Oke',
-                                                ),
                                                 style: ElevatedButton.styleFrom(
-                                                  minimumSize:
-                                                      Size(0.sp, 45.sp),
-                                                  foregroundColor:
-                                                      const Color(0xFFFFFFFF),
-                                                  backgroundColor:
-                                                      const Color(0xff4ec3fc),
+                                                  minimumSize: Size(0.sp, 45.sp),
+                                                  foregroundColor: const Color(0xFFFFFFFF),
+                                                  backgroundColor: const Color(0xff4ec3fc),
                                                   shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8),
+                                                    borderRadius: BorderRadius.circular(8),
                                                   ),
                                                 ),
                                                 onPressed: () {
                                                   Get.back();
                                                 },
+                                                child: const Text(
+                                                  'Oke',
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -233,8 +398,9 @@ class LoginPageDesktop extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 550.sp),
+                              padding: EdgeInsets.symmetric(horizontal: 350.sp),
                               child: Container(
+                                width: MediaQuery.of(context).size.width,
                                 decoration: const BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.all(
@@ -242,7 +408,7 @@ class LoginPageDesktop extends StatelessWidget {
                                   ),
                                 ),
                                 child: Padding(
-                                  padding: EdgeInsets.all(20.0.sp),
+                                  padding: EdgeInsets.all(10.0.sp),
                                   child: Material(
                                     color: Colors.white,
                                     child: Column(
@@ -267,25 +433,20 @@ class LoginPageDesktop extends StatelessWidget {
                                           children: [
                                             Expanded(
                                               child: ElevatedButton(
-                                                child: const Text(
-                                                  'Oke',
-                                                ),
                                                 style: ElevatedButton.styleFrom(
-                                                  minimumSize:
-                                                      Size(0.sp, 45.sp),
-                                                  foregroundColor:
-                                                      const Color(0xFFFFFFFF),
-                                                  backgroundColor:
-                                                      const Color(0xff4ec3fc),
+                                                  minimumSize: Size(0.sp, 45.sp),
+                                                  foregroundColor: const Color(0xFFFFFFFF),
+                                                  backgroundColor: const Color(0xff4ec3fc),
                                                   shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8),
+                                                    borderRadius: BorderRadius.circular(8),
                                                   ),
                                                 ),
                                                 onPressed: () {
                                                   Get.back();
                                                 },
+                                                child: const Text(
+                                                  'Oke',
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -300,9 +461,12 @@ class LoginPageDesktop extends StatelessWidget {
                         ))
                       }
                     else if (txtUsername.text != "" && txtPassword.text != "")
-                      {Get.to(const FullIndexWeb())}
+                      {
+                        loginUser()
+                      }
                   },
                 ),
+                if (isLoading) const CircularProgressIndicator(),
               ],
             ),
           ),
@@ -314,8 +478,11 @@ class LoginPageDesktop extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [Image.asset('images/login.png')],
           ),
-        )
+        ),
+        
       ],
-    ));
+    ),
+    
+    );
   }
 }

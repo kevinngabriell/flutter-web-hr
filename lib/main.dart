@@ -1,74 +1,54 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:hr_systems_web/mobile-version/on_construction.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:hr_systems_web/mobile-version/indexMobile.dart';
+import 'package:hr_systems_web/mobile-version/login.dart';
+import 'package:hr_systems_web/responsive.dart';
+import 'package:hr_systems_web/web-version/full-access/index.dart';
 import 'package:hr_systems_web/web-version/login.dart';
 
 void main() {
-  runApp(const MyApp());
+  int? employeeID = GetStorage().read('employee_id');
+  runApp(const GetMaterialApp( // Wrap your MainWeb widget with MaterialApp
+    home: MainWeb(),
+  ));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MainWeb extends StatefulWidget {
+  const MainWeb({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MainWeb> createState() => _MainWebState();
+}
+
+class _MainWebState extends State<MainWeb> {
+  int? employeeID = GetStorage().read('employee_id');
+  
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
+  
+  return ScreenUtilInit(
       designSize: const Size(360, 690),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (_, child) {
-        return GetMaterialApp(
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
-          home: const MyHomePage(),
-        );
+        //Check is mobile or not
+        if(ResponsiveWidget.isSmallScreen(context)){
+          //Is there any session or not
+          if(employeeID != null){
+            return const indexMobile(EmployeeName: 'EmployeeName', PositionName: 'PositionName');
+          } else {
+            return const MobileLogin();
+          }
+        } else {
+          if(employeeID != null){
+            return FullIndexWeb(employeeID);
+          } else {
+            return const LoginPageDesktop();
+          }
+        }
       },
-      // child: GetMaterialApp(
-      //   theme: ThemeData(
-      //     primarySwatch: Colors.blue,
-      //   ),
-      //   home: const MyHomePage(),
-      // ),
     );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  void initState() {
-    super.initState();
-
-    Future.delayed(Duration.zero, () async {
-      checkDevice();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-
-  void checkDevice() {
-    final isWebMobile = kIsWeb &&
-        (defaultTargetPlatform == TargetPlatform.iOS ||
-            defaultTargetPlatform == TargetPlatform.android);
-    const isWebDesktop = kIsWeb;
-
-    isWebMobile == true
-        ? Get.to(const OnConstructionMobile())
-        : isWebDesktop == true
-            ? Get.to(LoginPageDesktop())
-            : Get.to(const OnConstructionMobile());
   }
 }

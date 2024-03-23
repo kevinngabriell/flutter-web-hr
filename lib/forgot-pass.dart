@@ -1,15 +1,60 @@
+// ignore_for_file: file_names, prefer_const_literals_to_create_immutables, avoid_print
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hr_systems_web/web-version/login.dart';
+import 'package:http/http.dart' as http;
 
-class ForgotPassWeb extends StatelessWidget {
-  const ForgotPassWeb({super.key});
+class ForgotPassWeb extends StatefulWidget {
+  final String username;
+  const ForgotPassWeb({super.key, required  this.username});
+
+  @override
+  State<ForgotPassWeb> createState() => _ForgotPassWebState();
+}
+
+class _ForgotPassWebState extends State<ForgotPassWeb> {
+  TextEditingController txtPass1 = TextEditingController();
+
+  TextEditingController txtPass2 = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+
+    bool containsWordsAndNumbers(String text) {
+      // Check if the text contains both words and numbers
+      return RegExp(r'(?=.*[a-zA-Z])(?=.*\d)').hasMatch(text);
+    }
+    
+    Future<void> updatePassword() async{
+      var username = widget.username;
+      try {
+        String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/account/changepassword.php';
+
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          body: {
+            "username": username,
+            "new_pass": txtPass1.text
+          }
+        );
+
+        if(response.statusCode == 200){
+          Get.snackbar('Sukses', 'Password anda telah berhasil diubah');
+          Get.to(const LoginPageDesktop());
+        } else {
+          Get.snackbar('Gagal', response.body);
+          print('Failed to insert employee. Status code: ${response.statusCode}');
+          print('Response body: ${response.body}');
+        }
+
+      } catch (e){
+        Get.snackbar('Gagal', '$e');
+        print('Exception during API call: $e');
+      }
+    }
+
     return Scaffold(
       body: Row(
         children: [
@@ -20,7 +65,7 @@ class ForgotPassWeb extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Reset Akun',
+                  'Ubah Password',
                   style: TextStyle(
                     fontSize: 48.sp,
                     fontWeight: FontWeight.w700,
@@ -29,7 +74,7 @@ class ForgotPassWeb extends StatelessWidget {
                 SizedBox(
                   height: 3.sp,
                 ),
-                Text('Masukkan username anda untuk dilakukan reset akun',
+                Text('Silahkan masukkan password baru anda',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 15.sp,
@@ -44,7 +89,7 @@ class ForgotPassWeb extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 20.w, bottom: 2.w),
                       child: Text(
-                        'Username',
+                        'Password Baru',
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
@@ -56,6 +101,8 @@ class ForgotPassWeb extends StatelessWidget {
                 SizedBox(
                   width: MediaQuery.of(context).size.width / 2.6,
                   child: TextField(
+                    controller: txtPass1,
+                    obscureText: true,
                     decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(width: 0.0),
@@ -65,7 +112,42 @@ class ForgotPassWeb extends StatelessWidget {
                           borderSide: const BorderSide(width: 0.0),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
-                        hintText: 'Mohon masukkan username anda'),
+                        hintText: 'Mohon masukkan password baru anda'),
+                  ),
+                ),
+                SizedBox(
+                  height: 20.sp,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 20.w, bottom: 2.w),
+                      child: Text(
+                        'Konfirmasi Password Baru',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 2.6,
+                  child: TextField(
+                    controller: txtPass2,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(width: 0.0),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(width: 0.0),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        hintText: 'Mohon konfirmasi password baru anda'),
                   ),
                 ),
                 SizedBox(
@@ -91,103 +173,13 @@ class ForgotPassWeb extends StatelessWidget {
                     ),
                   ),
                   onPressed: () => {
-                    Get.dialog(
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 550.sp),
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(20),
-                                ),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(20.0.sp),
-                                child: Material(
-                                  color: Colors.white,
-                                  child: Column(
-                                    children: [
-                                      Image.asset(
-                                        'images/success-check-02.png',
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.3.sp,
-                                      ),
-                                      SizedBox(height: 10.sp),
-                                      Text(
-                                        "Sukses",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: 30.sp,
-                                            fontWeight: FontWeight.w900),
-                                      ),
-                                      SizedBox(height: 15.sp),
-                                      Text(
-                                        "Akun anda telah berhasil di reset. Silahkan login kembali",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w300),
-                                      ),
-                                      SizedBox(height: 25.sp),
-                                      //Buttons
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: ElevatedButton(
-                                              child: const Text(
-                                                'Oke',
-                                              ),
-                                              style: ElevatedButton.styleFrom(
-                                                minimumSize: Size(0.sp, 45.sp),
-                                                foregroundColor: const Color(0xFFFFFFFF), 
-                                                backgroundColor: const Color(0xff4ec3fc),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                ),
-                                              ),
-                                              onPressed: () {
-                                                Get.to(LoginPageDesktop());
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                    // Get.defaultDialog(
-                    //   content: Container(
-                    //     width: MediaQuery.of(context).size.width * 0.2,
-                    //     child: Image.asset('images/login.png'),
-                    //   ),
-                    //   title: "Sukses",
-                    //   titleStyle: TextStyle(
-                    //     fontSize: 35.sp,
-                    //     fontWeight: FontWeight.w700
-                    //   ),
-                    //   middleText: "Akun anda telah berhasil di reset. Silahkan login kembali",
-                    //   middleTextStyle: TextStyle(
-                    //     fontSize: 16.sp,
-                    //     fontWeight: FontWeight.w500
-                    //   ),
-                    //   textConfirm: "Oke",
-                    //   buttonColor: Color(0xff4ec3fc),
-                    //   confirmTextColor: Colors.white,
-                    //   onConfirm: () {
-                    //     Get.to(LoginPageDesktop());
-                    //   }
-                    // )
+                    if(txtPass1.text == '' || txtPass2.text == ''){
+                      Get.snackbar('Invalid', 'Password baru tidak dapat kosong !!')
+                    } else if (txtPass1.text.length <= 8 || !containsWordsAndNumbers(txtPass1.text)){
+                      Get.snackbar('Invalid', 'Password baru minimal 8 karakter dan harus terdapat angka dan huruf !!')
+                    } else{
+                      updatePassword()
+                    }
                   },
                 ),
               ],
@@ -198,7 +190,7 @@ class ForgotPassWeb extends StatelessWidget {
             color: Colors.white,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [Text('data'), Text('data')],
+              children: [Image.asset('images/login.png')],
             ),
           )
         ],
