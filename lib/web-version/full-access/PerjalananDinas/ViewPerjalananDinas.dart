@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:hr_systems_web/services/pdf_downloader.dart';
 import 'package:hr_systems_web/web-version/full-access/Event/event.dart';
 import 'package:hr_systems_web/web-version/full-access/Performance/performance.dart';
 import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/AddNewLPD.dart';
@@ -21,6 +22,7 @@ import 'dart:convert';
 import '../../login.dart';
 import '../employee.dart';
 import '../index.dart';
+
 
 class ViewPerjalananDinas extends StatefulWidget {
   final String perjalananDinasID;
@@ -62,6 +64,11 @@ class _ViewPerjalananDinasState extends State<ViewPerjalananDinas> {
   String memberThree = '-';
   String memberFour = '-';
   String employeeSPV = '';
+
+  String namaMengetahui = '';
+  String tanggalMengetahui = '';
+  String namaMenyetujui = '';
+  String tanggalMenyetujui = '';
 
   @override
   void initState() {
@@ -185,6 +192,42 @@ class _ViewPerjalananDinasState extends State<ViewPerjalananDinas> {
         List<dynamic> employee = data['Data'];
         if (employee.isNotEmpty) {
           employeeSPV = employee.isNotEmpty ? employee[0]['employee_spv'] : '-';
+        }
+      });
+    } else {
+      // Handle the case where the server did not return a 200 OK response
+      print("Failed to load members data");
+    }
+
+    String mengetahuiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/perjalanandinas/getperjalanandinas.php?action=11&businesstrip_id=${widget.perjalananDinasID}';
+    final mengetahuiResponse = await http.get(Uri.parse(mengetahuiUrl));
+
+    if (mengetahuiResponse.statusCode == 200) {
+      var mengetahuiData = json.decode(mengetahuiResponse.body);
+
+      setState(() {
+        List<dynamic> mengetahuiHasil = mengetahuiData['Data'];
+        if (mengetahuiHasil.isNotEmpty) {
+          namaMengetahui = mengetahuiHasil.isNotEmpty ? mengetahuiHasil[0]['employee_name'] : '-';
+          tanggalMengetahui = mengetahuiHasil.isNotEmpty ? _formatDate(mengetahuiHasil[0]['action_dt']) : '-';
+        }
+      });
+    } else {
+      // Handle the case where the server did not return a 200 OK response
+      print("Failed to load members data");
+    }
+
+    String menyetujuiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/perjalanandinas/getperjalanandinas.php?action=10&businesstrip_id=${widget.perjalananDinasID}';
+    final menyetujuiResponse = await http.get(Uri.parse(menyetujuiUrl));
+
+    if (menyetujuiResponse.statusCode == 200) {
+      var menyetujuiData = json.decode(menyetujuiResponse.body);
+
+      setState(() {
+        List<dynamic> menyetujuiHasil = menyetujuiData['Data'];
+        if (menyetujuiHasil.isNotEmpty) {
+          namaMenyetujui = menyetujuiHasil.isNotEmpty ? menyetujuiHasil[0]['employee_name'] : '-';
+          tanggalMenyetujui = menyetujuiHasil.isNotEmpty ? _formatDate(menyetujuiHasil[0]['action_dt']) : '-';
         }
       });
     } else {
@@ -1302,7 +1345,7 @@ class _ViewPerjalananDinasState extends State<ViewPerjalananDinas> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            if(positionId == 'POS-HR-002' && widget.perjalananDinasStatus == 'Draft LPD')
+                            if(positionId == 'POS-HR-002' && widget.perjalananDinasStatus == 'Draft LPD' || widget.perjalananDinasStatus == 'Laporan disetujui HRD' || widget.perjalananDinasStatus == 'Laporan ditolak oleh HRD' || widget.perjalananDinasStatus == 'Laporan disetujui Keuangan' || widget.perjalananDinasStatus == 'Laporan ditolak oleh Keuangan')
                               ElevatedButton(
                                 onPressed: (){
                                   Get.to(ViewLPD(businessTripID: widget.perjalananDinasID,));
@@ -1317,10 +1360,22 @@ class _ViewPerjalananDinasState extends State<ViewPerjalananDinas> {
                                 ),
                                 child: const Text('Lihat LPD')
                               ),
-                            if(widget.requestorID == numberAsString && widget.perjalananDinasStatus == 'Disetujui oleh HRD')
+                            if(positionId == 'POS-HR-002' && widget.perjalananDinasStatus == 'Draft LPD' || widget.perjalananDinasStatus == 'Laporan disetujui HRD' || widget.perjalananDinasStatus == 'Laporan ditolak oleh HRD' || widget.perjalananDinasStatus == 'Laporan disetujui Keuangan' || widget.perjalananDinasStatus == 'Laporan ditolak oleh Keuangan')
+                              SizedBox(width: 10.w,),
+                            if(widget.perjalananDinasStatus == 'Disetujui oleh HRD' || widget.perjalananDinasStatus == 'Draft LPD' || widget.perjalananDinasStatus == 'Laporan disetujui HRD' || widget.perjalananDinasStatus == 'Laporan ditolak oleh HRD' || widget.perjalananDinasStatus == 'Laporan disetujui Keuangan' || widget.perjalananDinasStatus == 'Laporan ditolak oleh Keuangan')
                               ElevatedButton(
                                 onPressed: (){
-
+                                  String namaA = widget.namaKaryawan;
+                                  String departemenA = widget.namaDepartemen;
+                                  String kotaTujuan = widget.namaKota;
+                                  String lamaPerjalanan = widget.lamaDurasi;
+                                  String keperluan = widget.keterangan;
+                                  String tim = widget.tim;
+                                  String biaya = widget.pembayaran;
+                                  String transport = widget.tranportasi;
+                                  String tanggalPermohonan = _formatDate(widget.tanggalPermohonan);
+                                  String buisnessTripId = widget.perjalananDinasID;
+                                  generateAndDisplayPDFPerjalananDinas(buisnessTripId, companyName, companyAddress, namaA, departemenA, kotaTujuan, lamaPerjalanan, keperluan, tim, memberOne, memberTwo, memberThree, memberFour, biaya, transport, tanggalPermohonan, namaMengetahui, namaMenyetujui, tanggalMengetahui, tanggalMenyetujui);
                                 }, 
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
@@ -1330,7 +1385,7 @@ class _ViewPerjalananDinasState extends State<ViewPerjalananDinas> {
                                   backgroundColor: const Color(0xff4ec3fc),
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                 ),
-                                child: const Text('Download PDF')
+                                child: const Text('Download PDF Perjalanan Dinas')
                               ),
                             if(widget.requestorID == numberAsString && widget.perjalananDinasStatus == 'Disetujui oleh HRD')  
                               SizedBox(width: 10.w,),
@@ -1500,7 +1555,8 @@ class _ViewPerjalananDinasState extends State<ViewPerjalananDinas> {
                               );
                             }
                           ),
-                        )
+                        ),
+                        SizedBox(height: 50.sp,),
                       ]
                     )
                   )
@@ -1517,7 +1573,8 @@ class _ViewPerjalananDinasState extends State<ViewPerjalananDinas> {
     // Parse the date string
     DateTime parsedDate = DateFormat("yyyy-MM-dd HH:mm").parse(date);
 
-    // Format the date as "dd MMMM yyyy"
-    return DateFormat("d MMMM yyyy HH:mm").format(parsedDate);
+    // Format the date as "dd MMMM yyyy" in Indonesian locale
+    return DateFormat("d MMMM yyyy", 'id').format(parsedDate);
   }
+
 }

@@ -278,24 +278,48 @@ class _AddNewLPDState extends State<AddNewLPD> {
           "tiket_days" : txtHariTiketPesawat.text.replaceAll(RegExp(r'[^0-9]'), ''),
           "hotel_days" : txtHariHotel.text.replaceAll(RegExp(r'[^0-9]'), ''),
           "saku_days" : txtHariUangSaku.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "saku_days_two" : txtHariUangSakuDua.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "saku_days_three" : txtHariUangSakuTiga.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "saku_days_four" : txtHariUangSakuEmpat.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "saku_days_five" : txtHariUangSakuLima.text.replaceAll(RegExp(r'[^0-9]'), ''),
           "transport_days" : txtHariTransport.text.replaceAll(RegExp(r'[^0-9]'), ''),
           "makan_days" : txtHariUangMakan.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "makan_days_two" : txtHariUangMakanDua.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "makan_days_three" : txtHariUangMakanTiga.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "makan_days_four" : txtHariUangMakanEmpat.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "makan_days_five" : txtHariUangMakanLima.text.replaceAll(RegExp(r'[^0-9]'), ''),
           "entertain_days" : txtHariByEntertain.text.replaceAll(RegExp(r'[^0-9]'), ''),
           "lain_days" : txtHariLain.text.replaceAll(RegExp(r'[^0-9]'), ''),
 
           "tiket_price" : txtSatuanTiketPesawat.text.replaceAll(RegExp(r'[^0-9]'), ''),
           "hotel_price" : txtSatuanHotel.text.replaceAll(RegExp(r'[^0-9]'), ''),
           "saku_price" : txtSatuanUangSaku.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "saku_price_two" : txtSatuanUangSakuDua.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "saku_price_three" : txtSatuanUangSakuTiga.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "saku_price_four" : txtSatuanUangSakuEmpat.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "saku_price_five" : txtSatuanUangSakuLima.text.replaceAll(RegExp(r'[^0-9]'), ''),
           "transport_price" : txtSatuanTransport.text.replaceAll(RegExp(r'[^0-9]'), ''),
           "makan_price" : txtSatuanUangMakan.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "makan_price_two" : txtSatuanUangMakanDua.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "makan_price_three" : txtSatuanUangMakanTiga.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "makan_price_four" : txtSatuanUangMakanEmpat.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "makan_price_five" : txtSatuanUangMakanLima.text.replaceAll(RegExp(r'[^0-9]'), ''),
           "entertain_price" : txtSatuanByEntertain.text.replaceAll(RegExp(r'[^0-9]'), ''),
           "lain_price" : txtSatuanLain.text.replaceAll(RegExp(r'[^0-9]'), ''),
 
           "tiket_total" : txtJumlahBiayaTiketPesawat.text.replaceAll(RegExp(r'[^0-9]'), ''),
           "hotel_total" : txtJumlahBiayaHotel.text.replaceAll(RegExp(r'[^0-9]'), ''),
           "saku_total" : txtJumlahBiayaUangSaku.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "saku_total_two" : txtJumlahBiayaUangSakuDua.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "saku_total_three" : txtJumlahBiayaUangSakuTiga.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "saku_total_four" : txtJumlahBiayaUangSakuEmpat.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "saku_total_five" : txtJumlahBiayaUangSakuLima.text.replaceAll(RegExp(r'[^0-9]'), ''),
           "transport_total" : txtJumlahBiayaTransport.text.replaceAll(RegExp(r'[^0-9]'), ''),
           "makan_total" : txtJumlahBiayaUangMakan.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "makan_total_two" : txtJumlahBiayaUangMakanDua.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "makan_total_three" : txtJumlahBiayaUangMakanTiga.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "makan_total_four" : txtJumlahBiayaUangMakanEmpat.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "makan_total_five" : txtJumlahBiayaUangMakanLima.text.replaceAll(RegExp(r'[^0-9]'), ''),
           "entertain_total" : txtJumlahBiayaByEntertain.text.replaceAll(RegExp(r'[^0-9]'), ''),
           "lain_total" : txtJumlahBiayaLain.text.replaceAll(RegExp(r'[^0-9]'), ''),
         }
@@ -1545,7 +1569,7 @@ class _AddNewLPDState extends State<AddNewLPD> {
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: TextFormField(
-                                  controller: txtHariUangMakanEmpat,
+                                  controller: txtHariUangSakuEmpat,
                                   decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     fillColor: Color.fromRGBO(235, 235, 235, 1),
@@ -1553,7 +1577,7 @@ class _AddNewLPDState extends State<AddNewLPD> {
                                   ),
                                   onChanged: (value){
                                     setState(() {
-                                      JumlahUangSakuEmpat = int.parse(txtHariUangMakanEmpat.text.replaceAll(RegExp(r'[^0-9]'), '')) * double.parse(txtSatuanUangSakuEmpat.text.replaceAll(RegExp(r'[^0-9]'), ''));
+                                      JumlahUangSakuEmpat = int.parse(txtHariUangSakuEmpat.text.replaceAll(RegExp(r'[^0-9]'), '')) * double.parse(txtSatuanUangSakuEmpat.text.replaceAll(RegExp(r'[^0-9]'), ''));
                                       GrandTotal = JumlahTiket + JumlahHotel + JumlahUangSaku + JumlahTransport + JumlahUangMakan + JumlahEntertain + JumlahLain + JumlahUangMakanDua + JumlahUangMakanEmpat + JumlahUangMakanLima + JumlahUangMakanTiga + JumlahUangSakuDua + JumlahUangSakuEmpat + JumlahUangSakuLima + JumlahUangSakuTiga;
                                     });
                                   }
@@ -1575,7 +1599,7 @@ class _AddNewLPDState extends State<AddNewLPD> {
                                   ),
                                   onChanged: (value){
                                     setState(() {
-                                      JumlahUangSakuEmpat = int.parse(txtHariUangMakanEmpat.text.replaceAll(RegExp(r'[^0-9]'), '')) * double.parse(txtSatuanUangSakuEmpat.text.replaceAll(RegExp(r'[^0-9]'), ''));
+                                      JumlahUangSakuEmpat = int.parse(txtHariUangSakuEmpat.text.replaceAll(RegExp(r'[^0-9]'), '')) * double.parse(txtSatuanUangSakuEmpat.text.replaceAll(RegExp(r'[^0-9]'), ''));
                                       GrandTotal = JumlahTiket + JumlahHotel + JumlahUangSaku + JumlahTransport + JumlahUangMakan + JumlahEntertain + JumlahLain + JumlahUangMakanDua + JumlahUangMakanEmpat + JumlahUangMakanLima + JumlahUangMakanTiga + JumlahUangSakuDua + JumlahUangSakuEmpat + JumlahUangSakuLima + JumlahUangSakuTiga;
                                     });
                                   }

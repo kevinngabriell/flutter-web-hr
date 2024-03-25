@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hr_systems_web/web-version/full-access/Event/event.dart';
 import 'package:hr_systems_web/web-version/full-access/Performance/performance.dart';
+import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/PerjalananDinasIndex.dart';
 import 'package:hr_systems_web/web-version/full-access/Report/report.dart';
 import 'package:hr_systems_web/web-version/full-access/Salary/salary.dart';
 import 'package:hr_systems_web/web-version/full-access/Settings/setting.dart';
@@ -74,18 +75,73 @@ class _ViewLPDState extends State<ViewLPD> {
   String priceLain = '';
   String totalLain = '';
 
+  String countDayEntertain = '';
+  String priceEntertain = '';
+  String totalEntertain = '';
+
+  String countDayUangSaku = '';
+  String priceUangSaku = '';
+  String totalUangSaku = '';
+
+  String countDayUangSakuDua = '';
+  String priceUangSakuDua = '';
+  String totalUangSakuDua = '';
+
+  String countDayUangSakuTiga = '';
+  String priceUangSakuTiga = '';
+  String totalUangSakuTiga = '';
+
+  String countDayUangSakuEmpat = '';
+  String priceUangSakuEmpat = '';
+  String totalUangSakuEmpat = '';
+
+  String countDayUangSakuLima = '';
+  String priceUangSakuLima = '';
+  String totalUangSakuLima = '';
+
+  String countDayUangMakan = '';
+  String priceUangMakan = '';
+  String totalUangMakan = '';
+
+  String countDayUangMakanDua = '';
+  String priceUangMakanDua = '';
+  String totalUangMakanDua = '';
+
+  String countDayUangMakanTiga = '';
+  String priceUangMakanTiga = '';
+  String totalUangMakanTiga = '';
+
+  String countDayUangMakanEmpat = '';
+  String priceUangMakanEmpat = '';
+  String totalUangMakanEmpat = '';
+
+  String countDayUangMakanLima = '';
+  String priceUangMakanLima = '';
+  String totalUangMakanLima = '';
+
   double JumlahBiayaTiket = 0;
   double JumlahTiket = 0;
   double JumlahHotel = 0;
   double JumlahUangSaku = 0;
+  double JumlahUangSakuDua = 0;
+  double JumlahUangSakuTiga = 0;
+  double JumlahUangSakuEmpat = 0;
+  double JumlahUangSakuLima = 0;
   double JumlahTransport = 0;
   double JumlahUangMakan = 0;
+  double JumlahUangMakanDua = 0;
+  double JumlahUangMakanTiga = 0;
+  double JumlahUangMakanEmpat = 0;
+  double JumlahUangMakanLima = 0;
   double JumlahEntertain = 0;
   double JumlahLain = 0;
   double GrandTotal = 0;
   double Kekurangan = 0;
 
   String spvName = '';
+  String insertDt = '';
+
+  List<Map<String, dynamic>> historyList = [];
 
   @override
   void initState() {
@@ -212,6 +268,7 @@ class _ViewLPDState extends State<ViewLPD> {
           statusName = data['status_name'];
           departemen = data['department_name'];
           karyawanID = data['id'];
+          insertDt = _formatDate(data['insert_dt']);
         });
       } else {
         print('Failed to load data: ${response.statusCode}');
@@ -262,6 +319,16 @@ class _ViewLPDState extends State<ViewLPD> {
         var transportData = transactionResponseData['Data']['Transport'];
         var byEntertainData = transactionResponseData['Data']['ByEntertain'];
         var lainLainData = transactionResponseData['Data']['LainLain'];
+        var UangSakuData = transactionResponseData['Data']['Uang Saku'];
+        var UangSakuDuaData = transactionResponseData['Data']['Uang Saku 2'];
+        var UangSakuTigaData = transactionResponseData['Data']['Uang Saku 3'];
+        var UangSakuEmpatData = transactionResponseData['Data']['Uang Saku 4'];
+        var UangSakuLimaData = transactionResponseData['Data']['Uang Saku 5'];
+        var UangMakanData = transactionResponseData['Data']['Uang Makan'];
+        var UangMakanDuaData = transactionResponseData['Data']['Uang Makan 2'];
+        var UangMakanTigaData = transactionResponseData['Data']['Uang Makan 3'];
+        var UangMakanEmpatData = transactionResponseData['Data']['Uang Makan 4'];
+        var UangMakanLimaData = transactionResponseData['Data']['Uang Makan 5'];
 
         setState(() {
           countDayTiket = tiketPesawatData['count_days'];
@@ -279,6 +346,117 @@ class _ViewLPDState extends State<ViewLPD> {
           countDayLain = lainLainData['count_days'];
           priceLain = lainLainData['price'];
           totalLain = lainLainData['total'];
+
+          countDayUangSaku = UangSakuData['count_days'];
+          priceUangSaku = UangSakuData['price'];
+          totalUangSaku = UangSakuData['total'];
+
+          countDayUangSakuDua = UangSakuDuaData['count_days'];
+          priceUangSakuDua = UangSakuDuaData['price'];
+          totalUangSakuDua = UangSakuDuaData['total'];
+
+          countDayUangSakuTiga = UangSakuTigaData['count_days'];
+          priceUangSakuTiga = UangSakuTigaData['price'];
+          totalUangSakuTiga = UangSakuTigaData['total'];
+
+          countDayUangSakuEmpat = UangSakuEmpatData['count_days'];
+          priceUangSakuEmpat = UangSakuEmpatData['price'];
+          totalUangSakuEmpat = UangSakuEmpatData['total'];
+
+          countDayUangSakuLima= UangSakuLimaData['count_days'];
+          priceUangSakuLima = UangSakuLimaData['price'];
+          totalUangSakuLima = UangSakuLimaData['total'];
+
+          countDayUangMakan = UangMakanData['count_days'];
+          priceUangMakan = UangMakanData['price'];
+          totalUangMakan = UangMakanData['total'];
+
+          countDayUangMakanDua = UangMakanDuaData['count_days'];
+          priceUangMakanDua = UangMakanDuaData['price'];
+          totalUangMakanDua = UangMakanDuaData['total'];
+
+          countDayUangMakanTiga = UangMakanTigaData['count_days'];
+          priceUangMakanTiga = UangMakanTigaData['price'];
+          totalUangMakanTiga = UangMakanTigaData['total'];
+
+          countDayUangMakanEmpat = UangMakanEmpatData['count_days'];
+          priceUangMakanEmpat = UangMakanEmpatData['price'];
+          totalUangMakanEmpat = UangMakanEmpatData['total'];
+
+          countDayUangMakanLima = UangMakanLimaData['count_days'];
+          priceUangMakanLima = UangMakanLimaData['price'];
+          totalUangMakanLima = UangMakanLimaData['total'];
+
+          countDayEntertain = byEntertainData['count_days'];
+          priceEntertain = byEntertainData['price'];
+          totalEntertain = byEntertainData['total'];
+
+          if(countDayEntertain == '0'){
+            JumlahEntertain = double.parse(totalEntertain);
+          } else {
+            JumlahEntertain = double.parse(countDayEntertain) * double.parse(priceEntertain);
+          }
+
+          if(countDayUangMakan == '0'){
+            JumlahUangMakan = double.parse(totalUangMakan);
+          } else {
+            JumlahUangMakan = double.parse(countDayUangMakan) * double.parse(priceUangMakan);
+          }
+
+          if(countDayUangMakanDua == '0'){
+            JumlahUangMakanDua = double.parse(totalUangMakanDua);
+          } else {
+            JumlahUangMakanDua = double.parse(countDayUangMakanDua) * double.parse(priceUangMakanDua);
+          }
+
+          if(countDayUangMakanTiga == '0'){
+            JumlahUangMakanTiga = double.parse(totalUangMakanTiga);
+          } else {
+            JumlahUangMakanTiga = double.parse(countDayUangMakanTiga) * double.parse(priceUangMakanTiga);
+          }
+
+          if(countDayUangMakanEmpat == '0'){
+            JumlahUangMakanEmpat = double.parse(totalUangMakanEmpat);
+          } else {
+            JumlahUangMakanEmpat = double.parse(countDayUangMakanEmpat) * double.parse(priceUangMakanEmpat);
+          }
+
+          if(countDayUangMakanLima == '0'){
+            JumlahUangMakanLima = double.parse(totalUangMakanLima);
+          } else {
+            JumlahUangMakanLima = double.parse(countDayUangMakanLima) * double.parse(priceUangMakanLima);
+          }
+
+          if(countDayUangSaku == '0'){
+            JumlahUangSaku = double.parse(totalUangSaku);
+          } else {
+            JumlahUangSaku = double.parse(countDayUangSaku) * double.parse(priceUangSaku);
+            
+          }
+
+          if(countDayUangSakuDua == '0'){
+            JumlahUangSakuDua = double.parse(totalUangSakuDua);
+          } else {
+            JumlahUangSakuDua = double.parse(countDayUangSakuDua) * double.parse(priceUangSakuDua);
+          }
+
+          if(countDayUangSakuTiga == '0'){
+            JumlahUangSakuTiga = double.parse(totalUangSakuTiga);
+          } else {
+            JumlahUangSakuTiga = double.parse(countDayUangSakuTiga) * double.parse(priceUangSakuTiga);
+          }
+
+          if(countDayUangSakuEmpat == '0'){
+            JumlahUangSakuEmpat = double.parse(totalUangSakuEmpat);
+          } else {
+            JumlahUangSakuEmpat = double.parse(countDayUangSakuEmpat) * double.parse(priceUangSakuEmpat);
+          }
+
+          if(countDayUangSakuLima == '0'){
+            JumlahUangSakuLima = double.parse(totalUangSakuLima);
+          } else {
+            JumlahUangSakuLima = double.parse(countDayUangSakuLima) * double.parse(priceUangSakuLima);
+          }
 
           if(countDayTiket == '0'){
             JumlahTiket = double.parse(totalTiket);
@@ -304,7 +482,7 @@ class _ViewLPDState extends State<ViewLPD> {
             JumlahLain = double.parse(countDayLain) * double.parse(priceLain);
           }
 
-          GrandTotal = JumlahTiket + JumlahHotel + JumlahTransport + JumlahLain;
+          GrandTotal = JumlahTiket + JumlahHotel + JumlahTransport + JumlahLain + JumlahEntertain + JumlahUangSaku + JumlahUangSakuDua + JumlahUangSakuTiga + JumlahUangSakuEmpat + JumlahUangSakuLima + JumlahUangMakan + JumlahUangMakanDua + JumlahUangMakanTiga + JumlahUangMakanEmpat + JumlahUangMakanLima;
 
           Kekurangan = double.parse(advancedCash) - GrandTotal;
 
@@ -314,10 +492,327 @@ class _ViewLPDState extends State<ViewLPD> {
         print('Failed to load data: ${response.statusCode}');
       }
 
+      String historyUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/perjalanandinas/getlpd.php?action=6&lpd_id=$lpdID';
+
+      var historyResponse = await http.get(Uri.parse(historyUrl));
+
+      if (historyResponse.statusCode == 200) {
+        var historyData = json.decode(historyResponse.body);
+
+        setState(() {
+          historyList = List<Map<String, dynamic>>.from(historyData['Data']);
+        });
+      } else if (response.statusCode == 404){
+        print('404, No Data Found');
+      }
+
     } catch (e){
       print('Error at catching inevntory detail : $e');
     } finally {
       isLoading = false;
+    }
+  }
+
+  Future<void> actionLPD (action_id) async {
+    String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/perjalanandinas/lpd.php';
+    String employeeId = storage.read('employee_id').toString();
+
+    if(action_id == '1'){
+      try{
+        isLoading = true;
+
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          body: {
+            "action" : "2",
+            "businesstrip_id": widget.businessTripID,
+            "lpd_id": lpdID,
+            "employee_id" : employeeId,
+            "requestor_id" : karyawanID
+          }
+        );
+
+        if (response.statusCode == 200) {
+          showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Sukses'),
+                content: const Text('Anda telah berhasil mengubah status LPD'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PerjalananDinasIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+        } else {
+          showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('Error ${response.body}'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PerjalananDinasIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+        }
+
+      } catch (e){
+        showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('Error $e'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PerjalananDinasIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+      } finally {
+        isLoading = false;
+      }
+    } else if (action_id == '2'){
+      try{
+        isLoading = true;
+
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          body: {
+            "action" : "3",
+            "businesstrip_id": widget.businessTripID,
+            "lpd_id": lpdID,
+            "employee_id" : employeeId,
+            "requestor_id" : karyawanID
+          }
+        );
+
+        if (response.statusCode == 200) {
+          showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Sukses'),
+                content: const Text('Anda telah berhasil mengubah status LPD'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PerjalananDinasIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+        } else {
+          showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('Error ${response.body}'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PerjalananDinasIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+        }
+
+      } catch (e){
+        showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('Error $e'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PerjalananDinasIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+      } finally {
+        isLoading = false;
+      }
+    } else if (action_id == '3'){
+      try{
+        isLoading = true;
+
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          body: {
+            "action" : "4",
+            "businesstrip_id": widget.businessTripID,
+            "lpd_id": lpdID,
+            "employee_id" : employeeId,
+            "requestor_id" : karyawanID
+          }
+        );
+
+        if (response.statusCode == 200) {
+          showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Sukses'),
+                content: const Text('Anda telah berhasil mengubah status LPD'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PerjalananDinasIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+        } else {
+          showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('Error ${response.body}'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PerjalananDinasIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+        }
+
+      } catch (e){
+        showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('Error $e'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PerjalananDinasIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+      } finally {
+        isLoading = false;
+      }
+    } else if (action_id == '4'){
+      try{
+        isLoading = true;
+
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          body: {
+            "action" : "5",
+            "businesstrip_id": widget.businessTripID,
+            "lpd_id": lpdID,
+            "employee_id" : employeeId,
+            "requestor_id" : karyawanID
+          }
+        );
+
+        if (response.statusCode == 200) {
+          showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Sukses'),
+                content: const Text('Anda telah berhasil mengubah status LPD'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PerjalananDinasIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+        } else {
+          showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('Error ${response.body}'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PerjalananDinasIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+        }
+
+      } catch (e){
+        showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('Error $e'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PerjalananDinasIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+      } finally {
+        isLoading = false;
+      }
     }
   }
 
@@ -1128,22 +1623,22 @@ class _ViewLPDState extends State<ViewLPD> {
                             SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                              child: Text('data')
+                              child: Text('$countDayUangSaku hari', textAlign: TextAlign.center,)
                             ),
                             SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                              child: Text('data')
+                              child: Text(formatCurrency2(priceUangSaku), textAlign: TextAlign.end,)
                             ),
                             SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 5,
-                              child: Text('data')
+                              child: Text(formatCurrency2(totalUangSaku), textAlign: TextAlign.end,)
                             ),
                             SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                              child: Text('data', textAlign: TextAlign.end,),
+                              child: Text(formatCurrency(JumlahUangSaku), textAlign: TextAlign.end,)
                             ),
                           ],
                         ),
@@ -1158,22 +1653,22 @@ class _ViewLPDState extends State<ViewLPD> {
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text('$countDayUangSakuDua hari', textAlign: TextAlign.center,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency2(priceUangSakuDua), textAlign: TextAlign.end,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency2(totalUangSakuDua), textAlign: TextAlign.end,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency(JumlahUangSakuDua), textAlign: TextAlign.end,)
                               ),
                             ],
                           ),
@@ -1189,22 +1684,22 @@ class _ViewLPDState extends State<ViewLPD> {
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text('$countDayUangSakuTiga hari', textAlign: TextAlign.center,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency2(priceUangSakuTiga), textAlign: TextAlign.end,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency2(totalUangSakuTiga), textAlign: TextAlign.end,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency(JumlahUangSakuTiga), textAlign: TextAlign.end,)
                               ),
                             ],
                           ),
@@ -1220,22 +1715,22 @@ class _ViewLPDState extends State<ViewLPD> {
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text('$countDayUangSakuEmpat hari', textAlign: TextAlign.center,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency2(priceUangSakuEmpat), textAlign: TextAlign.end,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency2(totalUangSakuEmpat), textAlign: TextAlign.end,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency(JumlahUangSakuEmpat), textAlign: TextAlign.end,)
                               ),
                             ],
                           ),
@@ -1251,22 +1746,22 @@ class _ViewLPDState extends State<ViewLPD> {
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text('$countDayUangSakuLima hari', textAlign: TextAlign.center,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency2(priceUangSakuLima), textAlign: TextAlign.end,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency2(totalUangSakuLima), textAlign: TextAlign.end,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency(JumlahUangSakuLima), textAlign: TextAlign.end,)
                               ),
                             ],
                           ),
@@ -1310,22 +1805,22 @@ class _ViewLPDState extends State<ViewLPD> {
                             SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                              child: Text('data')
+                              child: Text('$countDayUangMakan hari', textAlign: TextAlign.center,)
                             ),
                             SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                              child: Text('data')
+                              child: Text(formatCurrency2(priceUangMakan), textAlign: TextAlign.end,)
                             ),
                             SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 5,
-                              child: Text('data')
+                              child: Text(formatCurrency2(totalUangMakan), textAlign: TextAlign.end,)
                             ),
                             SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                              child: Text('data', textAlign: TextAlign.end,),
+                              child: Text(formatCurrency(JumlahUangMakan), textAlign: TextAlign.end,)
                             ),
                           ],
                         ),
@@ -1340,22 +1835,22 @@ class _ViewLPDState extends State<ViewLPD> {
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text('$countDayUangMakanDua hari', textAlign: TextAlign.center,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency2(priceUangMakanDua), textAlign: TextAlign.end,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency2(totalUangMakanDua), textAlign: TextAlign.end,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency(JumlahUangMakanDua), textAlign: TextAlign.end,)
                               ),
                             ],
                           ),
@@ -1371,22 +1866,22 @@ class _ViewLPDState extends State<ViewLPD> {
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text('$countDayUangMakanTiga hari', textAlign: TextAlign.center,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency2(priceUangMakanTiga), textAlign: TextAlign.end,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency2(totalUangMakanTiga), textAlign: TextAlign.end,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency(JumlahUangMakanTiga), textAlign: TextAlign.end,)
                               ),
                             ],
                           ),
@@ -1402,22 +1897,22 @@ class _ViewLPDState extends State<ViewLPD> {
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text('$countDayUangMakanEmpat hari', textAlign: TextAlign.center,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency2(priceUangMakanEmpat), textAlign: TextAlign.end,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency2(totalUangMakanEmpat), textAlign: TextAlign.end,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency(JumlahUangMakanEmpat), textAlign: TextAlign.end,)
                               ),
                             ],
                           ),
@@ -1433,22 +1928,22 @@ class _ViewLPDState extends State<ViewLPD> {
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text('$countDayUangMakanLima hari', textAlign: TextAlign.center,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency2(priceUangMakanLima), textAlign: TextAlign.end,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency2(totalUangMakanLima), textAlign: TextAlign.end,)
                               ),
                               SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                                child: Text('data')
+                                child: Text(formatCurrency(JumlahUangMakanLima), textAlign: TextAlign.end,)
                               ),
                             ],
                           ),
@@ -1463,22 +1958,22 @@ class _ViewLPDState extends State<ViewLPD> {
                             SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                              child: Text('data')
+                              child: Text('$countDayEntertain hari', textAlign: TextAlign.center,)
                             ),
                             SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                              child: Text('data')
+                              child: Text(formatCurrency2(priceEntertain), textAlign: TextAlign.end,)
                             ),
                             SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 5,
-                              child: Text('data')
+                              child: Text(formatCurrency2(totalEntertain), textAlign: TextAlign.end,)
                             ),
                             SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
-                              child: Text('data', textAlign: TextAlign.end,),
+                              child: Text(formatCurrency(JumlahEntertain), textAlign: TextAlign.end,)
                             ),
                           ],
                         ),
@@ -1489,6 +1984,7 @@ class _ViewLPDState extends State<ViewLPD> {
                               width: (MediaQuery.of(context).size.width - 100.w) / 4,
                               child: Text('Lain-lain'),
                             ),
+                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text('$countDayLain hari', textAlign: TextAlign.center,)
@@ -1576,7 +2072,119 @@ class _ViewLPDState extends State<ViewLPD> {
                             )
                           ],
                         ),
-                        SizedBox(height: 50.sp,),
+                        SizedBox(height: 30.sp,),
+                        // ElevatedButton(
+                        //   onPressed: (){
+                        //     String strtDate = _formatDate2(startDate);
+                        //     String endedDate = _formatDate2(endDate);
+                        //     generateAndDisplayPDFLPD(companyName, companyAddress, namaKaryawan, departemen, spvName, memberOne, memberTwo, memberThree, memberFour, 
+                        //     lpdID, projectName, strtDate, endedDate, countDayTiket, formatCurrency2(priceTiket), countDayPenginapan, countDayTransport, countDayEntertain, 
+                        //     countDayLain, formatCurrency2(pricePenginapan), formatCurrency2(priceTransport), formatCurrency2(priceEntertain), formatCurrency2(priceLain),
+                        //     formatCurrency2(totalTiket), formatCurrency2(totalPenginapan), formatCurrency2(totalTransport), formatCurrency2(totalEntertain), 
+                        //     formatCurrency2(totalLain), formatCurrency(JumlahTiket), formatCurrency(JumlahHotel), formatCurrency(JumlahTransport), formatCurrency(JumlahEntertain),
+                        //     formatCurrency(JumlahLain), formatCurrency(GrandTotal), uraianLPD, formatCurrency2(advancedCash), formatCurrency(Kekurangan), insertDt);
+                        //   }, 
+                        //   style: ElevatedButton.styleFrom(
+                        //     elevation: 0,
+                        //     alignment: Alignment.center,
+                        //     minimumSize: Size(40.w, 55.h),
+                        //     foregroundColor: const Color(0xFFFFFFFF),
+                        //     backgroundColor: const Color(0xff4ec3fc),
+                        //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        //   ),
+                        //   child: Text('Download LPD')
+                        // ),
+                        // SizedBox(height: 30.sp,),
+                        if(statusName == 'Draft LPD' && positionId == 'POS-HR-002')
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ElevatedButton(
+                                onPressed: (){
+                                  actionLPD('1');
+                                }, 
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0,
+                                  alignment: Alignment.center,
+                                  minimumSize: Size(40.w, 55.h),
+                                  foregroundColor: const Color(0xFFFFFFFF),
+                                  backgroundColor: Colors.green,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                ),
+                                child: Text('Terima')
+                              ),
+                              SizedBox(width: 10.w,),
+                              ElevatedButton(
+                                onPressed: (){
+                                  actionLPD('2');
+                                }, 
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0,
+                                  alignment: Alignment.center,
+                                  minimumSize: Size(40.w, 55.h),
+                                  foregroundColor: const Color(0xFFFFFFFF),
+                                  backgroundColor: Colors.red,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                ),
+                                child: Text('Tolak')
+                              ),
+                            ],
+                          ),
+                        if(statusName == 'Laporan disetujui HRD' && positionId == 'POS-HR-001')
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ElevatedButton(
+                                onPressed: (){
+                                  actionLPD('3');
+                                }, 
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0,
+                                  alignment: Alignment.center,
+                                  minimumSize: Size(40.w, 55.h),
+                                  foregroundColor: const Color(0xFFFFFFFF),
+                                  backgroundColor: Colors.green,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                ),
+                                child: Text('Terima')
+                              ),
+                              SizedBox(width: 10.w,),
+                              ElevatedButton(
+                                onPressed: (){
+                                  actionLPD('4');
+                                }, 
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0,
+                                  alignment: Alignment.center,
+                                  minimumSize: Size(40.w, 55.h),
+                                  foregroundColor: const Color(0xFFFFFFFF),
+                                  backgroundColor: Colors.red,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                ),
+                                child: Text('Tolak')
+                              ),
+                            ],
+                          ),
+                        SizedBox(height: 30.sp,),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height,
+                          child: ListView.builder(
+                            itemCount: historyList.length,
+                            itemBuilder: (context, index){
+                              var item = historyList[index];
+                              return ListTile(
+                                leading: CircleAvatar(
+                                  backgroundColor: const Color(0xff4ec3fc),
+                                  child: Text('${index + 1}', style: const TextStyle(color: Colors.white),),
+                                ),
+                                title: Text(item['employee_name'], style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),),
+                                subtitle: Text(item['action'], style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400),),
+                                trailing: Text(_formatDate(item['action_dt']), style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400),),
+                              );
+                            }
+                          ),
+                        ),
+                        SizedBox(height: 50.sp,)
                       ]
                     )
                   )
@@ -1594,7 +2202,7 @@ class _ViewLPDState extends State<ViewLPD> {
     DateTime parsedDate = DateFormat("yyyy-MM-dd HH:mm").parse(date);
 
     // Format the date as "dd MMMM yyyy"
-    return DateFormat("d MMMM yyyy HH:mm").format(parsedDate);
+    return DateFormat("d MMMM yyyy HH:mm", 'id').format(parsedDate);
   }
 
   String _formatDate2(String date) {
@@ -1602,6 +2210,6 @@ class _ViewLPDState extends State<ViewLPD> {
     DateTime parsedDate = DateFormat("yyyy-MM-dd").parse(date);
 
     // Format the date as "d MMMM yyyy"
-    return DateFormat("d MMMM yyyy").format(parsedDate);
+    return DateFormat("d MMMM yyyy", 'id').format(parsedDate);
   }
 }

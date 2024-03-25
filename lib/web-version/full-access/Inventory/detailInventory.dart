@@ -70,6 +70,14 @@ class _detailInventoryState extends State<detailInventory> {
     fetchemployeeList();
   }
 
+  String formatCurrency2(String value) {
+    // Parse the string to a number.
+    double numberValue = double.tryParse(value) ?? 0;
+
+    // Format the number as currency.
+    return NumberFormat.currency(locale: 'id_ID', symbol: 'Rp. ', decimalDigits: 0).format(numberValue);
+  }
+
   Future<void> fetchNotification() async{
     try{  
       String employeeId = storage.read('employee_id').toString();
@@ -156,6 +164,11 @@ class _detailInventoryState extends State<detailInventory> {
           supplierName = data['supplier_name'];
           statusName = data['status_name'];
           inventoryNotes = data['inventory_notes'];
+
+          if(paymentMethod == 'Cash'){
+            installmentPeriod = '-';
+            installmentPrice = '-';
+          }
 
         });
 
@@ -1161,7 +1174,7 @@ class _detailInventoryState extends State<detailInventory> {
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w600,
                                   )),
-                                    Text(purchaseDate),
+                                    Text(_formatDate2(purchaseDate)),
                                   ],
                                 ),
                               ),
@@ -1175,7 +1188,7 @@ class _detailInventoryState extends State<detailInventory> {
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w600,
                                   )),
-                                    Text(warrantyDate),
+                                    Text(_formatDate2(warrantyDate)),
                                   ],
                                 ),
                               ),
@@ -1275,7 +1288,7 @@ class _detailInventoryState extends State<detailInventory> {
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w600,
                                   )),
-                                    Text(dueDate),
+                                    Text(jatuhTempoFormatDate(dueDate)),
                                   ],
                                 ),
                               ),
@@ -1289,7 +1302,7 @@ class _detailInventoryState extends State<detailInventory> {
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w600,
                                   )),
-                                    Text(installmentPrice),
+                                    Text(formatCurrency2(installmentPrice)),
                                   ],
                                 ),
                               ),
@@ -1311,7 +1324,7 @@ class _detailInventoryState extends State<detailInventory> {
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w600,
                                   )),
-                                    Text(purchasePrice),
+                                    Text(formatCurrency2(purchasePrice)),
                                   ],
                                 ),
                               ),
@@ -1541,6 +1554,25 @@ class _detailInventoryState extends State<detailInventory> {
     DateTime parsedDate = DateFormat("yyyy-MM-dd HH:mm").parse(date);
 
     // Format the date as "dd MMMM yyyy"
-    return DateFormat("d MMMM yyyy HH:mm").format(parsedDate);
+    return DateFormat("d MMMM yyyy HH:mm", 'id').format(parsedDate);
+  }
+
+  String _formatDate2(String date) {
+    // Parse the date string
+    DateTime parsedDate = DateFormat("yyyy-MM-dd").parse(date);
+
+    // Format the date as "d MMMM yyyy"
+    return DateFormat("d MMMM yyyy", 'id').format(parsedDate);
+  }
+
+  String jatuhTempoFormatDate(String dateString) {
+    // Parse the input string into a DateTime object
+    DateTime dateTime = DateTime.parse(dateString);
+
+    // Define the desired output format
+    final DateFormat formatter = DateFormat('dd');
+
+    // Format the DateTime object into a string
+    return formatter.format(dateTime);
   }
 }

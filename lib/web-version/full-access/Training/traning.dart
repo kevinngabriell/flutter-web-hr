@@ -506,7 +506,27 @@ class _TrainingIndexState extends State<TrainingIndex> {
                         ],
                       ),
                       SizedBox(height: 30.sp,),
-                      
+                      if(positionId == 'POS-HR-002')
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            ElevatedButton(
+                              onPressed: (){
+
+                              }, 
+                              style: ElevatedButton.styleFrom(
+                                elevation: 0,
+                                alignment: Alignment.center,
+                                minimumSize: Size(40.w, 55.h),
+                                foregroundColor: const Color(0xFFFFFFFF),
+                                backgroundColor: const Color(0xff4ec3fc),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              ),
+                              child: Text('Buat Pelatihan Modul Baru')
+                            )
+                          ],
+                        ),
+                      SizedBox(height: 30.sp,),
                     ],
                   )
                 )

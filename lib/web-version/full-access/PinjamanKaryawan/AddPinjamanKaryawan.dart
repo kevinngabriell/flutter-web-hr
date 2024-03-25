@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hr_systems_web/web-version/full-access/Event/event.dart';
 import 'package:hr_systems_web/web-version/full-access/Performance/performance.dart';
 import 'package:hr_systems_web/web-version/full-access/Report/report.dart';
+import 'package:hr_systems_web/web-version/full-access/Salary/currencyformatter.dart';
 import 'package:hr_systems_web/web-version/full-access/Salary/salary.dart';
 import 'package:hr_systems_web/web-version/full-access/Settings/setting.dart';
 import 'package:hr_systems_web/web-version/full-access/Structure/structure.dart';
@@ -34,6 +36,9 @@ class _AddNewPinjamanKaryawanState extends State<AddNewPinjamanKaryawan> {
   final storage = GetStorage();
   bool isLoading = false;
 
+  String departmentName = '';
+  String positionName = '';
+
   List<Map<String, dynamic>> noticationList = [];
 
   @override
@@ -41,6 +46,50 @@ class _AddNewPinjamanKaryawanState extends State<AddNewPinjamanKaryawan> {
     super.initState();
     fetchNotification();
     fetchData();
+    fetchDataforFilled();
+  }
+
+  Future<void> fetchDataforFilled() async {
+    try {
+      isLoading = true;
+      String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/permission/getdataforrequestor.php';
+
+      // Replace 'employee_id' with the actual employee ID from storage
+      String employeeId = storage.read('employee_id').toString(); // replace with your logic to get employee ID
+
+      // Create a Map for the request body
+      Map<String, dynamic> requestBody = {'employee_id': employeeId};
+
+      // Convert the Map to a JSON string
+      String requestBodyJson = json.encode(requestBody);
+
+      // Make the API call with a POST request
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        body: {
+          'employee_id': employeeId,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> data = json.decode(response.body);
+
+        setState(() {
+          employeeName = data['Data']['employee_name'] as String;
+          employeeId = data['Data']['employee_id'] as String;
+          departmentName = data['Data']['department_name'] as String;
+          positionName = data['Data']['position_name'] as String;
+
+        });
+      } else {
+        print('Failed to load data. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+    } catch (e) {
+      print('Exception during API call: $e');
+    } finally {
+      isLoading = false;
+    }
   }
 
   Future<void> fetchNotification() async{
@@ -647,6 +696,153 @@ class _AddNewPinjamanKaryawanState extends State<AddNewPinjamanKaryawan> {
                           ),
                         ),
                         SizedBox(height: 30.sp,),
+                        Center(
+                          child: Text('Form Permohonan Peminjaman Karyawan', style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w700,
+                            color: const Color.fromRGBO(116, 116, 116, 1)
+                          ),)
+                        ),
+                        SizedBox(height: 30.sp,),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Nama', style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w600,
+                                    )),
+                                  SizedBox(height: 10.h,),
+                                  Text(employeeName)
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 5.w,),
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Departemen', style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w600,
+                                    )),
+                                  SizedBox(height: 10.h,),
+                                  Text(departmentName)
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 5.w,),
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Jabatan', style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w600,
+                                    )),
+                                  SizedBox(height: 10.h,),
+                                  Text(positionName)
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 30.sp,),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Besar Pinjaman', style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w600,
+                                    )),
+                                  SizedBox(height: 10.h,),
+                                  TextFormField(
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly,
+                                      CurrencyFormatter(),
+                                    ],
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                      hintText: 'Masukkan besar pinjaman'
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 5.w,),
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Keperluan Pinjaman', style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w600,
+                                    )),
+                                  SizedBox(height: 10.h,),
+                                  TextFormField(
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                      hintText: 'Masukkan keperluan pinjaman'
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 5.w,),
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Cara Membayar', style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w600,
+                                    )),
+                                  SizedBox(height: 10.h,),
+                                  TextFormField(
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                      hintText: 'Masukkan cara membayar'
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 30.sp,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            ElevatedButton(
+                              onPressed: (){
+
+                              }, 
+                              style: ElevatedButton.styleFrom(
+                                elevation: 0,
+                                alignment: Alignment.center,
+                                minimumSize: Size(40.w, 55.h),
+                                foregroundColor: const Color(0xFFFFFFFF),
+                                backgroundColor: const Color(0xff4ec3fc),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              ),
+                              child: Text('Kumpulkan')
+                            )
+                          ],
+                        )
                       ]
                     )
                   )

@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hr_systems_web/web-version/full-access/Event/event.dart';
 import 'package:hr_systems_web/web-version/full-access/Performance/performance.dart';
+import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/AddNewPerjalananDinas.dart';
+import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/ViewLPD.dart';
 import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/ViewPerjalananDinas.dart';
 import 'package:hr_systems_web/web-version/full-access/Report/report.dart';
 import 'package:hr_systems_web/web-version/full-access/Salary/salary.dart';
@@ -152,7 +154,7 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
         print('Failed to load data: ${response.statusCode}');
       }
 
-      String lpdApprovalUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/perjalanandinas/getlpd.php?action=2&employee_id=$employeeId';
+      String lpdApprovalUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/perjalanandinas/getlpd.php?action=3';
       var lpdApprovalResponse = await http.get(Uri.parse(lpdApprovalUrl));
 
       if (lpdApprovalResponse.statusCode == 200) {
@@ -727,9 +729,91 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
                           children: [
                             ElevatedButton(
                               onPressed: (){
+                                Get.to(const AddNewPerjalananDinas());
+                                // showDialog(
+                                //   context: context, 
+                                //   builder: (_) {
+                                //     return AlertDialog(
+                                //       title: Text('Tambah Perjalanan Dinas'),
+                                //       content: DropdownButtonFormField(
+                                //         value: 'R001',
+                                //         items: [
+                                //           DropdownMenuItem(
+                                //             value: 'R001',
+                                //             child: Text('Permohonan Perjalanan Dinas')
+                                //           ),
+                                //           DropdownMenuItem(
+                                //             value: 'R002',
+                                //             child: Text('Laporan Perjalanan Dinas')
+                                //           )
+                                //         ], 
+                                //         onChanged: (value){
+                                //           if(value == 'R001'){
+                                //             Get.to(addNewInventory());
+                                //           } else if (value == 'R002'){
+                                //             Get.back();
+                                //             showDialog(
+                                //               context: context, 
+                                //               builder: (_){
+                                //                 return AlertDialog(
+                                //                   title: Text('Tambah Laporan Perjalanan Dinas'),
+                                //                   content: DropdownButtonFormField(
+                                //                     value: 'R001',
+                                //                     items: [
+                                //                       DropdownMenuItem(
+                                //                         value: 'R001',
+                                //                         child: Text('myBusinessTrip['']')
+                                //                       ),
+                                //                       DropdownMenuItem(
+                                //                         value: 'R002',
+                                //                         child: Text('Laporan Perjalanan Dinas')
+                                //                       )
+                                //                     ], 
+                                //                     onChanged: (value){
 
+                                //                     }
+                                //                   ),
+                                //                   actions: [
+                                //                     TextButton(
+                                //                       onPressed: () {
+                                //                         Get.back();
+                                //                       }, 
+                                //                       child: Text('Batal')
+                                //                     )
+                                //                   ],
+                                //                 );
+                                //               }
+                                //             );
+                                //           }
+                                //         }
+                                //       ),
+                                //       actions: [
+                                //         TextButton(
+                                //           onPressed: () {
+                                //             Get.back();
+                                //           }, 
+                                //           child: Text("Batal")
+                                //         ),
+                                //          TextButton(
+                                //           onPressed: () {
+                                //             Get.back();
+                                //           }, 
+                                //           child: Text("Oke")
+                                //         )
+                                //       ],
+                                //     );
+                                //   }
+                                // );
                               }, 
-                              child: Text('Tambah')
+                              style: ElevatedButton.styleFrom(
+                                elevation: 0,
+                                alignment: Alignment.center,
+                                minimumSize: Size(40.w, 55.h),
+                                foregroundColor: const Color(0xFFFFFFFF),
+                                backgroundColor: const Color(0xff4ec3fc),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              ),
+                              child: const Text('Tambah Perjalanan Dinas')
                             )
                           ],
                         ),
@@ -1007,6 +1091,7 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
                                             ),
                                             GestureDetector(
                                               onTap: () {
+                                                // Get.to(ViewLPD(businessTripID: businessTripID));
                                                 // Get.to(const allMyInventoryRequest());
                                               },
                                               child: Text('Lihat semua', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
@@ -1018,7 +1103,7 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
                                             children: [
                                               GestureDetector(
                                                 onTap: () {
-                                                  
+                                                  Get.to(ViewLPD(businessTripID: myLPD[indexC]['businesstrip_id']));
                                                 },
                                                 child: Card(
                                                   child: ListTile(
@@ -1089,7 +1174,7 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
                                             children: [
                                               GestureDetector(
                                                 onTap: () {
-                                                  
+                                                  Get.to(ViewLPD(businessTripID: myLPD[indexD]['businesstrip_id']));
                                                 },
                                                 child: Card(
                                                   child: ListTile(
@@ -1155,7 +1240,7 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
                                             children: [
                                               GestureDetector(
                                                 onTap: () {
-                                                  
+                                                  Get.to(ViewLPD(businessTripID: LPDApproval[indexE]['businesstrip_id']));
                                                 },
                                                 child: Card(
                                                   child: ListTile(

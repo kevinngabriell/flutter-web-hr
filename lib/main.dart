@@ -7,12 +7,15 @@ import 'package:hr_systems_web/mobile-version/login.dart';
 import 'package:hr_systems_web/responsive.dart';
 import 'package:hr_systems_web/web-version/full-access/index.dart';
 import 'package:hr_systems_web/web-version/login.dart';
+import 'package:intl/date_symbol_data_local.dart';
+
 
 void main() {
   int? employeeID = GetStorage().read('employee_id');
   runApp(const GetMaterialApp( // Wrap your MainWeb widget with MaterialApp
     home: MainWeb(),
   ));
+  initializeDateFormatting('id', null);
 }
 
 class MainWeb extends StatefulWidget {

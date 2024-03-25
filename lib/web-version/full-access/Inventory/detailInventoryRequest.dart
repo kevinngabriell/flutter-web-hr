@@ -2180,7 +2180,7 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
     DateTime parsedDate = DateFormat("yyyy-MM-dd HH:mm").parse(date);
 
     // Format the date as "dd MMMM yyyy"
-    return DateFormat("d MMMM yyyy HH:mm").format(parsedDate);
+    return DateFormat("d MMMM yyyy HH:mm", 'id').format(parsedDate);
   }
 
   String formatDate(String dateString) {
@@ -2188,7 +2188,7 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
     DateTime dateTime = DateTime.parse(dateString);
 
     // Define the desired output format
-    final DateFormat formatter = DateFormat('dd MMMM yyyy');
+    final DateFormat formatter = DateFormat('dd MMMM yyyy', 'id');
 
     // Format the DateTime object into a string
     return formatter.format(dateTime);
