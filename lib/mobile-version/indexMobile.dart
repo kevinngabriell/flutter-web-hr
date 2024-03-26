@@ -7,14 +7,14 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hr_systems_web/mobile-version/absen.dart';
+import 'package:hr_systems_web/mobile-version/profileMobile.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class indexMobile extends StatefulWidget {
-  final String EmployeeName;
-  final String PositionName;
+  final String EmployeeID;
 
-  const indexMobile({super.key, required this.EmployeeName, required this.PositionName});
+  const indexMobile({super.key, required this.EmployeeID});
 
   @override
   State<indexMobile> createState() => _indexMobileState();
@@ -26,7 +26,8 @@ class _indexMobileState extends State<indexMobile> {
   String? leaveoptions;
   String companyName = '';
   String companyAddress = '';
-  // String employeeName = '';
+  String employeeName = '';
+  String positionName = '';
   String employeeEmail = '';
   String sisaCuti = '';
   String timeIn = "- : -";
@@ -40,6 +41,61 @@ class _indexMobileState extends State<indexMobile> {
     super.initState();
     fetchDataTimeIn();
     fetchDataTimeOut();
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    String employeeId = GetStorage().read('employee_id').toString();
+
+    try {
+      String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-systems-data-v.1/GetAllPageProfile.php';
+      Map<String, dynamic> requestBody = {'employee_id': employeeId};
+      String requestBodyJson = json.encode(requestBody);
+
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        body: {
+          'employee_id': employeeId,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> data = json.decode(response.body);
+
+        setState(() {
+          companyName = data['company_name'] as String;
+          companyAddress = data['company_address'] as String;
+          employeeName = data['employee_name'] as String;
+          employeeEmail = data['employee_email'] as String;
+          positionName = data['position_name'] as String;
+        });
+
+        storage.write('employee_name', data['employee_name'] as String);
+        storage.write('position_name', data['position_name'] as String);
+
+        await Future.delayed(const Duration(seconds: 1)); 
+
+         setState(() {
+          isLoading = false;
+        });
+
+        Get.to(indexMobile(EmployeeID: employeeId,));
+      } else {
+        print('Failed to load data. Status code: ${response.statusCode}');
+          setState(() {
+            isLoading = false;
+          });
+      }
+    } catch (e) {
+      print('Exception during API call: $e');
+        setState(() {
+          isLoading = false;
+        });
+    }
   }
 
   Future<void> checkLocation() async {
@@ -154,6 +210,7 @@ class _indexMobileState extends State<indexMobile> {
 
   Future<void> fetchDataTimeIn() async {
     try {
+      isLoading = true;
       // Read the 'employee_id' from GetStorage
       String employeeId = GetStorage().read('employee_id').toString();
 
@@ -173,11 +230,14 @@ class _indexMobileState extends State<indexMobile> {
       }
     } catch (e) {
       print('Exception during API call: $e');
+    } finally {
+      isLoading = false;
     }
   }
 
   Future<void> fetchDataTimeOut() async {
     try {
+      isLoading = true;
       // Read the 'employee_id' from GetStorage
       String employeeId = GetStorage().read('employee_id').toString();
 
@@ -197,6 +257,8 @@ class _indexMobileState extends State<indexMobile> {
       }
     } catch (e) {
       print('Exception during API call: $e');
+    } finally {
+      isLoading = false;
     }
   }
 
@@ -204,7 +266,7 @@ class _indexMobileState extends State<indexMobile> {
         setState(() {
     
           if (index == 0) {
-            Get.to(indexMobile(EmployeeName: widget.EmployeeName, PositionName: widget.PositionName,));
+            Get.to(indexMobile(EmployeeID: widget.EmployeeID,));
           }else if(index == 1){
             _currentMenu = 'Order';
           }else if(index == 2){
@@ -229,6 +291,9 @@ class _indexMobileState extends State<indexMobile> {
           }else if(index == 3){
             _currentMenu = 'Account';
           } else if (index == 4){
+            Get.to(MyProfileMobile());
+            // logoutServicesMobile();
+            // Get.to(MobileLogin());
             // Get.to(ProfilePage(EmployeeName: "${widget.EmployeeName}", PositionName: "${widget.PositionName}",));
           }
         });
@@ -239,7 +304,7 @@ class _indexMobileState extends State<indexMobile> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
+      body: isLoading ? Center(child: CircularProgressIndicator(),) : SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -262,13 +327,13 @@ class _indexMobileState extends State<indexMobile> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(widget.EmployeeName,
+                              Text(employeeName,
                                 style: TextStyle(
                                   fontSize: 22.sp,
                                   fontWeight: FontWeight.w600
                                 ),
                               ),
-                              Text(widget.PositionName,
+                              Text(positionName,
                                 style: TextStyle(
                                   color: const Color.fromRGBO(116, 116, 116, 1),
                                   fontSize: 14.sp,
@@ -574,7 +639,7 @@ class _indexMobileState extends State<indexMobile> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history),
-            label: 'Histori',
+            label: 'Permohonan',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),

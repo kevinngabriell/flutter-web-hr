@@ -5,7 +5,11 @@ import 'package:get_storage/get_storage.dart';
 import 'package:hr_systems_web/web-version/full-access/Event/event.dart';
 import 'package:hr_systems_web/web-version/full-access/Performance/performance.dart';
 import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/AddNewPerjalananDinas.dart';
+import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/ViewAllApprovalLPD.dart';
+import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/ViewAllApprovalPerjalananDinas.dart';
 import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/ViewLPD.dart';
+import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/ViewMyLPD.dart';
+import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/ViewMyPerjalananDinas.dart';
 import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/ViewPerjalananDinas.dart';
 import 'package:hr_systems_web/web-version/full-access/Report/report.dart';
 import 'package:hr_systems_web/web-version/full-access/Salary/salary.dart';
@@ -43,6 +47,11 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
   List<Map<String, dynamic>> businessTripManagerApproval = [];
   List<Map<String, dynamic>> myLPD = [];
   List<Map<String, dynamic>> LPDApproval = [];
+
+  String myBusinessTripStatistic = '0';
+  String myLDStatistic = '0';
+  String needApprovalStatistic = '0';
+  String allBusinessTripStatistic = '0';
 
   @override
   void initState() {
@@ -114,6 +123,26 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
 
     try{
       isLoading = true;
+
+      String url = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/perjalanandinas/getperjalanandinas.php?action=12&employee_id=$employeeId';
+      var statisticResponse = await http.get(Uri.parse(url));
+
+      if (statisticResponse.statusCode == 200) {
+        var statisticData = json.decode(statisticResponse.body);
+
+        if (statisticData['StatusCode'] == 200) {
+          setState(() {
+            myBusinessTripStatistic = statisticData['Data']['myBusinessTrip'];
+            myLDStatistic = statisticData['Data']['myLPD'];
+            needApprovalStatistic = statisticData['Data']['needApproval'];
+            allBusinessTripStatistic = statisticData['Data']['allBusinessTrip'];
+          });
+        } else {
+          print('Data fetch was successful but server returned an error: ${statisticData['Status']}');
+        }
+      } else {
+        print('Failed to load data: ${statisticResponse.statusCode}');
+      }
 
       String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/perjalanandinas/getperjalanandinas.php?action=6&employee_id=$employeeId';
       var response = await http.get(Uri.parse(apiUrl));
@@ -730,80 +759,6 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
                             ElevatedButton(
                               onPressed: (){
                                 Get.to(const AddNewPerjalananDinas());
-                                // showDialog(
-                                //   context: context, 
-                                //   builder: (_) {
-                                //     return AlertDialog(
-                                //       title: Text('Tambah Perjalanan Dinas'),
-                                //       content: DropdownButtonFormField(
-                                //         value: 'R001',
-                                //         items: [
-                                //           DropdownMenuItem(
-                                //             value: 'R001',
-                                //             child: Text('Permohonan Perjalanan Dinas')
-                                //           ),
-                                //           DropdownMenuItem(
-                                //             value: 'R002',
-                                //             child: Text('Laporan Perjalanan Dinas')
-                                //           )
-                                //         ], 
-                                //         onChanged: (value){
-                                //           if(value == 'R001'){
-                                //             Get.to(addNewInventory());
-                                //           } else if (value == 'R002'){
-                                //             Get.back();
-                                //             showDialog(
-                                //               context: context, 
-                                //               builder: (_){
-                                //                 return AlertDialog(
-                                //                   title: Text('Tambah Laporan Perjalanan Dinas'),
-                                //                   content: DropdownButtonFormField(
-                                //                     value: 'R001',
-                                //                     items: [
-                                //                       DropdownMenuItem(
-                                //                         value: 'R001',
-                                //                         child: Text('myBusinessTrip['']')
-                                //                       ),
-                                //                       DropdownMenuItem(
-                                //                         value: 'R002',
-                                //                         child: Text('Laporan Perjalanan Dinas')
-                                //                       )
-                                //                     ], 
-                                //                     onChanged: (value){
-
-                                //                     }
-                                //                   ),
-                                //                   actions: [
-                                //                     TextButton(
-                                //                       onPressed: () {
-                                //                         Get.back();
-                                //                       }, 
-                                //                       child: Text('Batal')
-                                //                     )
-                                //                   ],
-                                //                 );
-                                //               }
-                                //             );
-                                //           }
-                                //         }
-                                //       ),
-                                //       actions: [
-                                //         TextButton(
-                                //           onPressed: () {
-                                //             Get.back();
-                                //           }, 
-                                //           child: Text("Batal")
-                                //         ),
-                                //          TextButton(
-                                //           onPressed: () {
-                                //             Get.back();
-                                //           }, 
-                                //           child: Text("Oke")
-                                //         )
-                                //       ],
-                                //     );
-                                //   }
-                                // );
                               }, 
                               style: ElevatedButton.styleFrom(
                                 elevation: 0,
@@ -833,9 +788,9 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text('Permintaan saya', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400,)),
+                                      Text('Perjalanan Dinas Saya', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400,)),
                                       SizedBox(height: 5.h,),
-                                      Text('12', style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700,)),
+                                      Text(myBusinessTripStatistic, style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700,)),
                                     ],
                                   ),
                                 )
@@ -855,9 +810,9 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text('Inventaris saya', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400,)),
+                                      Text('LPD saya', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400,)),
                                       SizedBox(height: 5.h,),
-                                      Text('22', style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700,)),
+                                      Text(myLDStatistic, style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700,)),
                                     ],
                                   ),
                                 )
@@ -880,7 +835,7 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
                                       children: [
                                         Text('Butuh persetujuan', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400,)),
                                         SizedBox(height: 5.h,),
-                                        Text('22', style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700,)),
+                                        Text(needApprovalStatistic, style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700,)),
                                       ],
                                     ),
                                   )
@@ -901,9 +856,9 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text('Barang Tidak Terpakai', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400,)),
+                                        Text('Total Perjalanan Dinas', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400,)),
                                         SizedBox(height: 5.h,),
-                                        Text('12', style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700,)),
+                                        Text(allBusinessTripStatistic, style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700,)),
                                       ],
                                     ),
                                   )
@@ -935,6 +890,7 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
                                           ),
                                           GestureDetector(
                                             onTap: () {
+                                              Get.to(ViewMyPerjalananDinas());
                                               // Get.to(const allMyInventoryRequest());
                                             },
                                             child: Text('Lihat semua', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
@@ -1014,6 +970,7 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
                                             ),
                                             GestureDetector(
                                               onTap: () {
+                                                Get.to(ViewAllApprovalPerjalananDinas());
                                                 // Get.to(const allMyInventoryRequest());
                                               },
                                               child: Text('Lihat semua', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
@@ -1091,6 +1048,7 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
                                             ),
                                             GestureDetector(
                                               onTap: () {
+                                                Get.to(ViewMyLPD());
                                                 // Get.to(ViewLPD(businessTripID: businessTripID));
                                                 // Get.to(const allMyInventoryRequest());
                                               },
@@ -1163,6 +1121,7 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
                                             ),
                                             GestureDetector(
                                               onTap: () {
+                                                Get.to(ViewMyLPD());
                                                 // Get.to(const allMyInventoryRequest());
                                               },
                                               child: Text('Lihat semua', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
@@ -1229,6 +1188,7 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
                                             ),
                                             GestureDetector(
                                               onTap: () {
+                                                Get.to(ViewAllApprovalLPD());
                                                 // Get.to(const allMyInventoryRequest());
                                               },
                                               child: Text('Lihat semua', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))

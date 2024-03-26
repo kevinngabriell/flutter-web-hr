@@ -101,7 +101,7 @@ class _MobileLoginState extends State<MobileLogin> {
         },
       );
 
-      if (response.statusCode == 500) {
+      if (response.statusCode == 200) {
         // Successful API call, parse the JSON response
         var result = json.decode(response.body);
         
@@ -171,7 +171,7 @@ class _MobileLoginState extends State<MobileLogin> {
           isLoading = false;
         });
 
-        Get.to(indexMobile(EmployeeName : employeeName, PositionName : positionName));
+        Get.to(indexMobile(EmployeeID: employeeId,));
       } else {
         print('Failed to load data. Status code: ${response.statusCode}');
           setState(() {

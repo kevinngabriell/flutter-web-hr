@@ -45,10 +45,10 @@ class _InventoryIndexState extends State<InventoryIndex> {
   List<Map<String, dynamic>> companyInventory = [];
   List<Map<String, dynamic>> approvalRequestInventory = [];
 
-  String angkaPermintaanSaya = '';
-  String inventarisSaya = '';
-  String butuhPersetujuan = '';
-  String barangTidakTerpakai = '';
+  String angkaPermintaanSaya = '0';
+  String inventarisSaya = '0';
+  String butuhPersetujuan = '0';
+  String barangTidakTerpakai = '0';
 
   String selectedMenu = 'menu1';
 
@@ -58,10 +58,6 @@ class _InventoryIndexState extends State<InventoryIndex> {
     fetchData();
     fetchTopMyRequest();
     fetchTopApprovalRequest();
-    angkaPermintaanSaya = '0';
-    inventarisSaya = '0';
-    butuhPersetujuan = '0';
-    barangTidakTerpakai = '0';
     fetchMyInventory();
     fetchAllInventory();
   }
@@ -121,6 +117,27 @@ class _InventoryIndexState extends State<InventoryIndex> {
       } else {
         print('Failed to load data: ${response.statusCode}');
       }
+
+      String url = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/inventory/getinventory.php?action=12&employee_id=$employeeId';
+      var statisticResponse = await http.get(Uri.parse(url));
+
+      if (statisticResponse.statusCode == 200) {
+        var statisticData = json.decode(statisticResponse.body);
+
+        if (statisticData['StatusCode'] == 200) {
+          setState(() {
+            angkaPermintaanSaya = statisticData['Data']['myRequest'];
+            inventarisSaya = statisticData['Data']['myInventory'];
+            butuhPersetujuan = statisticData['Data']['needApproval'];
+            barangTidakTerpakai = statisticData['Data']['inactiveInventory'];
+          });
+        } else {
+          print('Data fetch was successful but server returned an error: ${statisticData['Status']}');
+        }
+      } else {
+        print('Failed to load data: ${statisticResponse.statusCode}');
+      }
+
 
     } catch (e){
       print('Error: $e');
@@ -794,7 +811,7 @@ class _InventoryIndexState extends State<InventoryIndex> {
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text('Barang Tidak Terpakai', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400,)),
+                                        Text('Inventaris Non-Aktif', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400,)),
                                         SizedBox(height: 5.h,),
                                         Text(barangTidakTerpakai, style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700,)),
                                       ],

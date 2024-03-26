@@ -1,31 +1,32 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:hr_systems_web/logout.dart';
 import 'package:hr_systems_web/web-version/full-access/Event/event.dart';
-import 'package:hr_systems_web/web-version/full-access/Inventory/detailInventoryRequest.dart';
-import 'package:hr_systems_web/web-version/full-access/Performance/performance.dart';
+import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/ViewPerjalananDinas.dart';
 import 'package:hr_systems_web/web-version/full-access/Report/report.dart';
 import 'package:hr_systems_web/web-version/full-access/Salary/salary.dart';
 import 'package:hr_systems_web/web-version/full-access/Settings/setting.dart';
 import 'package:hr_systems_web/web-version/full-access/Structure/structure.dart';
 import 'package:hr_systems_web/web-version/full-access/Training/traning.dart';
+import 'package:hr_systems_web/web-version/full-access/employee.dart';
+import 'package:hr_systems_web/web-version/full-access/index.dart';
 import 'package:hr_systems_web/web-version/full-access/profile.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
-import 'dart:convert';
-import '../../login.dart';
-import '../employee.dart';
-import '../index.dart';
 
-class allApprovalInventoryRequest extends StatefulWidget {
-  const allApprovalInventoryRequest({super.key});
+import '../Performance/performance.dart';
+
+class ViewMyPerjalananDinas extends StatefulWidget {
+  const ViewMyPerjalananDinas({super.key});
 
   @override
-  State<allApprovalInventoryRequest> createState() => _allApprovalInventoryRequestState();
+  State<ViewMyPerjalananDinas> createState() => _ViewMyPerjalananDinasState();
 }
 
-class _allApprovalInventoryRequestState extends State<allApprovalInventoryRequest> {
+class _ViewMyPerjalananDinasState extends State<ViewMyPerjalananDinas> {
   String? leaveoptions;
   String companyName = '';
   String companyAddress = '';
@@ -33,21 +34,17 @@ class _allApprovalInventoryRequestState extends State<allApprovalInventoryReques
   String employeeEmail = '';
   String trimmedCompanyAddress = '';
   final storage = GetStorage();
-  bool isLaoding = false;
+  bool isLoading = false;
+
   List<Map<String, dynamic>> noticationList = [];
-  List<Map<String, dynamic>> approvalRequestInventory = [];
-  bool isSearch = false;
-  List<Map<String, dynamic>> statusList = [];
-  String selectedStatus = '';
-  List<Map<String, dynamic>> approvalRequestInventorySearch = [];
-  TextEditingController txtNamaItem = TextEditingController();
+  List<Map<String, dynamic>> myBusinessTrip = [];
 
   @override
   void initState() {
     super.initState();
-    fetchData();
     fetchNotification();
-    fetchApprovalRequest();
+    fetchData();
+    fetchPerjalananDinas();
   }
 
   Future<void> fetchNotification() async{
@@ -67,7 +64,6 @@ class _allApprovalInventoryRequestState extends State<allApprovalInventoryReques
         print('404, No Data Found');
       }
 
-
     } catch (e){
       print('Error: $e');
     }
@@ -75,7 +71,7 @@ class _allApprovalInventoryRequestState extends State<allApprovalInventoryReques
 
   Future<void> fetchData() async {
     String employeeId = storage.read('employee_id').toString();
-    isLaoding = true;
+    isLoading = true;
     try {
       String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/account/getprofileforallpage.php';
 
@@ -101,69 +97,35 @@ class _allApprovalInventoryRequestState extends State<allApprovalInventoryReques
       } else {
         print('Failed to load data. Status code: ${response.statusCode}');
       }
-
-      String url = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/inventory/getinventory.php?action=13';
-      var statusResponse = await http.get(Uri.parse(url));
-
-      if (statusResponse.statusCode == 200) {
-        var statusData = json.decode(statusResponse.body);
-
-        setState(() {
-          statusList = List<Map<String, dynamic>>.from(statusData['Data']);
-          selectedStatus = statusList[0]['status_id'];
-        });
-      } else {
-        print('Failed to load data: ${statusResponse.statusCode}');
-      }
     } catch (e) {
       print('Exception during API call: $e');
     } finally {
-      isLaoding = false;
+      isLoading = false;
     }
   }
 
-  Future<void> fetchApprovalRequest() async{
-    setState(() {
-      isLaoding = true;
-    });
+  Future<void> fetchPerjalananDinas() async {
+    String employeeId = storage.read('employee_id').toString();
 
-    try{  
-      String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/inventory/approvaltoprequest.php';
+    try{
+      isLoading = true;
 
+      String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/perjalanandinas/getperjalanandinas.php?action=6&employee_id=$employeeId';
       var response = await http.get(Uri.parse(apiUrl));
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body);
 
         setState(() {
-          approvalRequestInventory = List<Map<String, dynamic>>.from(data['Data']);
+          myBusinessTrip = List<Map<String, dynamic>>.from(data['Data']);
         });
       } else {
         print('Failed to load data: ${response.statusCode}');
       }
-
-      String cariApa = txtNamaItem.text;
-      String tanngal = '';
-
-      String searchUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/inventory/getinventory.php?action=15&item_request=$cariApa&last_status=$selectedStatus&insert_dt=$tanngal';
-      var searchResponse = await http.get(Uri.parse(searchUrl));
-
-      if (searchResponse.statusCode == 200) {
-        var searchData = json.decode(searchResponse.body);
-
-        setState(() {
-          approvalRequestInventorySearch = List<Map<String, dynamic>>.from(searchData['Data']);
-        });
-      } else {
-        print('Failed to load data: ${searchResponse.statusCode}');
-      }
-
     } catch (e){
-      print('Error: $e');
+      print(e.toString());
     } finally {
-      setState(() {
-        isLaoding = false;
-      });
+      isLoading = false;
     }
   }
 
@@ -175,10 +137,10 @@ class _allApprovalInventoryRequestState extends State<allApprovalInventoryReques
     var positionId = storage.read('position_id');
 
     return MaterialApp(
-      title: 'Permohonan Saya - Inventaris',
+      title: 'Perjalanan Dinas Saya',
       home: SafeArea(
         child: Scaffold(
-          body: isLaoding ? Center(child: CircularProgressIndicator()) : SingleChildScrollView(
+          body: isLoading ? const Center(child: CircularProgressIndicator(),) : SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,18 +161,18 @@ class _allApprovalInventoryRequestState extends State<allApprovalInventoryReques
                         dense: true,
                         horizontalTitleGap: 0.0, // Adjust this value as needed
                         leading: Container(
-                          margin: EdgeInsets.only(right: 2.0), // Add margin to the right of the image
+                          margin: const EdgeInsets.only(right: 2.0), // Add margin to the right of the image
                           child: Image.asset(
                             'images/kinglab.png',
                             width: MediaQuery.of(context).size.width * 0.08,
                           ),
                         ),
                         title: Text(
-                          "$companyName",
+                          companyName,
                           style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
                         ),
                         subtitle: Text(
-                          '$trimmedCompanyAddress',
+                          trimmedCompanyAddress,
                           style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
                         ),
                       ),
@@ -286,7 +248,7 @@ class _allApprovalInventoryRequestState extends State<allApprovalInventoryReques
                               padding: EdgeInsets.only(left: 5.w, right: 5.w),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Get.to(SalaryIndex());
+                                  Get.to(const SalaryIndex());
                                 },
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
@@ -317,7 +279,7 @@ class _allApprovalInventoryRequestState extends State<allApprovalInventoryReques
                               padding: EdgeInsets.only(left: 5.w, right: 5.w),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Get.to(PerformanceIndex());
+                                  Get.to(const PerformanceIndex());
                                 },
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
@@ -348,7 +310,7 @@ class _allApprovalInventoryRequestState extends State<allApprovalInventoryReques
                               padding: EdgeInsets.only(left: 5.w, right: 5.w),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Get.to(TrainingIndex());
+                                  Get.to(const TrainingIndex());
                                 },
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
@@ -379,7 +341,7 @@ class _allApprovalInventoryRequestState extends State<allApprovalInventoryReques
                               padding: EdgeInsets.only(left: 5.w, right: 5.w),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Get.to(EventIndex());
+                                  Get.to(const EventIndex());
                                 },
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
@@ -410,7 +372,7 @@ class _allApprovalInventoryRequestState extends State<allApprovalInventoryReques
                               padding: EdgeInsets.only(left: 5.w, right: 5.w),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Get.to(ReportIndex());
+                                  Get.to(const ReportIndex());
                                 },
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
@@ -449,7 +411,7 @@ class _allApprovalInventoryRequestState extends State<allApprovalInventoryReques
                               padding: EdgeInsets.only(left: 5.w, right: 5.w),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Get.to(SettingIndex());
+                                  Get.to(const SettingIndex());
                                 },
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
@@ -480,7 +442,7 @@ class _allApprovalInventoryRequestState extends State<allApprovalInventoryReques
                               padding: EdgeInsets.only(left: 5.w, right: 5.w),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Get.to(StructureIndex());
+                                  Get.to(const StructureIndex());
                                 },
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
@@ -524,7 +486,9 @@ class _allApprovalInventoryRequestState extends State<allApprovalInventoryReques
                                             child: const Text('Cancel'),
                                           ),
                                           TextButton(
-                                            onPressed: () {Get.off(const LoginPageDesktop());},
+                                            onPressed: () {
+                                              logoutServicesWeb();
+                                            },
                                             child: const Text('OK',),
                                           ),
                                         ],
@@ -661,20 +625,20 @@ class _allApprovalInventoryRequestState extends State<allApprovalInventoryReques
                                 },
                                 child: Stack(
                                   children: [
-                                    Icon(Icons.notifications),
+                                    const Icon(Icons.notifications),
                                     // if (noti.isNotEmpty)
                                       Positioned(
                                         top: 0,
                                         right: 0,
                                         child: Container(
-                                          padding: EdgeInsets.all(1),
+                                          padding: const EdgeInsets.all(1),
                                           decoration: BoxDecoration(
                                             color: Colors.red,
                                             borderRadius: BorderRadius.circular(10),
                                           ),
                                           child: Text(
                                             noticationList.length.toString(),
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               color: Colors.white,
                                               fontSize: 12,
                                             ),
@@ -715,113 +679,25 @@ class _allApprovalInventoryRequestState extends State<allApprovalInventoryReques
                         ),
                         SizedBox(height: 30.sp,),
                         SizedBox(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Nama Item Request', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700)),
-                                  SizedBox(height: 10.h,),
-                                  SizedBox(
-                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                    child: TextFormField(
-                                      controller: txtNamaItem,
-                                      decoration: const InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                        hintText: 'Masukkan nama item'
-                                      ),
-                                    )
-                                  ),
-                                ],
-                              ),
-                              SizedBox(width: 5.w,),
-                              ElevatedButton(
-                                onPressed: (){
-                                  setState(() {
-                                    isSearch = true;
-                                    fetchApprovalRequest();
-                                  });
-                                }, 
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(20.w, 55.h),
-                                  foregroundColor: Colors.white,
-                                  backgroundColor: const Color(0xFF2A85FF),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8)
-                                  ),
-                                ),
-                                child: Text('Search', style: TextStyle(fontSize: 12.sp))
-                              ),
-                              SizedBox(width: 5.w,),
-                              ElevatedButton(
-                                onPressed: (){
-                                  setState(() {
-                                    isSearch = false;
-                                  });
-                                }, 
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(20.w, 55.h),
-                                  foregroundColor: Colors.white,
-                                  backgroundColor: const Color(0xFF2A85FF),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8)
-                                  ),
-                                ),
-                                child: Text('Reset', style: TextStyle(fontSize: 12.sp))
-                              )
-                            ],
-                          )
-                        ),
-                        SizedBox(height: 30.sp,),
-                        if(isSearch == true)
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height,
-                            child: ListView.builder(
-                              itemCount: approvalRequestInventorySearch.length,
-                              itemBuilder: (context, index){
-                                var itemSearch = approvalRequestInventorySearch[index];
-                                return Padding(
-                                  padding: EdgeInsets.only(bottom: 10.sp),
-                                  child: Card(
-                                    child: ListTile(
-                                      title: Text(itemSearch['employee_name'] + ' | ' + itemSearch['item_request'], style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700)),
-                                      subtitle: Text(itemSearch['status_name'], style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w400)),
-                                      onTap: () {
-                                        Get.to(DetailInventoryRequest((itemSearch['request_id'])));
-                                      },
-                                    ),
-                                  ),
-                                );
-                              }
-                            ),
-                          ),
-                        if(isSearch == false)
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height,
-                            child: ListView.builder(
-                              itemCount: approvalRequestInventory.length,
-                              itemBuilder: (context, index){
-                                var item = approvalRequestInventory[index];
-                                return Card(
+                          height: MediaQuery.of(context).size.height,
+                          child: ListView.builder(
+                            itemCount: myBusinessTrip.length,
+                            itemBuilder: (context, index){
+                              return GestureDetector(
+                                onTap: () {
+                                  Get.to(ViewPerjalananDinas(perjalananDinasID: myBusinessTrip[index]['businesstrip_id'], perjalananDinasStatus: myBusinessTrip[index]['status_name'],  tanggalPermohonan: myBusinessTrip[index]['insert_dt'], namaKota: myBusinessTrip[index]['nama_kota'], lamaDurasi: myBusinessTrip[index]['duration_name'], keterangan: myBusinessTrip[index]['reason'], tim: myBusinessTrip[index]['team'], pembayaran: myBusinessTrip[index]['payment_name'], tranportasi: myBusinessTrip[index]['transport_name'], namaKaryawan: myBusinessTrip[index]['employee_name'], namaDepartemen: myBusinessTrip[index]['department_name'], requestorID: myBusinessTrip[index]['insert_by'],));
+                                },
+                                child: Card(
                                   child: ListTile(
-                                    title: Text(item['employee_name'] + ' | ' + item['item_request'], style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700)),
-                                    subtitle: Text(item['status_name'], style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w400)),
-                                    onTap: () {
-                                      Get.to(DetailInventoryRequest((item['request_id'])));
-                                    },
+                                    title: Text(myBusinessTrip[index]['employee_name'], style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),),
+                                    subtitle: Text('${myBusinessTrip[index]['nama_kota']} (${myBusinessTrip[index]['duration_name']})', style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w400),),
+                                    trailing: Text(myBusinessTrip[index]['status_name'], style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),),
                                   ),
-                                );
-                              }
-                            ),
-                          )
+                                ),
+                              );
+                            }
+                          ),
+                        )
                       ]
                     )
                   )

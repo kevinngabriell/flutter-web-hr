@@ -34,11 +34,17 @@ class _allMyInventoryRequestState extends State<allMyInventoryRequest> {
   String trimmedCompanyAddress = '';
   final storage = GetStorage();
   bool isLaoding = false;
+  bool isSearch = false;
 
   List<Map<String, dynamic>> myRequestInventory = [];
+  List<Map<String, dynamic>> myRequestInventorySearch = [];
   List<Map<String, dynamic>> noticationList = [];
+  List<Map<String, dynamic>> statusList = [];
+  String selectedStatus = '';
+  TextEditingController txtNamaItem = TextEditingController();
+  DateTime? tanggalPengajuan;
 
-   @override
+  @override
   void initState() {
     super.initState();
     fetchData();
@@ -96,6 +102,20 @@ class _allMyInventoryRequestState extends State<allMyInventoryRequest> {
       } else {
         print('Failed to load data. Status code: ${response.statusCode}');
       }
+
+       String url = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/inventory/getinventory.php?action=13';
+      var statusResponse = await http.get(Uri.parse(url));
+
+      if (statusResponse.statusCode == 200) {
+        var statusData = json.decode(statusResponse.body);
+
+        setState(() {
+          statusList = List<Map<String, dynamic>>.from(statusData['Data']);
+          selectedStatus = statusList[0]['status_id'];
+        });
+      } else {
+        print('Failed to load data: ${statusResponse.statusCode}');
+      }
     } catch (e) {
       print('Exception during API call: $e');
     } finally {
@@ -124,6 +144,21 @@ class _allMyInventoryRequestState extends State<allMyInventoryRequest> {
         print('Failed to load data: ${response.statusCode}');
       }
 
+      String cariApa = txtNamaItem.text;
+      String tanngal = tanggalPengajuan.toString();
+
+      String searchUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/inventory/getinventory.php?action=14&employee_id=0000000015&item_request=$cariApa&last_status=$selectedStatus&insert_dt=$tanngal';
+      var searchResponse = await http.get(Uri.parse(searchUrl));
+
+      if (searchResponse.statusCode == 200) {
+        var searchData = json.decode(searchResponse.body);
+
+        setState(() {
+          myRequestInventorySearch = List<Map<String, dynamic>>.from(searchData['Data']);
+        });
+      } else {
+        print('Failed to load data: ${searchResponse.statusCode}');
+      }
     } catch (e){
       print('Error: $e');
     } finally {
@@ -681,24 +716,116 @@ class _allMyInventoryRequestState extends State<allMyInventoryRequest> {
                         ),
                         SizedBox(height: 30.sp,),
                         SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height,
-                          child: ListView.builder(
-                            itemCount: myRequestInventory.length,
-                            itemBuilder: (context, index){
-                              var item = myRequestInventory[index];
-                              return Card(
-                                child: ListTile(
-                                  title: Text(item['employee_name'] + ' | ' + item['item_request'], style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700)),
-                                  subtitle: Text(item['status_name'], style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w400)),
-                                  onTap: () {
-                                    Get.to(DetailInventoryRequest((item['request_id'])));
-                                  },
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Nama Item Request', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700)),
+                                  SizedBox(height: 10.h,),
+                                  SizedBox(
+                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                    child: TextFormField(
+                                      controller: txtNamaItem,
+                                      decoration: const InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                        hintText: 'Masukkan nama item'
+                                      ),
+                                    )
+                                  ),
+                                ],
+                              ),
+                              SizedBox(width: 5.w,),
+                              ElevatedButton(
+                                onPressed: (){
+                                  setState(() {
+                                    isSearch = true;
+                                    fetchMyRequest();
+                                  });
+                                }, 
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0,
+                                  alignment: Alignment.centerLeft,
+                                  minimumSize: Size(20.w, 55.h),
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: const Color(0xFF2A85FF),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)
+                                  ),
                                 ),
-                              );
-                            }
+                                child: Text('Search', style: TextStyle(fontSize: 12.sp))
+                              ),
+                              SizedBox(width: 5.w,),
+                              ElevatedButton(
+                                onPressed: (){
+                                  setState(() {
+                                    isSearch = false;
+                                  });
+                                }, 
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0,
+                                  alignment: Alignment.centerLeft,
+                                  minimumSize: Size(20.w, 55.h),
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: const Color(0xFF2A85FF),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)
+                                  ),
+                                ),
+                                child: Text('Reset', style: TextStyle(fontSize: 12.sp))
+                              )
+                            ],
+                          )
+                        ),
+                        SizedBox(height: 30.sp,),
+                        if(isSearch == true)
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height,
+                            child: ListView.builder(
+                              itemCount: myRequestInventorySearch.length,
+                              itemBuilder: (context, index){
+                                var itemSearch = myRequestInventorySearch[index];
+                                return Padding(
+                                  padding: EdgeInsets.only(bottom: 10.sp),
+                                  child: Card(
+                                    child: ListTile(
+                                      title: Text(itemSearch['employee_name'] + ' | ' + itemSearch['item_request'], style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700)),
+                                      subtitle: Text(itemSearch['status_name'], style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w400)),
+                                      onTap: () {
+                                        Get.to(DetailInventoryRequest((itemSearch['request_id'])));
+                                      },
+                                    ),
+                                  ),
+                                );
+                              }
+                            ),
                           ),
-                        )
+                        if(isSearch == false)
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height,
+                            child: ListView.builder(
+                              itemCount: myRequestInventory.length,
+                              itemBuilder: (context, index){
+                                var item = myRequestInventory[index];
+                                return Padding(
+                                  padding: EdgeInsets.only(bottom: 10.sp),
+                                  child: Card(
+                                    child: ListTile(
+                                      title: Text(item['employee_name'] + ' | ' + item['item_request'], style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700)),
+                                      subtitle: Text(item['status_name'], style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w400)),
+                                      onTap: () {
+                                        Get.to(DetailInventoryRequest((item['request_id'])));
+                                      },
+                                    ),
+                                  ),
+                                );
+                              }
+                            ),
+                          )
                       ]
                     )
                   )

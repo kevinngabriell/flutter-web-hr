@@ -38,9 +38,10 @@ class _MainWebState extends State<MainWeb> {
       builder: (_, child) {
         //Check is mobile or not
         if(ResponsiveWidget.isSmallScreen(context)){
+          print(employeeID);
           //Is there any session or not
           if(employeeID != null){
-            return const indexMobile(EmployeeName: 'EmployeeName', PositionName: 'PositionName');
+            return indexMobile(EmployeeID: employeeID.toString());
           } else {
             return const MobileLogin();
           }

@@ -34,9 +34,16 @@ class _AllInventoryState extends State<AllInventory> {
   String trimmedCompanyAddress = '';
   final storage = GetStorage();
   bool isLaoding = false;
+  bool isSearch = false;
 
+  List<Map<String, dynamic>> allInventorySearch = [];
   List<Map<String, dynamic>> allInventory = [];
   List<Map<String, dynamic>> noticationList = [];
+
+  List<Map<String, dynamic>> statusList = [];
+  String selectedStatus = '';
+
+  TextEditingController txtNamaItem = TextEditingController();
 
    @override
   void initState() {
@@ -124,12 +131,55 @@ class _AllInventoryState extends State<AllInventory> {
         print('Failed to load data: ${response.statusCode}');
       }
 
+      String url = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/inventory/getinventory.php?action=5';
+      var statusResponse = await http.get(Uri.parse(url));
+
+      if (statusResponse.statusCode == 200) {
+        var statusData = json.decode(statusResponse.body);
+
+        setState(() {
+          statusList = List<Map<String, dynamic>>.from(statusData['Data']);
+          selectedStatus = statusList[0]['status_id'];
+        });
+      } else {
+        print('Failed to load data: ${statusResponse.statusCode}');
+      }
+
     } catch (e){
       print('Error: $e');
     } finally {
       setState(() {
         isLaoding = false;
       });
+    }
+  }
+
+  Future<void> search() async {
+    try{
+      isLaoding = true;
+
+      String cariApa = txtNamaItem.text;
+
+      String searchUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/inventory/getinventory.php?action=17&inventory_name=$cariApa';
+
+      var searchResponse = await http.get(Uri.parse(searchUrl));
+
+      if (searchResponse.statusCode == 200) {
+        var searchData = json.decode(searchResponse.body);
+
+        setState(() {
+          allInventorySearch = List<Map<String, dynamic>>.from(searchData['Data']);
+        });
+      } else {
+        setState(() {
+          isLaoding = false;
+        });
+        print('Failed to load data: ${searchResponse.statusCode}');
+      }
+    } catch (e){
+      isLaoding = false;
+    } finally {
+      isLaoding = false;
     }
   }
 
@@ -681,35 +731,135 @@ class _AllInventoryState extends State<AllInventory> {
                         ),
                         SizedBox(height: 30.sp,),
                         SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height,
-                          child: ListView.builder(
-                            itemCount: allInventory.length,
-                            itemBuilder: (context, index){
-                              var item = allInventory[index];
-                              return Card(
-                                child: ListTile(
-                                  title: Text(item['inventory_name'], style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700)),
-                                  subtitle: Text(item['inventory_id'], style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w400)),
-                                  trailing: Container(
-                                    alignment: Alignment.center,
-                                    constraints: BoxConstraints(
-                                      maxWidth: 30.w,
-                                    ),
-                                    decoration: const BoxDecoration(
-                                      borderRadius: BorderRadius.all(Radius.circular(12)),
-                                      color: Colors.green,
-                                    ),
-                                    child: Text(item['status_name'], textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 10.sp),),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Nama Item', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700)),
+                                  SizedBox(height: 10.h,),
+                                  SizedBox(
+                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                    child: TextFormField(
+                                      controller: txtNamaItem,
+                                      decoration: const InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                        hintText: 'Masukkan nama item'
+                                      ),
+                                    )
                                   ),
-                                  onTap: () {
-                                    Get.to(detailInventory((item['inventory_id'])));
-                                  },
+                                ],
+                              ),
+                              SizedBox(width: 5.w,),
+                              ElevatedButton(
+                                onPressed: (){
+                                  setState(() {
+                                    isSearch = true;
+                                    search();
+                                  });
+                                }, 
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0,
+                                  alignment: Alignment.centerLeft,
+                                  minimumSize: Size(20.w, 55.h),
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: const Color(0xFF2A85FF),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)
+                                  ),
                                 ),
-                              );
-                            }
+                                child: Text('Search', style: TextStyle(fontSize: 12.sp))
+                              ),
+                              SizedBox(width: 5.w,),
+                              ElevatedButton(
+                                onPressed: (){
+                                  setState(() {
+                                    isSearch = false;
+                                  });
+                                }, 
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0,
+                                  alignment: Alignment.centerLeft,
+                                  minimumSize: Size(20.w, 55.h),
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: const Color(0xFF2A85FF),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)
+                                  ),
+                                ),
+                                child: Text('Reset', style: TextStyle(fontSize: 12.sp))
+                              )
+                            ],
+                          )
+                        ),
+                        SizedBox(height: 30.sp,),
+                        if(isSearch == true)
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height,
+                            child: ListView.builder(
+                              itemCount: allInventorySearch.length,
+                              itemBuilder: (context, index){
+                                var itemSearch = allInventorySearch[index];
+                                return Padding(
+                                  padding: EdgeInsets.only(bottom: 10.sp),
+                                  child: Card(
+                                    child: ListTile(
+                                      title: Text(itemSearch['inventory_name'], style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700)),
+                                      subtitle: Text(itemSearch['inventory_id'], style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w400)),
+                                      trailing: Container(
+                                        alignment: Alignment.center,
+                                        constraints: BoxConstraints(
+                                          maxWidth: 30.w,
+                                        ),
+                                        decoration: const BoxDecoration(
+                                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                                          color: Colors.green,
+                                        ),
+                                        child: Text(itemSearch['status_name'], textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 10.sp),),
+                                      ),
+                                      onTap: () {
+                                        Get.to(detailInventory((itemSearch['inventory_id'])));
+                                      },
+                                    ),
+                                  ),
+                                );
+                              }
+                            ),
                           ),
-                        )
+                        if(isSearch == false)
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height,
+                            child: ListView.builder(
+                              itemCount: allInventory.length,
+                              itemBuilder: (context, index){
+                                var item = allInventory[index];
+                                return Card(
+                                  child: ListTile(
+                                    title: Text(item['inventory_name'], style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700)),
+                                    subtitle: Text(item['inventory_id'], style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w400)),
+                                    trailing: Container(
+                                      alignment: Alignment.center,
+                                      constraints: BoxConstraints(
+                                        maxWidth: 30.w,
+                                      ),
+                                      decoration: const BoxDecoration(
+                                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                                        color: Colors.green,
+                                      ),
+                                      child: Text(item['status_name'], textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 10.sp),),
+                                    ),
+                                    onTap: () {
+                                      Get.to(detailInventory((item['inventory_id'])));
+                                    },
+                                  ),
+                                );
+                              }
+                            ),
+                          )
                       ]
                     )
                   )
