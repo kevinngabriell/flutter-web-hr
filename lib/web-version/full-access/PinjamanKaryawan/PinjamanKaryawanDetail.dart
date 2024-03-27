@@ -1,10 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:hr_systems_web/services/pdf_downloader.dart';
 import 'package:hr_systems_web/web-version/full-access/Event/event.dart';
 import 'package:hr_systems_web/web-version/full-access/Performance/performance.dart';
-import 'package:hr_systems_web/web-version/full-access/PinjamanKaryawan/PinjamanKaryawanDetail.dart';
+import 'package:hr_systems_web/web-version/full-access/PinjamanKaryawan/PinjamanKaryawanIndex.dart';
 import 'package:hr_systems_web/web-version/full-access/Report/report.dart';
 import 'package:hr_systems_web/web-version/full-access/Salary/salary.dart';
 import 'package:hr_systems_web/web-version/full-access/Settings/setting.dart';
@@ -18,14 +21,23 @@ import '../../login.dart';
 import '../employee.dart';
 import '../index.dart';
 
-class PinjamanKaryawanIndex extends StatefulWidget {
-  const PinjamanKaryawanIndex({super.key});
+class PinjamanKaryawanDetail extends StatefulWidget {
+  final String pinjamanKaryawanID;
+  final String jumlahPinjaman;
+  final String alasanPinjaman;
+  final String caraBayarPinjaman;
+  final String statusPinjaman;
+  final String sudahLunasPinjaman;
+  final String tanggalPengajuan;
+  final String namaKaryawan;
+  final String requestorID;
+  const PinjamanKaryawanDetail({super.key, required this.pinjamanKaryawanID, required this.jumlahPinjaman, required this.alasanPinjaman, required this.caraBayarPinjaman, required this.statusPinjaman, required this.sudahLunasPinjaman, required this.tanggalPengajuan, required this.namaKaryawan, required this.requestorID});
 
   @override
-  State<PinjamanKaryawanIndex> createState() => _PinjamanKaryawanIndexState();
+  State<PinjamanKaryawanDetail> createState() => _PinjamanKaryawanDetailState();
 }
 
-class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
+class _PinjamanKaryawanDetailState extends State<PinjamanKaryawanDetail> {
   String? leaveoptions;
   String companyName = '';
   String companyAddress = '';
@@ -34,21 +46,10 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
   String trimmedCompanyAddress = '';
   final storage = GetStorage();
   bool isLoading = false;
-
   List<Map<String, dynamic>> noticationList = [];
-  List<Map<String, dynamic>> myLoanList = [];
-  List<Map<String, dynamic>> LoanList = [];
+  List<Map<String, dynamic>> historyList = [];
 
-  String myLoan = '';
-  String totalMyLoan = '';
-  String totalLoan = '';
-
-  @override
-  void initState() {
-    super.initState();
-    fetchNotification();
-    fetchData();
-  }
+  String employeeSPV = '';
 
   String formatCurrency2(String value) {
     // Parse the string to a number.
@@ -56,6 +57,56 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
 
     // Format the number as currency.
     return NumberFormat.currency(locale: 'id_ID', symbol: 'Rp. ', decimalDigits: 0).format(numberValue);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchNotification();
+    fetchData();
+    fetchEmployeeSPV();
+    fetchHistory();
+  }
+
+  Future<void> fetchHistory() async {
+    try{  
+      String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/loan/getloan.php?action=4&loan_id=${widget.pinjamanKaryawanID}';
+
+      var response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+
+        setState(() {
+          historyList = List<Map<String, dynamic>>.from(data['Data']);
+        });
+      } else if (response.statusCode == 404){
+        print('404, No Data Found');
+      }
+
+    } catch (e){
+      print('Error: $e');
+    }
+  }
+
+  Future<void> fetchEmployeeSPV() async {
+    String employeeId = storage.read('employee_id').toString();
+    String url = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getemployee.php?action=2&employee_id=${widget.requestorID}';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+
+      setState(() {
+        List<dynamic> employee = data['Data'];
+        if (employee.isNotEmpty) {
+          employeeSPV = employee.isNotEmpty ? employee[0]['employee_spv'] : '-';
+        }
+      });
+    } else {
+      // Handle the case where the server did not return a 200 OK response
+      print("Failed to load members data");
+    }
   }
 
   Future<void> fetchNotification() async{
@@ -109,57 +160,311 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
         print('Failed to load data. Status code: ${response.statusCode}');
       }
 
-      String url = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/loan/getloan.php?action=1&employee_id=$employeeId';
-      var statisticResponse = await http.get(Uri.parse(url));
-
-      if (statisticResponse.statusCode == 200) {
-        var statisticData = json.decode(statisticResponse.body);
-
-        if (statisticData['StatusCode'] == 200) {
-          setState(() {
-            myLoan = statisticData['Data']['myLoan'];
-            totalMyLoan = statisticData['Data']['myTotalLoan'];
-            totalLoan = statisticData['Data']['totalLoan'];
-          });
-        } else {
-          print('Data fetch was successful but server returned an error: ${statisticData['Status']}');
-        }
-      } else {
-        print('Failed to load data: ${statisticResponse.statusCode}');
-      }
-
-      String apiUrlPinjaman = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/loan/getloan.php?action=2&employee_id=$employeeId';
-      var responsePinjaman = await http.get(Uri.parse(apiUrlPinjaman));
-
-      if (responsePinjaman.statusCode == 200) {
-        var dataPinjaman = json.decode(responsePinjaman.body);
-
-        setState(() {
-          myLoanList = List<Map<String, dynamic>>.from(dataPinjaman['Data']);
-
-
-        });
-      } else {
-        print('Failed to load data: ${response.statusCode}');
-      }
-
-      String apiUrlPinjamanKaryawan = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/loan/getloan.php?action=3';
-      var responsePinjamanKaryawan = await http.get(Uri.parse(apiUrlPinjamanKaryawan));
-
-      if (responsePinjamanKaryawan.statusCode == 200) {
-        var dataPinjamanKaryawan = json.decode(responsePinjamanKaryawan.body);
-
-        setState(() {
-          LoanList = List<Map<String, dynamic>>.from(dataPinjamanKaryawan['Data']);
-      
-        });
-      } else {
-        print('Failed to load data: ${response.statusCode}');
-      }
     } catch (e) {
       print('Exception during API call: $e');
     } finally {
       isLoading = false;
+    }
+  }
+  
+  Future<void> actionPinjamanKaryawan(actionId) async {
+    String apiUrl = "https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/loan/loan.php";
+    String employeeId = storage.read('employee_id').toString();
+
+    if(actionId == '1'){
+      try{
+        isLoading = true;
+
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          body: {
+            "action" : "3",
+            "loan_id": widget.pinjamanKaryawanID,
+            "employee_id": widget.requestorID,
+            "spv_id" : employeeId,
+          }
+        );
+
+        if (response.statusCode == 200) {
+          showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Sukses'),
+                content: const Text('Anda telah berhasil mengubah status pinjaman karyawan'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PinjamanKaryawanIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+        } else {
+          showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('Error ${response.body}'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PinjamanKaryawanIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+        }
+
+      } catch (e){
+        showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('Error $e'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PinjamanKaryawanIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+      } finally {
+        isLoading = false;
+      }
+    } else if (actionId == '2'){
+      try{
+        isLoading = true;
+
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          body: {
+            "action" : "4",
+            "loan_id": widget.pinjamanKaryawanID,
+            "employee_id": widget.requestorID,
+            "spv_id" : employeeId,
+            "employee_name" : widget.namaKaryawan
+          }
+        );
+
+        if (response.statusCode == 200) {
+          showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Sukses'),
+                content: const Text('Anda telah berhasil mengubah status pinjaman karyawan'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PinjamanKaryawanIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+        } else {
+          showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('Error ${response.body}'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PinjamanKaryawanIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+        }
+
+      } catch (e){
+        showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('Error $e'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PinjamanKaryawanIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+      } finally {
+        isLoading = false;
+      }
+    } else if (actionId == '3'){
+      try{
+        isLoading = true;
+
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          body: {
+            "action" : "5",
+            "loan_id": widget.pinjamanKaryawanID,
+            "employee_id": widget.requestorID,
+            "hrd_id" : employeeId
+          }
+        );
+
+        if (response.statusCode == 200) {
+          showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Sukses'),
+                content: const Text('Anda telah berhasil mengubah status pinjaman karyawan'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PinjamanKaryawanIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+        } else {
+          showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('Error ${response.body}'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PinjamanKaryawanIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+        }
+
+      } catch (e){
+        showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('Error $e'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PinjamanKaryawanIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+      } finally {
+        isLoading = false;
+      }
+    } else if (actionId == '4'){
+      try{
+        isLoading = true;
+
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          body: {
+            "action" : "6",
+            "loan_id": widget.pinjamanKaryawanID,
+            "employee_id": widget.requestorID,
+            "hrd_id" : employeeId,
+            "employee_name" : widget.namaKaryawan
+          }
+        );
+
+        if (response.statusCode == 200) {
+          showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Sukses'),
+                content: const Text('Anda telah berhasil mengubah status pinjaman karyawan'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PinjamanKaryawanIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+        } else {
+          showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('Error ${response.body}'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PinjamanKaryawanIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+        }
+
+      } catch (e){
+        showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('Error $e'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PinjamanKaryawanIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+      } finally {
+        isLoading = false;
+      }
     }
   }
 
@@ -169,6 +474,7 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
     var employeeId = storage.read('employee_id');
     var photo = storage.read('photo');
     var positionId = storage.read('position_id');
+    String numberAsString = employeeId.toString().padLeft(10, '0');
 
     return MaterialApp(
       title: 'Pinjaman Karyawan',
@@ -710,327 +1016,276 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                           ),
                         ),
                         SizedBox(height: 30.sp,),
-                        if(positionId != 'POS-HR-002')
-                          Row(
+                        Center(child: Text('Pengajuan Pinjaman Karyawan', style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600,))),
+                        SizedBox(height: 30.sp,),
+                        Padding(
+                          padding: EdgeInsets.only(right: 10.sp),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Card(
-                                shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(12))),
-                                color: Colors.white,
-                                shadowColor: Colors.black,
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.36,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(15.0.sp),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text('Jumlah Pinjaman saya', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400,)),
-                                        SizedBox(height: 5.h,),
-                                        Text(myLoan, style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700,)),
-                                      ],
-                                    ),
-                                  )
-                                ),
-                              ),
-                              SizedBox(width: 6.w,),
-                              Card(
-                                shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(12))),
-                                color: Colors.white,
-                                shadowColor: Colors.black,
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.36,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(15.0.sp),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text('Total Pinjaman Saya', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400,)),
-                                        SizedBox(height: 5.h,),
-                                        Text(formatCurrency2(totalMyLoan), style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700,)),
-                                      ],
-                                    ),
-                                  )
-                                ),
-                              ),
-                            ],
-                          ),
-                        if(positionId != 'POS-HR-002')
-                          SizedBox(height: 30.sp,),
-                        if(positionId != 'POS-HR-002' && positionId != 'POS-HR-001' && positionId != 'POS-HR-004' && positionId != 'POS-HR-024' && positionId != 'POS-HR-008')
-                          Card(
-                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
-                            color: Colors.white,
-                            shadowColor: Colors.black,
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.74,
-                              child: Padding(
-                                padding: EdgeInsets.all(15.0.sp),
+                              SizedBox(
+                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text('Pinjaman Saya',style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700,)),
-                                            SizedBox(height: 5.sp,),
-                                            Text( 'Kelola pinjaman saya', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w300,)),
-                                          ],
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                              // Get.to(ViewMyPerjalananDinas());
-                                              // Get.to(const allMyInventoryRequest());
-                                          },
-                                          child: Text('Lihat semua', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
-                                        )
-                                      ],
-                                    ),
-                                    for (int indexA = 0; indexA < 3; indexA++)
-                                          Column(
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () {
-                                                  // Get.to();
-                                                },
-                                                child: Card(
-                                                  child: ListTile(
-                                                    title: Text(
-                                                      indexA < myLoanList.length
-                                                          ? '${myLoanList[indexA]['employee_name']}'
-                                                          : '-',
-                                                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
-                                                    ),
-                                                    subtitle: Text(
-                                                      indexA < myLoanList.length
-                                                          ? formatCurrency2(myLoanList[indexA]['loan_amount'])
-                                                          : '-',
-                                                      style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w400),
-                                                    ),
-                                                    trailing: Text(
-                                                      indexA < myLoanList.length
-                                                          ? '${myLoanList[indexA]['status_name']}'
-                                                          : '-',
-                                                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(height: 10.sp,),
-                                            ],
-                                          ),
+                                    Text('Nomor Permohonan', style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                  )),
+                                    Text(widget.pinjamanKaryawanID),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 5.w,),
+                              SizedBox(
+                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Status Permohonan', style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                  )),
+                                    Text(widget.statusPinjaman),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 5.w,),
+                              SizedBox(
+                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Tanggal Permohonan', style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                  )),
+                                    Text(_formatDate(widget.tanggalPengajuan)),
                                   ],
                                 ),
                               )
-                            ),
-                          ),
-                        if(positionId == 'POS-HR-002')
-                          Row(
-                            children: [
-                              Card(
-                                shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(12))),
-                                color: Colors.white,
-                                shadowColor: Colors.black,
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.235,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(15.0.sp),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text('Jumlah Pinjaman saya', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400,)),
-                                        SizedBox(height: 5.h,),
-                                        Text(myLoan, style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700,)),
-                                      ],
-                                    ),
-                                  )
-                                ),
-                              ),
-                              SizedBox(width: 6.w,),
-                              Card(
-                                shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(12))),
-                                color: Colors.white,
-                                shadowColor: Colors.black,
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.235,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(15.0.sp),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text('Total Pinjaman Saya', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400,)),
-                                        SizedBox(height: 5.h,),
-                                        Text(formatCurrency2(totalMyLoan), style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700,)),
-                                      ],
-                                    ),
-                                  )
-                                ),
-                              ),
-                              SizedBox(width: 6.w,),
-                              Card(
-                                shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(12))),
-                                color: Colors.white,
-                                shadowColor: Colors.black,
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.235,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(15.0.sp),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text('Total Pinjaman', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400,)),
-                                        SizedBox(height: 5.h,),
-                                        Text(formatCurrency2(totalLoan), style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700,)),
-                                      ],
-                                    ),
-                                  )
-                                ),
-                              ),
                             ],
                           ),
-                        if(positionId == 'POS-HR-002' || positionId != 'POS-HR-001' || positionId != 'POS-HR-004' || positionId != 'POS-HR-024' || positionId != 'POS-HR-008')
-                          SizedBox(height: 30.sp,),
-                        if(positionId != 'POS-HR-002' || positionId != 'POS-HR-001' || positionId != 'POS-HR-004' || positionId != 'POS-HR-024' || positionId != 'POS-HR-008')
-                          Row(
+                        ),
+                        SizedBox(height: 15.sp,),
+                        Text('Detail Permohonan', style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600,)),
+                        SizedBox(height: 15.sp,),
+                        Padding(
+                          padding: EdgeInsets.only(right: 10.sp),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Card(
-                                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
-                                color: Colors.white,
-                                shadowColor: Colors.black,
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.36,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(15.0.sp),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text('Pinjaman Saya',style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700,)),
-                                                SizedBox(height: 5.sp,),
-                                                Text( 'Kelola pinjaman saya', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w300,)),
-                                              ],
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                  // Get.to(ViewMyPerjalananDinas());
-                                                  // Get.to(const allMyInventoryRequest());
-                                              },
-                                              child: Text('Lihat semua', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
-                                            )
-                                          ],
-                                        ),
-                                        for (int indexA = 0; indexA < 3; indexA++)
-                                              Column(
-                                                children: [
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      Get.to(PinjamanKaryawanDetail(pinjamanKaryawanID: myLoanList[indexA]['loan_id'], jumlahPinjaman: myLoanList[indexA]['loan_amount'], alasanPinjaman: myLoanList[indexA]['loan_reason'], caraBayarPinjaman: myLoanList[indexA]['loan_topay'], statusPinjaman: myLoanList[indexA]['status_name'], sudahLunasPinjaman: myLoanList[indexA]['is_paid'], tanggalPengajuan: myLoanList[indexA]['insert_dt'], namaKaryawan: myLoanList[indexA]['employee_name'], requestorID: myLoanList[indexA]['insert_by'],));
-                                                    },
-                                                    child: Card(
-                                                      child: ListTile(
-                                                        title: Text(indexA < myLoanList.length ? '${myLoanList[indexA]['employee_name']}' : '-',
-                                                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
-                                                        ),
-                                                        subtitle: Text(indexA < myLoanList.length ? formatCurrency2(myLoanList[indexA]['loan_amount']) : '-',
-                                                          style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w400),
-                                                        ),
-                                                        trailing: Text(indexA < myLoanList.length ? '${myLoanList[indexA]['status_name']}' : '-',
-                                                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 10.sp,),
-                                                ],
-                                              ),
-                                      ],
-                                    ),
-                                  )
+                              SizedBox(
+                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Nama Karyawan', style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                  )),
+                                    Text(widget.namaKaryawan),
+                                  ],
                                 ),
                               ),
-                              SizedBox(width: 10.w,),
-                              Card(
-                                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
-                                color: Colors.white,
-                                shadowColor: Colors.black,
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.36,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(15.0.sp),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text('Pinjaman Karyawan',style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700,)),
-                                                SizedBox(height: 5.sp,),
-                                                Text( 'Kelola pinjaman karyawan', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w300,)),
-                                              ],
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                  // Get.to(ViewMyPerjalananDinas());
-                                                  // Get.to(const allMyInventoryRequest());
-                                              },
-                                              child: Text('Lihat semua', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
-                                            )
-                                          ],
-                                        ),
-                                        for (int indexB = 0; indexB < 3; indexB++)
-                                              Column(
-                                                children: [
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      Get.to(PinjamanKaryawanDetail(pinjamanKaryawanID: LoanList[indexB]['loan_id'], jumlahPinjaman: LoanList[indexB]['loan_amount'], alasanPinjaman: LoanList[indexB]['loan_reason'], caraBayarPinjaman: LoanList[indexB]['loan_topay'], statusPinjaman: LoanList[indexB]['status_name'], sudahLunasPinjaman: LoanList[indexB]['is_paid'], tanggalPengajuan: LoanList[indexB]['insert_dt'], namaKaryawan: LoanList[indexB]['employee_name'], requestorID: LoanList[indexB]['insert_by'],));
-                                                    },
-                                                    child: Card(
-                                                      child: ListTile(
-                                                        title: Text( indexB < LoanList.length? '${LoanList[indexB]['employee_name']}' : '-',
-                                                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
-                                                        ),
-                                                        subtitle: Text( indexB < LoanList.length ? formatCurrency2(LoanList[indexB]['loan_amount']) : '-',
-                                                          style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w400),
-                                                        ),
-                                                        trailing: Text( indexB < LoanList.length ? '${LoanList[indexB]['status_name']}' : '-',
-                                                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 10.sp,),
-                                                ],
-                                              ),
-                                      ],
-                                    ),
-                                  )
+                              SizedBox(width: 5.w,),
+                              SizedBox(
+                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Departemen', style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                  )),
+                                    const Text('Departemen'),
+                                  ],
                                 ),
                               ),
+                              SizedBox(width: 5.w,),
+                              SizedBox(
+                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Kota Tujuan', style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                  )),
+                                    const Text('Jabatan'),
+                                  ],
+                                ),
+                              )
                             ],
                           ),
+                        ),
+                        SizedBox(height: 30.sp,),
+                        Padding(
+                          padding: EdgeInsets.only(right: 10.sp),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Besar Pinjaman', style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                  )),
+                                    Text(formatCurrency2(widget.jumlahPinjaman)),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 5.w,),
+                              SizedBox(
+                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Keperluan Pinjaman', style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                  )),
+                                    Text(widget.alasanPinjaman),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 5.w,),
+                              SizedBox(
+                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Cara Membayar', style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                  )),
+                                    Text(widget.caraBayarPinjaman),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 30.sp,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            if(employeeSPV == numberAsString && widget.statusPinjaman == 'Draft')
+                              Row(
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: (){
+                                      actionPinjamanKaryawan('1');
+                                    }, 
+                                    style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      alignment: Alignment.center,
+                                      minimumSize: Size(40.w, 55.h),
+                                      foregroundColor: const Color(0xFFFFFFFF),
+                                      backgroundColor: Colors.red,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                    ),
+                                    child: const Text('Tolak')
+                                  ),
+                                  SizedBox(width: 5.w,),
+                                  ElevatedButton(
+                                    onPressed: (){
+                                      actionPinjamanKaryawan('2');
+                                    }, 
+                                    style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      alignment: Alignment.center,
+                                      minimumSize: Size(40.w, 55.h),
+                                      foregroundColor: const Color(0xFFFFFFFF),
+                                      backgroundColor: Colors.green,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                    ),
+                                    child: const Text('Terima')
+                                  )
+                                ],
+                              ),
+                            if(positionId == 'POS-HR-002' && widget.statusPinjaman == 'Disetujui oleh manager')
+                              Row(
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: (){
+                                      actionPinjamanKaryawan('3');
+                                    }, 
+                                    style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      alignment: Alignment.center,
+                                      minimumSize: Size(40.w, 55.h),
+                                      foregroundColor: const Color(0xFFFFFFFF),
+                                      backgroundColor: Colors.red,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                    ),
+                                    child: const Text('Tolak')
+                                  ),
+                                  SizedBox(width: 5.w,),
+                                  ElevatedButton(
+                                    onPressed: (){
+                                      actionPinjamanKaryawan('4');
+                                    }, 
+                                    style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      alignment: Alignment.center,
+                                      minimumSize: Size(40.w, 55.h),
+                                      foregroundColor: const Color(0xFFFFFFFF),
+                                      backgroundColor: Colors.green,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                    ),
+                                    child: const Text('Terima')
+                                  )
+                                ],
+                              ),
+                            if(widget.statusPinjaman == 'Disetujui oleh HRD')
+                              ElevatedButton(
+                                onPressed: (){
+                                  String a = widget.pinjamanKaryawanID;
+                                  String b = widget.namaKaryawan;
+                                  String d = formatCurrency2(widget.jumlahPinjaman);
+                                  String e = widget.alasanPinjaman;
+                                  String f = widget.caraBayarPinjaman;
+
+                                  generateAndDisplayPDFPinjamanKaryawan(a, b, 'position', d, e, f, 'spv_name', 'spv_dt', 'hr_name', 'hr_dt', 'insert_dt');
+                                }, 
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0,
+                                  alignment: Alignment.center,
+                                  minimumSize: Size(40.w, 55.h),
+                                  foregroundColor: const Color(0xFFFFFFFF),
+                                  backgroundColor: const Color(0xff4ec3fc),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                ),
+                                child: Text('Download PDF')
+                              )
+                          ]
+                        ),
+                        SizedBox(height: 30.sp,),
+                        Text('Riwayat Permohonan', style: TextStyle(fontSize: 20.sp,fontWeight: FontWeight.w600,)),
+                        SizedBox(height: 30.sp,),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height,
+                          child: ListView.builder(
+                            itemCount: historyList.length,
+                            itemBuilder: (context, index){
+                              var item = historyList[index];
+                              return ListTile(
+                                leading: CircleAvatar(
+                                  backgroundColor: const Color(0xff4ec3fc),
+                                  child: Text('${index + 1}', style: const TextStyle(color: Colors.white),),
+                                ),
+                                title: Text(item['employee_name'], style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),),
+                                subtitle: Text(item['action'], style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400),),
+                                trailing: Text(_formatDate(item['action_dt']), style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400),),
+                              );
+                            }
+                          ),
+                        ),
+                        SizedBox(height: 50.sp,),
                       ]
                     )
                   )
@@ -1048,6 +1303,6 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
     DateTime parsedDate = DateFormat("yyyy-MM-dd HH:mm").parse(date);
 
     // Format the date as "dd MMMM yyyy"
-    return DateFormat("d MMMM yyyy HH:mm").format(parsedDate);
+    return DateFormat("d MMMM yyyy HH:mm", "id").format(parsedDate);
   }
 }

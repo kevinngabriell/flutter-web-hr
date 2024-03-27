@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hr_systems_web/web-version/full-access/Event/event.dart';
 import 'package:hr_systems_web/web-version/full-access/Performance/performance.dart';
+import 'package:hr_systems_web/web-version/full-access/PinjamanKaryawan/PinjamanKaryawanIndex.dart';
 import 'package:hr_systems_web/web-version/full-access/Report/report.dart';
 import 'package:hr_systems_web/web-version/full-access/Salary/currencyformatter.dart';
 import 'package:hr_systems_web/web-version/full-access/Salary/salary.dart';
@@ -40,6 +43,10 @@ class _AddNewPinjamanKaryawanState extends State<AddNewPinjamanKaryawan> {
   String positionName = '';
 
   List<Map<String, dynamic>> noticationList = [];
+
+  TextEditingController txtBesarPinajman = TextEditingController();
+  TextEditingController txtKeperluanPinjaman = TextEditingController();
+  TextEditingController txtCaraMembayar = TextEditingController();
 
   @override
   void initState() {
@@ -146,6 +153,87 @@ class _AddNewPinjamanKaryawanState extends State<AddNewPinjamanKaryawan> {
       print('Exception during API call: $e');
     } finally {
       isLoading = false;
+    }
+  }
+
+  Future<void> actionLoan(action_id) async {
+    if(action_id == '1'){
+      try{
+        isLoading = true;
+        String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/loan/loan.php';
+        String employeeId = storage.read('employee_id').toString();
+
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          body: {
+            "action" : "1",
+            "employee_id": employeeId,
+            "loan_amount": txtBesarPinajman.text.replaceAll(RegExp(r'[^0-9]'), ''),
+            "loan_reason" : txtKeperluanPinjaman.text,
+            "loan_topay" : txtCaraMembayar.text,
+            "status" : '49d9e979-eb4c-11ee-a',
+            "is_paid" : '0',
+          }
+        );
+
+        if (response.statusCode == 200) {
+          showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Sukses'),
+                content: const Text('Anda telah berhasil mengajukan pinjaman karyawan'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PinjamanKaryawanIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+        } else {
+          showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('Error ${response.body}'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PinjamanKaryawanIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+        }
+
+      } catch (e){
+        showDialog(
+          context: context, 
+          builder: (_) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: Text('Error $e'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Get.to(const PinjamanKaryawanIndex());
+                }, 
+                child: const Text("Oke")
+              ),
+            ],
+          );}
+        );
+      } finally {
+        isLoading = false;
+      }
     }
   }
 
@@ -766,6 +854,7 @@ class _AddNewPinjamanKaryawanState extends State<AddNewPinjamanKaryawan> {
                                     )),
                                   SizedBox(height: 10.h,),
                                   TextFormField(
+                                    controller: txtBesarPinajman,
                                     inputFormatters: [
                                       FilteringTextInputFormatter.digitsOnly,
                                       CurrencyFormatter(),
@@ -791,6 +880,7 @@ class _AddNewPinjamanKaryawanState extends State<AddNewPinjamanKaryawan> {
                                     )),
                                   SizedBox(height: 10.h,),
                                   TextFormField(
+                                    controller: txtKeperluanPinjaman,
                                     decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
                                       fillColor: Color.fromRGBO(235, 235, 235, 1),
@@ -812,6 +902,7 @@ class _AddNewPinjamanKaryawanState extends State<AddNewPinjamanKaryawan> {
                                     )),
                                   SizedBox(height: 10.h,),
                                   TextFormField(
+                                    controller: txtCaraMembayar,
                                     decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
                                       fillColor: Color.fromRGBO(235, 235, 235, 1),
@@ -829,7 +920,7 @@ class _AddNewPinjamanKaryawanState extends State<AddNewPinjamanKaryawan> {
                           children: [
                             ElevatedButton(
                               onPressed: (){
-
+                                actionLoan('1');
                               }, 
                               style: ElevatedButton.styleFrom(
                                 elevation: 0,

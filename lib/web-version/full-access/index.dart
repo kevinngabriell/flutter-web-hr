@@ -1448,36 +1448,63 @@ class _FullIndexWebState extends State<FullIndexWeb> {
                               color: Colors.white,
                               shadowColor: Colors.black,
                               child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.495 / 2,
+                                width: MediaQuery.of(context).size.width * 0.35,
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: 17.sp, top: 5.sp, bottom: 15.sp,right: 7.sp),
+                                  padding: EdgeInsets.only(left: 17.sp, top: 5.sp, bottom: 15.sp,right: 17.sp),
                                   child: Column(
                                     children: [
                                       SizedBox(height: 10.sp,),
                                       Row(
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              Get.to(const ShowAllMyPermission());
-                                            },
-                                            child: Text('Izin saya',
-                                              style: TextStyle(
-                                                fontSize: 20.sp, fontWeight: FontWeight.w700,
-                                              )
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text('Izin Saya',
+                                                  style: TextStyle(
+                                                    fontSize: 20.sp, fontWeight: FontWeight.w700,
+                                                  )
+                                                ),
+                                                SizedBox(height: 3.sp,),
+                                                Text( 'Kelola dan tijau izin yang telah diajukan',
+                                                  style: TextStyle(
+                                                    fontSize: 12.sp, fontWeight: FontWeight.w300,
+                                                  )
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 3.sp,),
-                                      Row(
-                                        children: [
-                                          Text( 'Kelola dan tijau izin yang telah diajukan',
-                                            style: TextStyle(
-                                              fontSize: 12.sp, fontWeight: FontWeight.w300,
+                                            GestureDetector(
+                                              onTap: () {
+                                                Get.to(const ShowAllMyPermission());
+                                              },
+                                              child: Text('Lihat semua',  style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
                                             )
-                                          ),
-                                        ],
-                                      ),
+                                          ],
+                                        ),
+                                      // Row(
+                                      //   children: [
+                                      //     GestureDetector(
+                                      //       onTap: () {
+                                      //         Get.to(const ShowAllMyPermission());
+                                      //       },
+                                      //       child: Text('Izin saya',
+                                      //         style: TextStyle(
+                                      //           fontSize: 20.sp, fontWeight: FontWeight.w700,
+                                      //         )
+                                      //       ),
+                                      //     ),
+                                      //   ],
+                                      // ),
+                                      // SizedBox(height: 3.sp,),
+                                      // Row(
+                                      //   children: [
+                                      //     Text( 'Kelola dan tijau izin yang telah diajukan',
+                                      //       style: TextStyle(
+                                      //         fontSize: 12.sp, fontWeight: FontWeight.w300,
+                                      //       )
+                                      //     ),
+                                      //   ],
+                                      // ),
                                       SizedBox( height: 15.sp,),
                                       for (int index = 0; index < 3; index++)
                                         Column(
@@ -1520,34 +1547,37 @@ class _FullIndexWebState extends State<FullIndexWeb> {
                                 color: Colors.white,
                                 shadowColor: Colors.black,
                                 child: SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.495 / 2,
+                                  width: MediaQuery.of(context).size.width * 0.35,
                                   child: Padding(
                                     padding: EdgeInsets.only(left: 17.sp, top: 5.sp, bottom: 15.sp,right: 7.sp),
                                     child: Column(
                                       children: [
                                         SizedBox(height: 10.sp,),
                                         Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text('Persetujuan izin',
+                                                  style: TextStyle(
+                                                    fontSize: 20.sp, fontWeight: FontWeight.w700,
+                                                  )
+                                                ),
+                                                SizedBox(height: 3.sp,),
+                                                Text( 'Terima atau tolak permintaan izin yang masuk',
+                                                  style: TextStyle(
+                                                    fontSize: 12.sp, fontWeight: FontWeight.w300,
+                                                  )
+                                                ),
+                                              ],
+                                            ),
                                             GestureDetector(
                                               onTap: () {
                                                 Get.to(const ShowAllPermissionPage());
                                               },
-                                              child: Text('Persetujuan izin',
-                                                style: TextStyle(
-                                                  fontSize: 20.sp, fontWeight: FontWeight.w700,
-                                                )
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: 3.sp,),
-                                        Row(
-                                          children: [
-                                            Text( 'Terima atau tolak permintaan izin yang masuk',
-                                              style: TextStyle(
-                                                fontSize: 12.sp, fontWeight: FontWeight.w300,
-                                              )
-                                            ),
+                                              child: Text('Lihat semua',  style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
+                                            )
                                           ],
                                         ),
                                         SizedBox( height: 15.sp,),
@@ -1591,36 +1621,50 @@ class _FullIndexWebState extends State<FullIndexWeb> {
                                 color: Colors.white,
                                 shadowColor: Colors.black,
                                 child: SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.495 / 2,
+                                  width: MediaQuery.of(context).size.width * 0.35,
                                   child: Padding(
-                                    padding: EdgeInsets.only(left: 17.sp, top: 5.sp, bottom: 15.sp,right: 7.sp),
+                                    padding: EdgeInsets.only(left: 17.sp, top: 5.sp, bottom: 15.sp,right: 17.sp),
                                     child: Column(
                                       children: [
                                         SizedBox(height: 10.sp,),
                                         Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text('Persetujuan izin',
+                                                  style: TextStyle(
+                                                    fontSize: 20.sp, fontWeight: FontWeight.w700,
+                                                  )
+                                                ),
+                                                SizedBox(height: 3.sp,),
+                                                Text( 'Terima atau tolak permintaan izin yang masuk',
+                                                  style: TextStyle(
+                                                    fontSize: 12.sp, fontWeight: FontWeight.w300,
+                                                  )
+                                                ),
+                                              ],
+                                            ),
                                             GestureDetector(
                                               onTap: () {
                                                 Get.to(const ShowAllPermissionPage());
                                               },
-                                              child: Text('Persetujuan izin',
-                                                style: TextStyle(
-                                                  fontSize: 20.sp, fontWeight: FontWeight.w700,
-                                                )
-                                              ),
-                                            ),
+                                              child: Text('Lihat semua',  style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
+                                            )
                                           ],
                                         ),
-                                        SizedBox(height: 3.sp,),
-                                        Row(
-                                          children: [
-                                            Text( 'Terima atau tolak permintaan izin yang masuk',
-                                              style: TextStyle(
-                                                fontSize: 12.sp, fontWeight: FontWeight.w300,
-                                              )
-                                            ),
-                                          ],
-                                        ),
+                                        // Text('Persetujuan izin',
+                                        //   style: TextStyle(
+                                        //     fontSize: 20.sp, fontWeight: FontWeight.w700,
+                                        //   )
+                                        // ),
+                                        // SizedBox(height: 3.sp,),
+                                        // Text( 'Terima atau tolak permintaan izin yang masuk',
+                                        //   style: TextStyle(
+                                        //     fontSize: 12.sp, fontWeight: FontWeight.w300,
+                                        //   )
+                                        // ),
                                         SizedBox( height: 15.sp,),
                                         for (int indexB = 0; indexB < 3; indexB++)
                                           Column(
@@ -1654,12 +1698,6 @@ class _FullIndexWebState extends State<FullIndexWeb> {
                                   ),
                                 ),
                               ),
-                            Card(
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.495 / 2,
-                                child: const Text('data')
-                              ),
-                            )
                           ],
                         )
                       ],
