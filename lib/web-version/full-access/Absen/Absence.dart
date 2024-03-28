@@ -624,18 +624,6 @@ class _Absence2State extends State<Absence2> {
           )
         ))          
       );
-      //   Scaffold(
-      //     body: Column(
-      //       children: [
-      //         Row(
-      //           main
-      //         )
-      //               // Image.memory(imageData),
-      //               // Text('Timestamp: $timestamp'),
-      //               // Display other data like location if available
-      //       ],
-      //     ),
-      // );
   }
 
   String _formatDate(String date) {

@@ -9,25 +9,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hr_systems_web/web-version/full-access/Employee/EmployeeList.dart';
-import 'package:hr_systems_web/web-version/full-access/Event/event.dart';
-import 'package:hr_systems_web/web-version/full-access/Performance/performance.dart';
-import 'package:hr_systems_web/web-version/full-access/Report/report.dart';
-import 'package:hr_systems_web/web-version/full-access/Salary/salary.dart';
-import 'package:hr_systems_web/web-version/full-access/Settings/setting.dart';
-import 'package:hr_systems_web/web-version/full-access/Structure/structure.dart';
-import 'package:hr_systems_web/web-version/full-access/Training/traning.dart';
+import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart' as dio;
 import 'package:table_calendar/table_calendar.dart';
-import '../../login.dart';
-import '../employee.dart';
-import '../index.dart';
 import 'package:intl/intl.dart';
 
 import '../leave/ShowAllMyPermission.dart';
 import '../leave/ViewOnly.dart';
-import '../profile.dart'; 
 
 class EmployeeOverviewPage extends StatefulWidget {
   final String employeeId;
@@ -897,7 +887,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                 ),
                 Text(
                   'Masa berakhir cuti $expDateCuti ',
-                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400),
+                  style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w400),
                 ),
               ],
             ),
@@ -932,370 +922,33 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 15.sp,),
-                      //company logo and name
-                      ListTile(
-                        contentPadding: const EdgeInsets.only(left: 0, right: 0),
-                        dense: true,
-                        horizontalTitleGap: 0.0, // Adjust this value as needed
-                        leading: Container(
-                          margin: const EdgeInsets.only(right: 2.0), // Add margin to the right of the image
-                          child: Image.asset(
-                            'images/kinglab.png',
-                            width: MediaQuery.of(context).size.width * 0.08,
-                          ),
-                        ),
-                        title: Text(
-                          "$companyName",
-                          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
-                        ),
-                        subtitle: Text(
-                          '$trimmedCompanyAddress',
-                          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
-                        ),
-                      ),
-                      SizedBox(height: 30.sp,),
-                      //halaman utama title
-                      Padding(
-                        padding: EdgeInsets.only(left: 5.w),
-                        child: Text("Halaman utama", 
-                          style: TextStyle( fontSize: 20.sp, fontWeight: FontWeight.w600,)
-                        ),
-                      ),
-                      SizedBox(height: 10.sp,),
-                      //beranda button
-                      Padding(
-                        padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                        child: ElevatedButton(
-                          onPressed: () {Get.to(FullIndexWeb(employeeId));},
-                          style: ElevatedButton.styleFrom(
-                            elevation: 0,
-                            alignment: Alignment.centerLeft,
-                            minimumSize: Size(60.w, 55.h),
-                            foregroundColor: const Color(0xDDDDDDDD),
-                            backgroundColor: const Color(0xFFFFFFFF),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: Image.asset('images/home-inactive.png')
-                              ),
-                              SizedBox(width: 2.w),
-                              Text('Beranda',
-                                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                              )
-                            ],
-                          )
-                        ),
-                          ),
-                      SizedBox(height: 10.sp,),
-                      //karyawan button
-                          Padding(
-                            padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                            child: ElevatedButton(
-                              onPressed: () {Get.to(EmployeePage(employee_id: employeeId,));},
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                alignment: Alignment.centerLeft,
-                                minimumSize: Size(60.w, 55.h),
-                                foregroundColor: const Color(0xFFFFFFFF),
-                                backgroundColor: const Color(0xff4ec3fc),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Image.asset('images/employee-active.png')
-                                  ),
-                                  SizedBox(width: 2.w),
-                                  Text('Karyawan',
-                                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                  )
-                                ],
-                              )
-                            ),
-                          ),
-                          SizedBox(height: 10.sp,),
-                          //gaji button
-                          Padding(
-                            padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Get.to(const SalaryIndex());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                alignment: Alignment.centerLeft,
-                                minimumSize: Size(60.w, 55.h),
-                                foregroundColor: const Color(0xDDDDDDDD),
-                                backgroundColor: const Color(0xFFFFFFFF),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Image.asset('images/gaji-inactive.png')
-                                  ),
-                                  SizedBox(width: 2.w),
-                                  Text('Gaji',
-                                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                  )
-                                ],
-                              )
-                            ),
-                          ),
-                          SizedBox(height: 10.sp,),
-                          //performa button
-                          Padding(
-                            padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Get.to(const PerformanceIndex());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                alignment: Alignment.centerLeft,
-                                minimumSize: Size(60.w, 55.h),
-                                foregroundColor: const Color(0xDDDDDDDD),
-                                backgroundColor: const Color(0xFFFFFFFF),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Image.asset('images/performa-inactive.png')
-                                  ),
-                                  SizedBox(width: 2.w),
-                                  Text('Performa',
-                                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                  )
-                                ],
-                              )
-                            ),
-                          ),
-                          SizedBox(height: 10.sp,),
-                          //pelatihan button
-                          Padding(
-                            padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Get.to(const TrainingIndex());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                alignment: Alignment.centerLeft,
-                                minimumSize: Size(60.w, 55.h),
-                                foregroundColor: const Color(0xDDDDDDDD),
-                                backgroundColor: const Color(0xFFFFFFFF),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Image.asset('images/pelatihan-inactive.png')
-                                  ),
-                                  SizedBox(width: 2.w),
-                                  Text('Pelatihan',
-                                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                  )
-                                ],
-                              )
-                            ),
-                          ),
-                          SizedBox(height: 10.sp,),
-                          //acara button
-                          Padding(
-                            padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Get.to(const EventIndex());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                alignment: Alignment.centerLeft,
-                                minimumSize: Size(60.w, 55.h),
-                                foregroundColor: const Color(0xDDDDDDDD),
-                                backgroundColor: const Color(0xFFFFFFFF),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Image.asset('images/acara-inactive.png')
-                                  ),
-                                  SizedBox(width: 2.w),
-                                  Text('Acara',
-                                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                  )
-                                ],
-                              )
-                            ),
-                          ),
-                          SizedBox(height: 10.sp,),
-                          //laporan button
-                          Padding(
-                              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Get.to(const ReportIndex());
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(60.w, 55.h),
-                                  foregroundColor: const Color(0xDDDDDDDD),
-                                  backgroundColor: const Color(0xFFFFFFFF),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset('images/laporan-inactive.png')
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    Text('Laporan',
-                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                    )
-                                  ],
-                                )
-                              ),
-                            ),
-                          SizedBox(height: 30.sp,),
-                          //pengaturan title
-                          Padding(
-                              padding: EdgeInsets.only(left: 5.w),
-                              child: Text("Pengaturan", 
-                                style: TextStyle( fontSize: 20.sp, fontWeight: FontWeight.w600,)
-                              ),
-                          ),
-                          SizedBox(height: 10.sp,),
-                          //pengaturan button
-                          Padding(
-                            padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Get.to(const SettingIndex());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                alignment: Alignment.centerLeft,
-                                minimumSize: Size(60.w, 55.h),
-                                foregroundColor: const Color(0xDDDDDDDD),
-                                backgroundColor: const Color(0xFFFFFFFF),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Image.asset('images/pengaturan-inactive.png')
-                                  ),
-                                  SizedBox(width: 2.w),
-                                  Text('Pengaturan',
-                                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                  )
-                                ],
-                              )
-                            ),
-                          ),
-                          SizedBox(height: 10.sp,),
-                          //struktur button
-                          Padding(
-                            padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Get.to(const StructureIndex());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                alignment: Alignment.centerLeft,
-                                minimumSize: Size(60.w, 55.h),
-                                foregroundColor: const Color(0xDDDDDDDD),
-                                backgroundColor: const Color(0xFFFFFFFF),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Image.asset('images/struktur-inactive.png')
-                                  ),
-                                  SizedBox(width: 2.w),
-                                  Text('Struktur',
-                                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                  )
-                                ],
-                              )
-                            ),
-                          ),
-                          SizedBox(height: 10.sp,),
-                          //keluar button
-                          Padding(
-                            padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                //show dialog sure to exit ?
-                                showDialog(
-                                  context: context, 
-                                  builder: (_) {
-                                    return AlertDialog(
-                                      title: const Text("Keluar"),
-                                      content: const Text('Apakah anda yakin akan keluar ?'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {Get.back();},
-                                          child: const Text('Cancel'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {Get.off(const LoginPageDesktop());},
-                                          child: const Text('OK',),
-                                        ),
-                                      ],
-                                    );
-                                  }
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                alignment: Alignment.centerLeft,
-                                minimumSize: Size(60.w, 55.h),
-                                foregroundColor: const Color(0xDDDDDDDD),
-                                backgroundColor: const Color(0xFFFFFFFF),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Image.asset('images/logout.png')
-                                  ),
-                                  SizedBox(width: 2.w),
-                                  Text('Keluar',
-                                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, color: Colors.red)
-                                  )
-                                ],
-                              )
-                            ),
-                          ),
-                          SizedBox(height: 30.sp,),
+                      SizedBox(height: 5.sp,),
+                        NamaPerusahaanMenu(companyName: companyName, companyAddress: trimmedCompanyAddress),
+                        SizedBox(height: 10.sp,),
+                        const HalamanUtamaMenu(),
+                        SizedBox(height: 5.sp,),
+                        BerandaNonActive(employeeId: employeeId.toString()),
+                        SizedBox(height: 5.sp,),
+                        KaryawanActive(employeeId: employeeId.toString()),
+                        SizedBox(height: 5.sp,),
+                        const GajiNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const PerformaNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const PelatihanNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const AcaraNonActive(),
+                        SizedBox(height: 5.sp,),
+                        LaporanNonActive(positionId: positionId.toString()),
+                        SizedBox(height: 10.sp,),
+                        const PengaturanMenu(),
+                        SizedBox(height: 5.sp,),
+                        const PengaturanNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const StrukturNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const Logout(),
+                        SizedBox(height: 30.sp,),
                     ],
                   ),
                 ),
@@ -1309,39 +962,9 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 15.sp,),
-                      //Profile Name
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width / 4.5,
-                            child: GestureDetector(
-                              onTap: () {
-                                Get.to(const ProfilePage());
-                              },
-                              child: ListTile(
-                                contentPadding: const EdgeInsets.only(left: 0, right: 0),
-                                dense: true,
-                                horizontalTitleGap: 20.0,
-                                leading: Container(
-                                  margin: const EdgeInsets.only(right: 2.0),
-                                  child: Image.memory(
-                                    base64Decode(photo),
-                                  ),
-                                ),
-                                title: Text("$employeeName",
-                                  style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
-                                ),
-                                subtitle: Text("$employeeEmail",
-                                  style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 30.sp,),
+                      SizedBox(height: 5.sp,),
+                      NotificationnProfile(employeeName: employeeName, employeeAddress: employeeEmail, photo: photo),
+                      SizedBox(height: 7.sp,),
                       TabBar(
                         isScrollable: false,
                         controller: tabController,
@@ -1352,7 +975,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                             child: Text(
                               'Overview', 
                               style: TextStyle(
-                                fontSize: 15.sp, 
+                                fontSize: 4.sp, 
                                 fontWeight: FontWeight.w400,
                                 //color: tabController.index == 0 ? Color.fromRGBO(78, 195, 252, 1) : Colors.black
                               ),
@@ -1362,7 +985,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                             child: Text(
                               'Absen', 
                               style: TextStyle(
-                                fontSize: 15.sp, 
+                                fontSize: 4.sp, 
                                 fontWeight: FontWeight.w400,
                                 //color: Colors.black
                               ),
@@ -1372,7 +995,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                             child: Text(
                               'Cuti', 
                               style: TextStyle(
-                                fontSize: 15.sp, 
+                                fontSize: 4.sp, 
                                 fontWeight: FontWeight.w400,
                                 //color: Colors.black
                               ),
@@ -1382,7 +1005,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                             child: Text(
                               'Performa', 
                               style: TextStyle(
-                                fontSize: 15.sp, 
+                                fontSize: 4.sp, 
                                 fontWeight: FontWeight.w400,
                                 //color: Colors.black
                               ),
@@ -1392,7 +1015,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                             child: Text(
                               'Permohonan', 
                               style: TextStyle(
-                                fontSize: 15.sp, 
+                                fontSize: 4.sp, 
                                 fontWeight: FontWeight.w400,
                                 //color: Colors.black
                               ),
@@ -1402,7 +1025,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                             child: Text(
                               'Dokumen', 
                               style: TextStyle(
-                                fontSize: 15.sp, 
+                                fontSize: 4.sp, 
                                 fontWeight: FontWeight.w400,
                                 //color: Colors.black
                               ),
@@ -1412,7 +1035,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                             child: Text(
                               'Riwayat', 
                               style: TextStyle(
-                                fontSize: 15.sp, 
+                                fontSize: 4.sp, 
                                 fontWeight: FontWeight.w400,
                                 //color: Colors.black
                               ),
@@ -1459,24 +1082,24 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                 child: SizedBox(
                                                   width: MediaQuery.of(context).size.width / 2,
                                                   child: Padding(
-                                                    padding: EdgeInsets.all(15.sp),
+                                                    padding: EdgeInsets.all(4.sp),
                                                     child: Column(
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         Text('Informasi Umum', 
                                                           style: TextStyle(
-                                                            fontSize: 24.sp,
+                                                            fontSize: 7.sp,
                                                             fontWeight: FontWeight.w700,
                                                           ),
                                                         ),
-                                                        SizedBox(height: 30.h,),
+                                                        SizedBox(height: 10.h,),
                                                         Row(
                                                           children: [
                                                             SizedBox(
                                                               width: (MediaQuery.of(context).size.width - 900) / 2,
                                                               child: Text('NIK', 
                                                                 style: TextStyle(
-                                                                  fontSize: 14.sp,
+                                                                  fontSize: 4.sp,
                                                                   fontWeight: FontWeight.w700,
                                                                 )
                                                               )
@@ -1494,7 +1117,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                               width: (MediaQuery.of(context).size.width - 900) / 2,
                                                               child: Text('Nama lengkap', 
                                                                 style: TextStyle(
-                                                                  fontSize: 14.sp,
+                                                                  fontSize: 4.sp,
                                                                   fontWeight: FontWeight.w700,
                                                                 )
                                                               )
@@ -1512,7 +1135,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                               width: (MediaQuery.of(context).size.width - 900) / 2,
                                                               child: Text('Tempat, tanggal lahir', 
                                                                 style: TextStyle(
-                                                                  fontSize: 14.sp,
+                                                                  fontSize: 4.sp,
                                                                   fontWeight: FontWeight.w700,
                                                                 )
                                                               )
@@ -1530,7 +1153,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                               width: (MediaQuery.of(context).size.width - 900) / 2,
                                                               child: Text('Jenis kelamin', 
                                                                 style: TextStyle(
-                                                                  fontSize: 14.sp,
+                                                                  fontSize: 4.sp,
                                                                   fontWeight: FontWeight.w700,
                                                                 )
                                                               )
@@ -1548,7 +1171,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                               width: (MediaQuery.of(context).size.width - 900) / 2,
                                                               child: Text('Nomor KTP', 
                                                                 style: TextStyle(
-                                                                  fontSize: 14.sp,
+                                                                  fontSize: 4.sp,
                                                                   fontWeight: FontWeight.w700,
                                                                 )
                                                               )
@@ -1566,7 +1189,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                               width: (MediaQuery.of(context).size.width - 900) / 2,
                                                               child: Text('Username', 
                                                                 style: TextStyle(
-                                                                  fontSize: 14.sp,
+                                                                  fontSize: 4.sp,
                                                                   fontWeight: FontWeight.w700,
                                                                 )
                                                               )
@@ -1584,7 +1207,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                               width: (MediaQuery.of(context).size.width - 900) / 2,
                                                               child: Text('Email', 
                                                                 style: TextStyle(
-                                                                  fontSize: 14.sp,
+                                                                  fontSize: 4.sp,
                                                                   fontWeight: FontWeight.w700,
                                                                 )
                                                               )
@@ -1602,7 +1225,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                               width: (MediaQuery.of(context).size.width - 900) / 2,
                                                               child: Text('Nomor handphone', 
                                                                 style: TextStyle(
-                                                                  fontSize: 14.sp,
+                                                                  fontSize: 4.sp,
                                                                   fontWeight: FontWeight.w700,
                                                                 )
                                                               )
@@ -1626,7 +1249,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                               width: (MediaQuery.of(context).size.width - 900) / 2,
                                                               child: Text('Status', 
                                                                 style: TextStyle(
-                                                                  fontSize: 14.sp,
+                                                                  fontSize: 4.sp,
                                                                   fontWeight: FontWeight.w700,
                                                                 )
                                                               )
@@ -1650,7 +1273,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                               width: (MediaQuery.of(context).size.width - 900) / 2,
                                                               child: Text('Supervisor', 
                                                                 style: TextStyle(
-                                                                  fontSize: 14.sp,
+                                                                  fontSize: 4.sp,
                                                                   fontWeight: FontWeight.w700,
                                                                 )
                                                               )
@@ -1686,13 +1309,13 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                           child: SizedBox(
                                             width: MediaQuery.of(context).size.width / 2,
                                             child: Padding(
-                                              padding: EdgeInsets.all(15.sp),
+                                              padding: EdgeInsets.all(4.sp),
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Text('Catatan Posisi', 
                                                     style: TextStyle(
-                                                      fontSize: 24.sp,
+                                                      fontSize: 7.sp,
                                                       fontWeight: FontWeight.w700,
                                                     ),
                                                   ),
@@ -1966,15 +1589,11 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                       width: (MediaQuery.of(context).size.width - 160.w) / 4,
                                       child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
-                                          minimumSize:
-                                            Size(0.sp, 45.sp),
-                                            foregroundColor:
-                                              const Color(0xFFFFFFFF),
-                                            backgroundColor:
-                                              const Color(0xff4ec3fc),
+                                          minimumSize: Size(40.w, 55.h),
+                                          foregroundColor: const Color(0xFFFFFFFF),
+                                            backgroundColor: const Color(0xff4ec3fc),
                                             shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                BorderRadius.circular(8),
+                                              borderRadius: BorderRadius.circular(8),
                                             ),
                                         ),
                                         child: Container(
@@ -1982,9 +1601,10 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(8),
                                           ),
-                                          child: const Text(
+                                          child: Text(
                                             'Absen Manual',
                                             textAlign: TextAlign.center,
+                                            style: TextStyle(fontSize: 4.sp),
                                           ),
                                         ),
                                         onPressed: () async => {
@@ -1996,7 +1616,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                   'Input absen', 
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                    fontSize: 18.sp,
+                                                    fontSize: 7.sp,
                                                     fontWeight: FontWeight.w800
                                                   ),
                                                 ),
@@ -2016,7 +1636,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                             children: [
                                                               Text( 'Tipe Absen',
                                                                 style: TextStyle(
-                                                                  fontSize: 15.sp,
+                                                                  fontSize: 4.sp,
                                                                   fontWeight: FontWeight.w700,
                                                                 ),
                                                               ),
@@ -2045,7 +1665,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                               Text(
                                                                 'Tanggal Absen',
                                                                 style: TextStyle(
-                                                                  fontSize: 15.sp,
+                                                                  fontSize: 4.sp,
                                                                   fontWeight: FontWeight.w700,
                                                                 ),
                                                               ),
@@ -2074,7 +1694,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                             children: [
                                                               Text( 'Jam Absen',
                                                                 style: TextStyle(
-                                                                  fontSize: 15.sp,
+                                                                  fontSize: 4.sp,
                                                                   fontWeight: FontWeight.w700,
                                                                 ),
                                                               ),
@@ -2094,7 +1714,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                               Text(
                                                                 'Lokasi Absen',
                                                                 style: TextStyle(
-                                                                  fontSize: 15.sp,
+                                                                  fontSize: 4.sp,
                                                                   fontWeight: FontWeight.w700,
                                                                 ),
                                                               ),
@@ -2199,7 +1819,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                       titleTextStyle: TextStyle(
                                         color: Colors.black,
                                         fontFamily: 'RobotoBold',
-                                        fontSize: 18.sp,
+                                        fontSize: 7.sp,
                                       ),
                                       formatButtonDecoration: const BoxDecoration(
                                         color: Colors.blue,
@@ -2293,7 +1913,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                               'Detail Absen', 
                                                               textAlign: TextAlign.center,
                                                               style: TextStyle(
-                                                                fontSize: 18.sp,
+                                                                fontSize: 7.sp,
                                                                 fontWeight: FontWeight.w800
                                                               ),
                                                             ),
@@ -2324,7 +1944,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                                           Text(
                                                                             'Tipe Absen',
                                                                             style: TextStyle(
-                                                                              fontSize: 15.sp,
+                                                                              fontSize: 4.sp,
                                                                               fontWeight: FontWeight.w700,
                                                                             ),
                                                                           ),
@@ -2348,7 +1968,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                                           Text(
                                                                             'Tanggal Absen',
                                                                             style: TextStyle(
-                                                                              fontSize: 15.sp,
+                                                                              fontSize: 4.sp,
                                                                               fontWeight: FontWeight.w700,
                                                                             ),
                                                                           ),
@@ -2372,7 +1992,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                                           Text(
                                                                             'Jam Absen',
                                                                             style: TextStyle(
-                                                                              fontSize: 15.sp,
+                                                                              fontSize: 4.sp,
                                                                               fontWeight: FontWeight.w700,
                                                                             ),
                                                                           ),
@@ -2405,7 +2025,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                                           Text(
                                                                             'Lokasi',
                                                                             style: TextStyle(
-                                                                              fontSize: 15.sp,
+                                                                              fontSize: 4.sp,
                                                                               fontWeight: FontWeight.w700,
                                                                             ),
                                                                           ),
@@ -2660,7 +2280,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                     child: SizedBox(
                                        width: (MediaQuery.of(context).size.width),
                                       child: Padding(
-                                        padding: EdgeInsets.only(left: 17.sp, top: 5.sp, bottom: 15.sp,right: 7.sp),
+                                        padding: EdgeInsets.only(left: 17.sp, top: 5.sp, bottom: 4.sp,right: 7.sp),
                                         child: Column(
                                           children: [
                                             SizedBox(height: 10.sp,),
@@ -2688,7 +2308,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                 ),
                                               ],
                                             ),
-                                            SizedBox( height: 15.sp,),
+                                            SizedBox( height: 4.sp,),
                                             for (int index = 0; index < 3; index++)
                                               Column(
                                                 children: [
@@ -2702,7 +2322,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                           index < permissionDataLimit.length
                                                               ? '${permissionDataLimit[index]['employee_name']} | ${permissionDataLimit[index]['permission_type_name']}'
                                                               : '-',
-                                                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
+                                                          style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w700),
                                                         ),
                                                         subtitle: Text(
                                                           index < permissionDataLimit.length

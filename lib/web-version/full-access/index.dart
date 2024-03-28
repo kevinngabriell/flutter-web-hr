@@ -16,6 +16,7 @@ import 'package:hr_systems_web/logout.dart';
 import 'package:hr_systems_web/web-version/full-access/Absen/Absence.dart';
 import 'package:hr_systems_web/web-version/full-access/Absen/ListEmployeeAbsence.dart';
 import 'package:hr_systems_web/web-version/full-access/Absen/VerifyABsence.dart';
+import 'package:hr_systems_web/web-version/full-access/Employee/AddRequestNewEmployee.dart';
 import 'package:hr_systems_web/web-version/full-access/Employee/RequestNewEmployee.dart';
 import 'package:hr_systems_web/web-version/full-access/Employee/ResignForm.dart';
 import 'package:hr_systems_web/web-version/full-access/Event/event.dart';
@@ -776,7 +777,7 @@ class _FullIndexWebState extends State<FullIndexWeb> {
                                                     Get.to(const NewInventoryRequest());
                                                   } else if (requestoptions == '007') {
                                                     if(positionId == 'POS-HR-001' || positionId == 'POS-HR-002' || positionId == 'POS-HR-004' || positionId == 'POS-HR-005' || positionId == 'POS-HR-008' || positionId == 'POS-HR-024'){
-                                                      Get.to(const RequestNewEmployee());
+                                                      Get.to(const AddRequestNewEmployee());
                                                     } else {
                                                       showDialog(
                                                         context: context, 
@@ -824,7 +825,7 @@ class _FullIndexWebState extends State<FullIndexWeb> {
                                   if(positionId == 'POS-HR-002')
                                     GestureDetector(
                                       onTap: () {
-                                        Get.to(VerifyAbsence());
+                                        Get.to(const VerifyAbsence());
                                       },
                                       child: SizedBox(
                                         width: MediaQuery.of(context).size.width * 0.49 / 5,

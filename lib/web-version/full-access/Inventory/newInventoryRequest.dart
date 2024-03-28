@@ -530,19 +530,24 @@ class _NewInventoryRequestState extends State<NewInventoryRequest> {
                         ],
                       ),
                       SizedBox(height: 10.sp,),
-                      ElevatedButton(
-                        onPressed: () async {
-                          sendRequest();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(0.sp, 45.sp),
-                          foregroundColor: const Color(0xFFFFFFFF),
-                          backgroundColor: const Color(0xff4ec3fc),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () async {
+                              sendRequest();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: Size(40.w, 55.h),
+                              foregroundColor: const Color(0xFFFFFFFF),
+                              backgroundColor: const Color(0xff4ec3fc),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: const Text('Kumpulkan')
                           ),
-                        ),
-                        child: const Text('Kumpulkan')
+                        ],
                       )
                     ]
                   )
