@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, file_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -266,11 +268,11 @@ class _InventoryIndexState extends State<InventoryIndex> {
                           ),
                         ),
                         title: Text(
-                          "$companyName",
+                          companyName,
                           style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
                         ),
                         subtitle: Text(
-                          '$trimmedCompanyAddress',
+                          trimmedCompanyAddress,
                           style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
                         ),
                       ),
@@ -646,10 +648,10 @@ class _InventoryIndexState extends State<InventoryIndex> {
                                     base64Decode(photo),
                                   ),
                                 ),
-                                title: Text("$employeeName",
+                                title: Text(employeeName,
                                   style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                                 ),
-                                subtitle: Text('$employeeEmail',
+                                subtitle: Text(employeeEmail,
                                   style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                                 ),
                               ),
@@ -973,7 +975,7 @@ class _InventoryIndexState extends State<InventoryIndex> {
                                             ),
                                             GestureDetector(
                                               onTap: () {
-                                                  Get.to(AllMyInventory());
+                                                  Get.to(const AllMyInventory());
                                               },
                                               child: Text('Lihat semua', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
                                             )
@@ -1048,7 +1050,7 @@ class _InventoryIndexState extends State<InventoryIndex> {
                                             ),
                                             GestureDetector(
                                               onTap: () {
-                                                  Get.to(AllInventory());
+                                                  Get.to(const AllInventory());
                                               },
                                               child: Text('Lihat semua', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
                                             )

@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, avoid_print, non_constant_identifier_names, file_names
 
 import 'dart:convert';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,7 +22,7 @@ import 'package:intl/intl.dart';
 
 class DetailInventoryRequest extends StatefulWidget {
   final String request_id;
-  DetailInventoryRequest(this.request_id, {super.key});
+  const DetailInventoryRequest(this.request_id, {super.key});
 
   @override
   State<DetailInventoryRequest> createState() => _DetailInventoryRequestState();
@@ -128,8 +128,6 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
         } else { 
 
         }
-      } catch (e){
-
       } finally {
         isLoading = false;
       }
@@ -162,7 +160,7 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
-                      Get.to(InventoryIndex());
+                      Get.to(const InventoryIndex());
                     }, 
                     child: const Text("Oke")
                   ),
@@ -180,7 +178,7 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
-                      Get.to(InventoryIndex());
+                      Get.to(const InventoryIndex());
                     }, 
                     child: const Text("Oke")
                   ),
@@ -200,7 +198,7 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
-                      Get.to(InventoryIndex());
+                      Get.to(const InventoryIndex());
                     }, 
                     child: const Text("Oke")
                   ),
@@ -238,7 +236,7 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
-                      Get.to(InventoryIndex());
+                      Get.to(const InventoryIndex());
                     }, 
                     child: const Text("Oke")
                   ),
@@ -256,7 +254,7 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
-                      Get.to(InventoryIndex());
+                      Get.to(const InventoryIndex());
                     }, 
                     child: const Text("Oke")
                   ),
@@ -276,7 +274,7 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
-                      Get.to(InventoryIndex());
+                      Get.to(const InventoryIndex());
                     }, 
                     child: const Text("Oke")
                   ),
@@ -313,7 +311,7 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
-                      Get.to(InventoryIndex());
+                      Get.to(const InventoryIndex());
                     }, 
                     child: const Text("Oke")
                   ),
@@ -331,7 +329,7 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
-                      Get.to(InventoryIndex());
+                      Get.to(const InventoryIndex());
                     }, 
                     child: const Text("Oke")
                   ),
@@ -351,7 +349,7 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
-                      Get.to(InventoryIndex());
+                      Get.to(const InventoryIndex());
                     }, 
                     child: const Text("Oke")
                   ),
@@ -389,7 +387,7 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
-                      Get.to(InventoryIndex());
+                      Get.to(const InventoryIndex());
                     }, 
                     child: const Text("Oke")
                   ),
@@ -407,7 +405,7 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
-                      Get.to(InventoryIndex());
+                      Get.to(const InventoryIndex());
                     }, 
                     child: const Text("Oke")
                   ),
@@ -427,7 +425,7 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
-                      Get.to(InventoryIndex());
+                      Get.to(const InventoryIndex());
                     }, 
                     child: const Text("Oke")
                   ),
@@ -467,7 +465,7 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
-                      Get.to(InventoryIndex());
+                      Get.to(const InventoryIndex());
                     }, 
                     child: const Text("Oke")
                   ),
@@ -485,7 +483,7 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
-                      Get.to(InventoryIndex());
+                      Get.to(const InventoryIndex());
                     }, 
                     child: const Text("Oke")
                   ),
@@ -505,7 +503,7 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
-                      Get.to(InventoryIndex());
+                      Get.to(const InventoryIndex());
                     }, 
                     child: const Text("Oke")
                   ),
@@ -533,8 +531,8 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
   Future<void> historyRequest() async {
     try{  
       isLoading = true;
-      String request_id = widget.request_id;
-      String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/inventory/getinventory.php?action=11&request_id=$request_id';
+      String requestId = widget.request_id;
+      String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/inventory/getinventory.php?action=11&request_id=$requestId';
 
       var response = await http.get(Uri.parse(apiUrl));
 
@@ -595,11 +593,11 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                             ),
                           ),
                           title: Text(
-                            "$companyName",
+                            companyName,
                             style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
                           ),
                           subtitle: Text(
-                            '$trimmedCompanyAddress',
+                            trimmedCompanyAddress,
                             style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
                           ),
                         ),
@@ -979,10 +977,10 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                                   base64Decode(photo),
                                 ),
                               ),
-                                  title: Text("$employeeName",
+                                  title: Text(employeeName,
                                     style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                                   ),
-                                  subtitle: Text("$employeeEmail",
+                                  subtitle: Text(employeeEmail,
                                     style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                                   ),
                                 ),
@@ -1031,7 +1029,7 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w600,
                                   )),
-                                    Text('inventoryLocation'),
+                                    const Text('inventoryLocation'),
                                   ],
                                 ),
                               ),
@@ -1045,7 +1043,7 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w600,
                                   )),
-                                    Text('paymentMethod'),
+                                    const Text('paymentMethod'),
                                   ],
                                 ),
                               ),
@@ -1332,367 +1330,365 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                                             title: const Center(child: Text('List Asset Kantor')),
                                             content: Column(
                                               children: [
-                                                Container(
-                                                  child: FutureBuilder<List<dynamic>>(
-                                                    future: fetchInventory(), 
-                                                    builder: (context, snapshot){
-                                                      if (snapshot.connectionState == ConnectionState.waiting) {
-                                                        return const Center(child: CircularProgressIndicator());
-                                                      } else if (snapshot.hasError) {
-                                                        return Text("Error: ${snapshot.error}");
-                                                      } else {
-                                                        return SizedBox(
-                                                          width: MediaQuery.of(context).size.width,
-                                                          height: MediaQuery.of(context).size.height - 325.h,
-                                                          child: ListView.builder(
-                                                            itemCount: snapshot.data?.length ?? 0,
-                                                            itemBuilder: (context, index) {
-                                                              var inventory = snapshot.data![index];
-                                                              return ListTile(
-                                                                titleAlignment: ListTileTitleAlignment.center,
-                                                                title: Text('${inventory['inventory_name']} | ${inventory['status_name']}'),
-                                                                subtitle: Text('${inventory['inventory_id']}'),
-                                                                onTap: () {
-                                                                  showDialog(
-                                                                    context: context, 
-                                                                    builder: (_){
-                                                                      return AlertDialog(
-                                                                        title: Text('Detail Assets ${inventory['inventory_name']}', style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700),),
-                                                                        content: Column(
-                                                                          children: [
-                                                                            SizedBox(height: 20.h,),
-                                                                            SizedBox(
-                                                                              width: MediaQuery.of(context).size.width - 150.w,
-                                                                              child: Row(
-                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                children: [
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Nama Inventaris', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(inventory['inventory_name'])
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Kategori Inventaris', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(inventory['inventory_category_name'])
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Nomor Inventaris', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(inventory['inventory_id'])
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                ],
-                                                                              ),
+                                                FutureBuilder<List<dynamic>>(
+                                                  future: fetchInventory(), 
+                                                  builder: (context, snapshot){
+                                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                                      return const Center(child: CircularProgressIndicator());
+                                                    } else if (snapshot.hasError) {
+                                                      return Text("Error: ${snapshot.error}");
+                                                    } else {
+                                                      return SizedBox(
+                                                        width: MediaQuery.of(context).size.width,
+                                                        height: MediaQuery.of(context).size.height - 325.h,
+                                                        child: ListView.builder(
+                                                          itemCount: snapshot.data?.length ?? 0,
+                                                          itemBuilder: (context, index) {
+                                                            var inventory = snapshot.data![index];
+                                                            return ListTile(
+                                                              titleAlignment: ListTileTitleAlignment.center,
+                                                              title: Text('${inventory['inventory_name']} | ${inventory['status_name']}'),
+                                                              subtitle: Text('${inventory['inventory_id']}'),
+                                                              onTap: () {
+                                                                showDialog(
+                                                                  context: context, 
+                                                                  builder: (_){
+                                                                    return AlertDialog(
+                                                                      title: Text('Detail Assets ${inventory['inventory_name']}', style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700),),
+                                                                      content: Column(
+                                                                        children: [
+                                                                          SizedBox(height: 20.h,),
+                                                                          SizedBox(
+                                                                            width: MediaQuery.of(context).size.width - 150.w,
+                                                                            child: Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              children: [
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Nama Inventaris', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(inventory['inventory_name'])
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Kategori Inventaris', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(inventory['inventory_category_name'])
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Nomor Inventaris', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(inventory['inventory_id'])
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                              ],
                                                                             ),
-                                                                            SizedBox(height: 20.sp,),
-                                                                            SizedBox(
-                                                                              width: MediaQuery.of(context).size.width - 150.w,
-                                                                              child: Row(
-                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                children: [
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Tanggal Pembelian', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(formatDate(inventory['purchase_date']))
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Tanggal Akhir Garansi', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(formatDate(inventory['warranty_date']))
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Kondisi Inventaris', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(inventory['condition_name'])
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                ],
-                                                                              ),
+                                                                          ),
+                                                                          SizedBox(height: 20.sp,),
+                                                                          SizedBox(
+                                                                            width: MediaQuery.of(context).size.width - 150.w,
+                                                                            child: Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              children: [
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Tanggal Pembelian', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(formatDate(inventory['purchase_date']))
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Tanggal Akhir Garansi', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(formatDate(inventory['warranty_date']))
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Kondisi Inventaris', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(inventory['condition_name'])
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                              ],
                                                                             ),
-                                                                            SizedBox(height: 20.sp,),
-                                                                            SizedBox(
-                                                                              width: MediaQuery.of(context).size.width - 150.w,
-                                                                              child: Row(
-                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                children: [
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Karyawan yang bertanggung jawab', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(inventory['employee_name'])
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Lokasi Inventaris', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(inventory['inventory_location'])
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Metode Pembelian', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(inventory['payment_method'])
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                ],
-                                                                              ),
+                                                                          ),
+                                                                          SizedBox(height: 20.sp,),
+                                                                          SizedBox(
+                                                                            width: MediaQuery.of(context).size.width - 150.w,
+                                                                            child: Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              children: [
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Karyawan yang bertanggung jawab', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(inventory['employee_name'])
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Lokasi Inventaris', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(inventory['inventory_location'])
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Metode Pembelian', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(inventory['payment_method'])
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                              ],
                                                                             ),
-                                                                            SizedBox(height: 20.sp,),
-                                                                            SizedBox(
-                                                                              width: MediaQuery.of(context).size.width - 150.w,
-                                                                              child: Row(
-                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                children: [
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Periode Cicilan', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        if(inventory['payment_method'] == 'Cash')
-                                                                                          const Text('-'),
-                                                                                        if(inventory['payment_method'] == 'Kredit dengan cicilan')
-                                                                                          Text(inventory['inventory_installment_name'])
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Tanggal Jatuh Tempo', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        if(inventory['payment_method'] == 'Cash')
-                                                                                          const Text('-'),
-                                                                                        if(inventory['payment_method'] == 'Kredit dengan cicilan')
-                                                                                          Text(jatuhTempoFormatDate(inventory['due_date']))
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Jumlah Cicilan', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        if(inventory['payment_method'] == 'Cash')
-                                                                                          const Text('-'),
-                                                                                        if(inventory['payment_method'] == 'Kredit dengan cicilan')
-                                                                                          Text(formatCurrency(inventory['installment_price']))
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                ],
-                                                                              ),
+                                                                          ),
+                                                                          SizedBox(height: 20.sp,),
+                                                                          SizedBox(
+                                                                            width: MediaQuery.of(context).size.width - 150.w,
+                                                                            child: Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              children: [
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Periode Cicilan', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      if(inventory['payment_method'] == 'Cash')
+                                                                                        const Text('-'),
+                                                                                      if(inventory['payment_method'] == 'Kredit dengan cicilan')
+                                                                                        Text(inventory['inventory_installment_name'])
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Tanggal Jatuh Tempo', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      if(inventory['payment_method'] == 'Cash')
+                                                                                        const Text('-'),
+                                                                                      if(inventory['payment_method'] == 'Kredit dengan cicilan')
+                                                                                        Text(jatuhTempoFormatDate(inventory['due_date']))
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Jumlah Cicilan', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      if(inventory['payment_method'] == 'Cash')
+                                                                                        const Text('-'),
+                                                                                      if(inventory['payment_method'] == 'Kredit dengan cicilan')
+                                                                                        Text(formatCurrency(inventory['installment_price']))
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                              ],
                                                                             ),
-                                                                            SizedBox(height: 20.sp,),
-                                                                            SizedBox(
-                                                                              width: MediaQuery.of(context).size.width - 150.w,
-                                                                              child: Row(
-                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                children: [
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Harga pembelian', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(formatCurrency(inventory['purchase_price']))
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Nama Manufaktur/Supplier', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(inventory['supplier_name'])
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: const Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                ],
-                                                                              ),
+                                                                          ),
+                                                                          SizedBox(height: 20.sp,),
+                                                                          SizedBox(
+                                                                            width: MediaQuery.of(context).size.width - 150.w,
+                                                                            child: Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              children: [
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Harga pembelian', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(formatCurrency(inventory['purchase_price']))
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Nama Manufaktur/Supplier', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(inventory['supplier_name'])
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: const Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                              ],
                                                                             ),
-                                                                            SizedBox(height: 20.sp,),
-                                                                            SizedBox(
-                                                                              width: MediaQuery.of(context).size.width - 150.w,
-                                                                              child: Row(
-                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                children: [
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w),
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Catatan', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(inventory['inventory_notes'])
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                ],
-                                                                              ),
+                                                                          ),
+                                                                          SizedBox(height: 20.sp,),
+                                                                          SizedBox(
+                                                                            width: MediaQuery.of(context).size.width - 150.w,
+                                                                            child: Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              children: [
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w),
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Catatan', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(inventory['inventory_notes'])
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                              ],
                                                                             ),
-                                                                          ],
-                                                                        ),
-                                                                        actions: [
-                                                                          TextButton(
-                                                                            onPressed: (){
-                                                                              Get.back();
-                                                                            }, 
-                                                                            child: const Text('Tutup')
-                                                                          )
+                                                                          ),
                                                                         ],
-                                                                      );
-                                                                    }
-                                                                  );
-                                                                },
-                                                                trailing: ElevatedButton(
-                                                                  onPressed: (){
-                                                                    inventoryId = inventory['inventory_id'];
-                                                                    actionRequestInventory('5');
-                                                                  }, 
-                                                                  style: ElevatedButton.styleFrom(
-                                                                    elevation: 0,
-                                                                    alignment: Alignment.center,
-                                                                    minimumSize: Size(40.w, 55.h),
-                                                                    foregroundColor: const Color(0xFFFFFFFF),
-                                                                    backgroundColor: const Color(0xff4ec3fc),
-                                                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                                                  ),
-                                                                  child: const Text('Berikan ke karyawan')
+                                                                      ),
+                                                                      actions: [
+                                                                        TextButton(
+                                                                          onPressed: (){
+                                                                            Get.back();
+                                                                          }, 
+                                                                          child: const Text('Tutup')
+                                                                        )
+                                                                      ],
+                                                                    );
+                                                                  }
+                                                                );
+                                                              },
+                                                              trailing: ElevatedButton(
+                                                                onPressed: (){
+                                                                  inventoryId = inventory['inventory_id'];
+                                                                  actionRequestInventory('5');
+                                                                }, 
+                                                                style: ElevatedButton.styleFrom(
+                                                                  elevation: 0,
+                                                                  alignment: Alignment.center,
+                                                                  minimumSize: Size(40.w, 55.h),
+                                                                  foregroundColor: const Color(0xFFFFFFFF),
+                                                                  backgroundColor: const Color(0xff4ec3fc),
+                                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                                                 ),
-                                                              );
-                                                            },
-                                                          ),
-                                                        );
-                                                      }
+                                                                child: const Text('Berikan ke karyawan')
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      );
                                                     }
-                                                  ),
+                                                  }
                                                 )
                                               ],
                                             ),
@@ -1747,367 +1743,365 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                                             title: const Center(child: Text('List Asset Kantor')),
                                             content: Column(
                                               children: [
-                                                Container(
-                                                  child: FutureBuilder<List<dynamic>>(
-                                                    future: fetchInventory(), 
-                                                    builder: (context, snapshot){
-                                                      if (snapshot.connectionState == ConnectionState.waiting) {
-                                                        return const Center(child: CircularProgressIndicator());
-                                                      } else if (snapshot.hasError) {
-                                                        return Text("Error: ${snapshot.error}");
-                                                      } else {
-                                                        return SizedBox(
-                                                          width: MediaQuery.of(context).size.width,
-                                                          height: MediaQuery.of(context).size.height - 325.h,
-                                                          child: ListView.builder(
-                                                            itemCount: snapshot.data?.length ?? 0,
-                                                            itemBuilder: (context, index) {
-                                                              var inventory = snapshot.data![index];
-                                                              return ListTile(
-                                                                titleAlignment: ListTileTitleAlignment.center,
-                                                                title: Text('${inventory['inventory_name']} | ${inventory['status_name']}'),
-                                                                subtitle: Text('${inventory['inventory_id']}'),
-                                                                onTap: () {
-                                                                  showDialog(
-                                                                    context: context, 
-                                                                    builder: (_){
-                                                                      return AlertDialog(
-                                                                        title: Text('Detail Assets ${inventory['inventory_name']}', style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700),),
-                                                                        content: Column(
-                                                                          children: [
-                                                                            SizedBox(height: 20.h,),
-                                                                            SizedBox(
-                                                                              width: MediaQuery.of(context).size.width - 150.w,
-                                                                              child: Row(
-                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                children: [
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Nama Inventaris', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(inventory['inventory_name'])
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Kategori Inventaris', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(inventory['inventory_category_name'])
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Nomor Inventaris', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(inventory['inventory_id'])
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                ],
-                                                                              ),
+                                                FutureBuilder<List<dynamic>>(
+                                                  future: fetchInventory(), 
+                                                  builder: (context, snapshot){
+                                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                                      return const Center(child: CircularProgressIndicator());
+                                                    } else if (snapshot.hasError) {
+                                                      return Text("Error: ${snapshot.error}");
+                                                    } else {
+                                                      return SizedBox(
+                                                        width: MediaQuery.of(context).size.width,
+                                                        height: MediaQuery.of(context).size.height - 325.h,
+                                                        child: ListView.builder(
+                                                          itemCount: snapshot.data?.length ?? 0,
+                                                          itemBuilder: (context, index) {
+                                                            var inventory = snapshot.data![index];
+                                                            return ListTile(
+                                                              titleAlignment: ListTileTitleAlignment.center,
+                                                              title: Text('${inventory['inventory_name']} | ${inventory['status_name']}'),
+                                                              subtitle: Text('${inventory['inventory_id']}'),
+                                                              onTap: () {
+                                                                showDialog(
+                                                                  context: context, 
+                                                                  builder: (_){
+                                                                    return AlertDialog(
+                                                                      title: Text('Detail Assets ${inventory['inventory_name']}', style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700),),
+                                                                      content: Column(
+                                                                        children: [
+                                                                          SizedBox(height: 20.h,),
+                                                                          SizedBox(
+                                                                            width: MediaQuery.of(context).size.width - 150.w,
+                                                                            child: Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              children: [
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Nama Inventaris', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(inventory['inventory_name'])
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Kategori Inventaris', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(inventory['inventory_category_name'])
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Nomor Inventaris', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(inventory['inventory_id'])
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                              ],
                                                                             ),
-                                                                            SizedBox(height: 20.sp,),
-                                                                            SizedBox(
-                                                                              width: MediaQuery.of(context).size.width - 150.w,
-                                                                              child: Row(
-                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                children: [
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Tanggal Pembelian', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(formatDate(inventory['purchase_date']))
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Tanggal Akhir Garansi', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(formatDate(inventory['warranty_date']))
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Kondisi Inventaris', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(inventory['condition_name'])
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                ],
-                                                                              ),
+                                                                          ),
+                                                                          SizedBox(height: 20.sp,),
+                                                                          SizedBox(
+                                                                            width: MediaQuery.of(context).size.width - 150.w,
+                                                                            child: Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              children: [
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Tanggal Pembelian', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(formatDate(inventory['purchase_date']))
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Tanggal Akhir Garansi', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(formatDate(inventory['warranty_date']))
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Kondisi Inventaris', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(inventory['condition_name'])
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                              ],
                                                                             ),
-                                                                            SizedBox(height: 20.sp,),
-                                                                            SizedBox(
-                                                                              width: MediaQuery.of(context).size.width - 150.w,
-                                                                              child: Row(
-                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                children: [
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Karyawan yang bertanggung jawab', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(inventory['employee_name'])
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Lokasi Inventaris', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(inventory['inventory_location'])
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Metode Pembelian', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(inventory['payment_method'])
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                ],
-                                                                              ),
+                                                                          ),
+                                                                          SizedBox(height: 20.sp,),
+                                                                          SizedBox(
+                                                                            width: MediaQuery.of(context).size.width - 150.w,
+                                                                            child: Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              children: [
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Karyawan yang bertanggung jawab', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(inventory['employee_name'])
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Lokasi Inventaris', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(inventory['inventory_location'])
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Metode Pembelian', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(inventory['payment_method'])
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                              ],
                                                                             ),
-                                                                            SizedBox(height: 20.sp,),
-                                                                            SizedBox(
-                                                                              width: MediaQuery.of(context).size.width - 150.w,
-                                                                              child: Row(
-                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                children: [
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Periode Cicilan', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        if(inventory['payment_method'] == 'Cash')
-                                                                                          const Text('-'),
-                                                                                        if(inventory['payment_method'] == 'Kredit dengan cicilan')
-                                                                                          Text(inventory['inventory_installment_name'])
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Tanggal Jatuh Tempo', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        if(inventory['payment_method'] == 'Cash')
-                                                                                          const Text('-'),
-                                                                                        if(inventory['payment_method'] == 'Kredit dengan cicilan')
-                                                                                          Text(jatuhTempoFormatDate(inventory['due_date']))
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Jumlah Cicilan', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        if(inventory['payment_method'] == 'Cash')
-                                                                                          const Text('-'),
-                                                                                        if(inventory['payment_method'] == 'Kredit dengan cicilan')
-                                                                                          Text(formatCurrency(inventory['installment_price']))
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                ],
-                                                                              ),
+                                                                          ),
+                                                                          SizedBox(height: 20.sp,),
+                                                                          SizedBox(
+                                                                            width: MediaQuery.of(context).size.width - 150.w,
+                                                                            child: Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              children: [
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Periode Cicilan', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      if(inventory['payment_method'] == 'Cash')
+                                                                                        const Text('-'),
+                                                                                      if(inventory['payment_method'] == 'Kredit dengan cicilan')
+                                                                                        Text(inventory['inventory_installment_name'])
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Tanggal Jatuh Tempo', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      if(inventory['payment_method'] == 'Cash')
+                                                                                        const Text('-'),
+                                                                                      if(inventory['payment_method'] == 'Kredit dengan cicilan')
+                                                                                        Text(jatuhTempoFormatDate(inventory['due_date']))
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Jumlah Cicilan', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      if(inventory['payment_method'] == 'Cash')
+                                                                                        const Text('-'),
+                                                                                      if(inventory['payment_method'] == 'Kredit dengan cicilan')
+                                                                                        Text(formatCurrency(inventory['installment_price']))
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                              ],
                                                                             ),
-                                                                            SizedBox(height: 20.sp,),
-                                                                            SizedBox(
-                                                                              width: MediaQuery.of(context).size.width - 150.w,
-                                                                              child: Row(
-                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                children: [
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Harga pembelian', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(formatCurrency(inventory['purchase_price']))
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Nama Manufaktur/Supplier', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(inventory['supplier_name'])
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w) / 3,
-                                                                                    child: const Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                ],
-                                                                              ),
+                                                                          ),
+                                                                          SizedBox(height: 20.sp,),
+                                                                          SizedBox(
+                                                                            width: MediaQuery.of(context).size.width - 150.w,
+                                                                            child: Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              children: [
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Harga pembelian', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(formatCurrency(inventory['purchase_price']))
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Nama Manufaktur/Supplier', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(inventory['supplier_name'])
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w) / 3,
+                                                                                  child: const Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                              ],
                                                                             ),
-                                                                            SizedBox(height: 20.sp,),
-                                                                            SizedBox(
-                                                                              width: MediaQuery.of(context).size.width - 150.w,
-                                                                              child: Row(
-                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                children: [
-                                                                                  SizedBox(
-                                                                                    width: (MediaQuery.of(context).size.width - 150.w),
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        Text('Catatan', style: TextStyle(
-                                                                                          fontSize: 14.sp,
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                                                                        ),),
-                                                                                        SizedBox(height: 10.h,),
-                                                                                        Text(inventory['inventory_notes'])
-                                                                                      ],
-                                                                                    )
-                                                                                  ),
-                                                                                ],
-                                                                              ),
+                                                                          ),
+                                                                          SizedBox(height: 20.sp,),
+                                                                          SizedBox(
+                                                                            width: MediaQuery.of(context).size.width - 150.w,
+                                                                            child: Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              children: [
+                                                                                SizedBox(
+                                                                                  width: (MediaQuery.of(context).size.width - 150.w),
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text('Catatan', style: TextStyle(
+                                                                                        fontSize: 14.sp,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        color: const Color.fromRGBO(116, 116, 116, 1)
+                                                                                      ),),
+                                                                                      SizedBox(height: 10.h,),
+                                                                                      Text(inventory['inventory_notes'])
+                                                                                    ],
+                                                                                  )
+                                                                                ),
+                                                                              ],
                                                                             ),
-                                                                          ],
-                                                                        ),
-                                                                        actions: [
-                                                                          TextButton(
-                                                                            onPressed: (){
-                                                                              Get.back();
-                                                                            }, 
-                                                                            child: const Text('Tutup')
-                                                                          )
+                                                                          ),
                                                                         ],
-                                                                      );
-                                                                    }
-                                                                  );
-                                                                },
-                                                                trailing: ElevatedButton(
-                                                                  onPressed: (){
-                                                                    inventoryId = inventory['inventory_id'];
-                                                                    actionRequestInventory('5');
-                                                                  }, 
-                                                                  style: ElevatedButton.styleFrom(
-                                                                    elevation: 0,
-                                                                    alignment: Alignment.center,
-                                                                    minimumSize: Size(40.w, 55.h),
-                                                                    foregroundColor: const Color(0xFFFFFFFF),
-                                                                    backgroundColor: const Color(0xff4ec3fc),
-                                                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                                                  ),
-                                                                  child: const Text('Berikan ke karyawan')
+                                                                      ),
+                                                                      actions: [
+                                                                        TextButton(
+                                                                          onPressed: (){
+                                                                            Get.back();
+                                                                          }, 
+                                                                          child: const Text('Tutup')
+                                                                        )
+                                                                      ],
+                                                                    );
+                                                                  }
+                                                                );
+                                                              },
+                                                              trailing: ElevatedButton(
+                                                                onPressed: (){
+                                                                  inventoryId = inventory['inventory_id'];
+                                                                  actionRequestInventory('5');
+                                                                }, 
+                                                                style: ElevatedButton.styleFrom(
+                                                                  elevation: 0,
+                                                                  alignment: Alignment.center,
+                                                                  minimumSize: Size(40.w, 55.h),
+                                                                  foregroundColor: const Color(0xFFFFFFFF),
+                                                                  backgroundColor: const Color(0xff4ec3fc),
+                                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                                                 ),
-                                                              );
-                                                            },
-                                                          ),
-                                                        );
-                                                      }
+                                                                child: const Text('Berikan ke karyawan')
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      );
                                                     }
-                                                  ),
+                                                  }
                                                 )
                                               ],
                                             ),

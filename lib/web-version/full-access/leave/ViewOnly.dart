@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations, avoid_web_libraries_in_flutter, file_names, avoid_print
+// ignore_for_file: non_constant_identifier_names, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations, avoid_web_libraries_in_flutter, file_names, avoid_print, unused_element, deprecated_member_use
 
 import 'dart:async';
 import 'package:flutter/material.dart';

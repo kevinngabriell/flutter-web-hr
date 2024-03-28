@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, camel_case_types, non_constant_identifier_names, prefer_const_constructors_in_immutables, avoid_print, file_names
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -432,7 +432,7 @@ class _detailInventoryState extends State<detailInventory> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
-                      Get.to(InventoryIndex());
+                      Get.to(const InventoryIndex());
                     }, 
                     child: const Text("Oke")
                   ),
@@ -450,7 +450,7 @@ class _detailInventoryState extends State<detailInventory> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
-                      Get.to(InventoryIndex());
+                      Get.to(const InventoryIndex());
                     }, 
                     child: const Text("Oke")
                   ),
@@ -470,7 +470,7 @@ class _detailInventoryState extends State<detailInventory> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
-                      Get.to(InventoryIndex());
+                      Get.to(const InventoryIndex());
                     }, 
                     child: const Text("Oke")
                   ),
@@ -483,8 +483,6 @@ class _detailInventoryState extends State<detailInventory> {
         }
       }
       
-    } catch (e){
-
     } finally {
       isLaoding = false;
     }
@@ -556,11 +554,11 @@ class _detailInventoryState extends State<detailInventory> {
                           ),
                         ),
                         title: Text(
-                          "$companyName",
+                          companyName,
                           style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
                         ),
                         subtitle: Text(
-                          '$trimmedCompanyAddress',
+                          trimmedCompanyAddress,
                           style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
                         ),
                       ),
@@ -1051,10 +1049,10 @@ class _detailInventoryState extends State<detailInventory> {
                                         base64Decode(photo),
                                       ),
                                     ),
-                                    title: Text("$employeeName",
+                                    title: Text(employeeName,
                                       style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                                     ),
-                                    subtitle: Text("$employeeEmail",
+                                    subtitle: Text(employeeEmail,
                                       style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                                     ),
                                   ),
@@ -1480,7 +1478,7 @@ class _detailInventoryState extends State<detailInventory> {
                                         context: context, 
                                         builder: (_){
                                           return AlertDialog(
-                                            title: Text('List Nama Karyawan'),
+                                            title: const Text('List Nama Karyawan'),
                                             content: SizedBox(
                                               width: MediaQuery.of(context).size.width,
                                               height: MediaQuery.of(context).size.height,
@@ -1505,7 +1503,7 @@ class _detailInventoryState extends State<detailInventory> {
                                                         backgroundColor: const Color(0xff4ec3fc),
                                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                                       ),
-                                                      child: Text('Pilih')
+                                                      child: const Text('Pilih')
                                                     ),
                                                   );
                                                 }
@@ -1516,7 +1514,7 @@ class _detailInventoryState extends State<detailInventory> {
                                                 onPressed: (){
                                                   Get.back();
                                                 }, 
-                                                child: Text('Kembali')
+                                                child: const Text('Kembali')
                                               )
                                             ],
                                           );

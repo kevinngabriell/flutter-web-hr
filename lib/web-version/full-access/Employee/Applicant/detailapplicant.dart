@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, deprecated_member_use, prefer_const_constructors, use_build_context_synchronously, avoid_print
+// ignore_for_file: non_constant_identifier_names, deprecated_member_use, prefer_const_constructors, use_build_context_synchronously, avoid_print, avoid_web_libraries_in_flutter
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -33,7 +33,7 @@ class DetailApplicant extends StatefulWidget {
   final String status_name;
   final String id_applicant;
 
-  DetailApplicant(this.candidate_name, this.position_name, this.candidate_phone, this.candidate_email, this.candidate_surat_lamaran, this.candidate_ijazah, this.candidate_riwayat_hidup, this.job_ads, this.status_name, this.id_applicant, {super.key});
+  const DetailApplicant(this.candidate_name, this.position_name, this.candidate_phone, this.candidate_email, this.candidate_surat_lamaran, this.candidate_ijazah, this.candidate_riwayat_hidup, this.job_ads, this.status_name, this.id_applicant, {super.key});
 
   @override
   State<DetailApplicant> createState() => _DetailApplicantState();
@@ -654,8 +654,6 @@ class _DetailApplicantState extends State<DetailApplicant> {
       } else {
 
       }
-    } catch (e){
-
     } finally {
       if(selectedKejujuranValue == 0){
           selectedKejujuranValue = 11;

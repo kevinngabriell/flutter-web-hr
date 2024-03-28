@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, use_build_context_synchronously
+// ignore_for_file: avoid_print, use_build_context_synchronously, file_names
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -844,10 +844,10 @@ class _AddNewPerjalananDinasState extends State<AddNewPerjalananDinas> {
                                         base64Decode(photo),
                                       ),
                                     ),
-                                    title: Text("$employeeName",
+                                    title: Text(employeeName,
                                       style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                                     ),
-                                    subtitle: Text("$employeeEmail",
+                                    subtitle: Text(employeeEmail,
                                       style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                                     ),
                                   ),
@@ -1255,7 +1255,7 @@ class _AddNewPerjalananDinasState extends State<AddNewPerjalananDinas> {
                                 backgroundColor: const Color(0xff4ec3fc),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                               ), 
-                              child: Text('Kumpul')
+                              child: const Text('Kumpul')
                             )
                           ],
                         )

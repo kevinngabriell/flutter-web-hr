@@ -1,4 +1,6 @@
 
+// ignore_for_file: file_names, avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_storage/get_storage.dart';
@@ -40,7 +42,6 @@ late Future<List<Map<String, dynamic>>> permissionData;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fetchData();
     permissionData = fetchPermissionData();
@@ -124,18 +125,18 @@ Future<List<Map<String, dynamic>>> fetchPermissionData() async {
                         dense: true,
                         horizontalTitleGap: 0.0, 
                         leading: Container(
-                          margin: EdgeInsets.only(right: 2.0),
+                          margin: const EdgeInsets.only(right: 2.0),
                           child: Image.asset(
                             'images/kinglab.png',
                             width: MediaQuery.of(context).size.width * 0.08,
                           ),
                         ),
                         title: Text(
-                          "$companyName",
+                          companyName,
                           style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
                         ),
                         subtitle: Text(
-                          '$trimmedCompanyAddress',
+                          trimmedCompanyAddress,
                           style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
                         ),
                       ),
@@ -209,7 +210,7 @@ Future<List<Map<String, dynamic>>> fetchPermissionData() async {
                         padding: EdgeInsets.only(left: 5.w, right: 5.w),
                         child: ElevatedButton(
                           onPressed: () {
-                            Get.to(SalaryIndex());
+                            Get.to(const SalaryIndex());
                           },
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
@@ -240,7 +241,7 @@ Future<List<Map<String, dynamic>>> fetchPermissionData() async {
                         padding: EdgeInsets.only(left: 5.w, right: 5.w),
                         child: ElevatedButton(
                           onPressed: () {
-                            Get.to(PerformanceIndex());
+                            Get.to(const PerformanceIndex());
                           },
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
@@ -270,7 +271,7 @@ Future<List<Map<String, dynamic>>> fetchPermissionData() async {
                         padding: EdgeInsets.only(left: 5.w, right: 5.w),
                         child: ElevatedButton(
                           onPressed: () {
-                            Get.to(TrainingIndex());
+                            Get.to(const TrainingIndex());
                           },
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
@@ -300,7 +301,7 @@ Future<List<Map<String, dynamic>>> fetchPermissionData() async {
                         padding: EdgeInsets.only(left: 5.w, right: 5.w),
                         child: ElevatedButton(
                           onPressed: () {
-                            Get.to(EventIndex());
+                            Get.to(const EventIndex());
                           },
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
@@ -331,7 +332,7 @@ Future<List<Map<String, dynamic>>> fetchPermissionData() async {
                               padding: EdgeInsets.only(left: 5.w, right: 5.w),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Get.to(ReportIndex());
+                                  Get.to(const ReportIndex());
                                 },
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
@@ -370,7 +371,7 @@ Future<List<Map<String, dynamic>>> fetchPermissionData() async {
                         padding: EdgeInsets.only(left: 5.w, right: 5.w),
                         child: ElevatedButton(
                           onPressed: () {
-                            Get.to(SettingIndex());
+                            Get.to(const SettingIndex());
                           },
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
@@ -401,7 +402,7 @@ Future<List<Map<String, dynamic>>> fetchPermissionData() async {
                         padding: EdgeInsets.only(left: 5.w, right: 5.w),
                         child: ElevatedButton(
                           onPressed: () {
-                            Get.to(StructureIndex());
+                            Get.to(const StructureIndex());
                           },
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
@@ -497,9 +498,9 @@ Future<List<Map<String, dynamic>>> fetchPermissionData() async {
                             if (snapshot.connectionState == ConnectionState.waiting) {
                               return const CircularProgressIndicator();
                             } else if (snapshot.hasError) {
-                              return Column(
+                              return const Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
+                                children: [
                                   //Image.asset('assets/no_data.png'), // Ganti dengan path gambar yang sesuai
                                   Text('Anda belum pernah mengajukan izin apapun'),
                                 ],
@@ -512,22 +513,22 @@ Future<List<Map<String, dynamic>>> fetchPermissionData() async {
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState == ConnectionState.waiting) {
                                       // If the data is still loading, show a loading indicator
-                                      return Center(
+                                      return const Center(
                                         child: CircularProgressIndicator(),
                                       );
                                     } else if (snapshot.hasError) {
                                       // If an error occurred, display an error message
-                                      return Column(
+                                      return const Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
-                                        children: const [
+                                        children: [
                                           Text('Error fetching permission data'),
                                         ],
                                       );
                                     } else if (snapshot.data!.isEmpty) {
                                       // If the data is empty, display a message indicating that no data is available
-                                      return Column(
+                                      return const Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
-                                        children: const [
+                                        children: [
                                           Text('No permission data available'),
                                         ],
                                       );
@@ -589,10 +590,10 @@ Future<List<Map<String, dynamic>>> fetchPermissionData() async {
                                 base64Decode(photo),
                               ),
                             ),
-                      title: Text("$employeeName",
+                      title: Text(employeeName,
                         style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                       ),
-                      subtitle: Text('$employeeEmail',
+                      subtitle: Text(employeeEmail,
                         style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                       ),
                     ),

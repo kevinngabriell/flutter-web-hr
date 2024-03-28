@@ -115,18 +115,18 @@ class _ListEmployeeAbsenceState extends State<ListEmployeeAbsence> {
                         dense: true,
                         horizontalTitleGap: 0.0,
                         leading: Container(
-                          margin: EdgeInsets.only(right: 2.0), // Add margin to the right of the image
+                          margin: const EdgeInsets.only(right: 2.0), // Add margin to the right of the image
                           child: Image.asset(
                             'images/kinglab.png',
                             width: MediaQuery.of(context).size.width * 0.08,
                           ),
                         ),
                         title: Text(
-                          "$companyName",
+                          companyName,
                           style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
                         ),
                         subtitle: Text(
-                          '$trimmedCompanyAddress',
+                          trimmedCompanyAddress,
                           style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
                         ),
                       ),
@@ -202,7 +202,7 @@ class _ListEmployeeAbsenceState extends State<ListEmployeeAbsence> {
                               padding: EdgeInsets.only(left: 5.w, right: 5.w),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Get.to(SalaryIndex());
+                                  Get.to(const SalaryIndex());
                                 },
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
@@ -233,7 +233,7 @@ class _ListEmployeeAbsenceState extends State<ListEmployeeAbsence> {
                               padding: EdgeInsets.only(left: 5.w, right: 5.w),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Get.to(PerformanceIndex());
+                                  Get.to(const PerformanceIndex());
                                 },
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
@@ -264,7 +264,7 @@ class _ListEmployeeAbsenceState extends State<ListEmployeeAbsence> {
                               padding: EdgeInsets.only(left: 5.w, right: 5.w),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Get.to(TrainingIndex());
+                                  Get.to(const TrainingIndex());
                                 },
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
@@ -295,7 +295,7 @@ class _ListEmployeeAbsenceState extends State<ListEmployeeAbsence> {
                               padding: EdgeInsets.only(left: 5.w, right: 5.w),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Get.to(EventIndex());
+                                  Get.to(const EventIndex());
                                 },
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
@@ -326,7 +326,7 @@ class _ListEmployeeAbsenceState extends State<ListEmployeeAbsence> {
                               padding: EdgeInsets.only(left: 5.w, right: 5.w),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Get.to(ReportIndex());
+                                  Get.to(const ReportIndex());
                                 },
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
@@ -365,7 +365,7 @@ class _ListEmployeeAbsenceState extends State<ListEmployeeAbsence> {
                               padding: EdgeInsets.only(left: 5.w, right: 5.w),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Get.to(SettingIndex());
+                                  Get.to(const SettingIndex());
                                 },
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
@@ -396,7 +396,7 @@ class _ListEmployeeAbsenceState extends State<ListEmployeeAbsence> {
                               padding: EdgeInsets.only(left: 5.w, right: 5.w),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Get.to(StructureIndex());
+                                  Get.to(const StructureIndex());
                                 },
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
@@ -544,10 +544,10 @@ class _ListEmployeeAbsenceState extends State<ListEmployeeAbsence> {
                                 base64Decode(photo),
                               ),
                             ),
-                          title: Text("$employeeName",
+                          title: Text(employeeName,
                             style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                           ),
-                          subtitle: Text("$employeeEmail",
+                          subtitle: Text(employeeEmail,
                             style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                           ),
                         ),

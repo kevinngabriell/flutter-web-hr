@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -83,7 +85,7 @@ class _ApplicantIndexState extends State<ApplicantIndex> {
 
   Future<List<dynamic>> fetchCandidates() async {
     isLoading = true;
-    final url = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/requestemployee/getlistapplicant.php';
+    const url = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/requestemployee/getlistapplicant.php';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {

@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_string_interpolations, file_names, avoid_print
+// ignore_for_file: unnecessary_string_interpolations, file_names, avoid_print, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -115,8 +115,6 @@ class _ShowAllPermissionPageState extends State<ShowAllPermissionPage> {
         print('Failed to load data: ${response.statusCode}');
       }    
 
-    } catch (e){
-
     } finally {
       isLoading = false;
     }
@@ -193,8 +191,6 @@ class _ShowAllPermissionPageState extends State<ShowAllPermissionPage> {
       } else {
         print('Failed to load data: ${response.statusCode}');
       }
-
-    } catch (e) {
 
     } finally {
       isLoading = false;
@@ -938,7 +934,7 @@ class _ShowAllPermissionPageState extends State<ShowAllPermissionPage> {
                                       SizedBox(
                                         width: MediaQuery.of(context).size.width / 6,
                                         child: DropdownButtonFormField(
-                                          items: [],
+                                          items: const [],
                                           onChanged: (value) {
                                             
                                           },

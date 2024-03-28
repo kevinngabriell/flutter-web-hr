@@ -662,7 +662,7 @@ class _DetailAbsenInsertUpdateState extends State<DetailAbsenInsertUpdate> {
                                           type: DateTimePickerType.time,
                                           initialValue: absenceType == 'Absen Pulang' ? dateTimeValue : null,
                                           onChanged: (value) {
-                                            print("Tanggal: $i " + txtMonthSelected.toString() + txtYearSelected.toString() + "JamPulang $i: $value");
+                                            print("Tanggal: $i $txtMonthSelected${txtYearSelected}JamPulang $i: $value");
                                           },
                                         ),
                                       ),

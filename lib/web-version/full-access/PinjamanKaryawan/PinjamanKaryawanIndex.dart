@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, non_constant_identifier_names, file_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -5,6 +7,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:hr_systems_web/web-version/full-access/Event/event.dart';
 import 'package:hr_systems_web/web-version/full-access/Performance/performance.dart';
 import 'package:hr_systems_web/web-version/full-access/PinjamanKaryawan/PinjamanKaryawanDetail.dart';
+import 'package:hr_systems_web/web-version/full-access/PinjamanKaryawan/ViewAllMyPinjaman.dart';
+import 'package:hr_systems_web/web-version/full-access/PinjamanKaryawan/ViewAllPinjaman.dart';
 import 'package:hr_systems_web/web-version/full-access/Report/report.dart';
 import 'package:hr_systems_web/web-version/full-access/Salary/salary.dart';
 import 'package:hr_systems_web/web-version/full-access/Settings/setting.dart';
@@ -697,10 +701,10 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                                         base64Decode(photo),
                                       ),
                                     ),
-                                    title: Text("$employeeName",
+                                    title: Text(employeeName,
                                       style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                                     ),
-                                    subtitle: Text("$employeeEmail",
+                                    subtitle: Text(employeeEmail,
                                       style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                                     ),
                                   ),
@@ -786,6 +790,7 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                                         ),
                                         GestureDetector(
                                           onTap: () {
+                                              Get.to(const ViewAllMyPinjaman());
                                               // Get.to(ViewMyPerjalananDinas());
                                               // Get.to(const allMyInventoryRequest());
                                           },
@@ -798,7 +803,7 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                                             children: [
                                               GestureDetector(
                                                 onTap: () {
-                                                  // Get.to();
+                                                  Get.to(PinjamanKaryawanDetail(pinjamanKaryawanID: myLoanList[indexA]['loan_id'], jumlahPinjaman: myLoanList[indexA]['loan_amount'], alasanPinjaman: myLoanList[indexA]['loan_reason'], caraBayarPinjaman: myLoanList[indexA]['loan_topay'], statusPinjaman: myLoanList[indexA]['status_name'], sudahLunasPinjaman: myLoanList[indexA]['is_paid'], tanggalPengajuan: myLoanList[indexA]['insert_dt'], namaKaryawan: myLoanList[indexA]['employee_name'], requestorID: myLoanList[indexA]['insert_by'], jabatan: myLoanList[indexA]['position_name'], departemen: myLoanList[indexA]['department_name'],));
                                                 },
                                                 child: Card(
                                                   child: ListTile(
@@ -903,7 +908,7 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                           ),
                         if(positionId == 'POS-HR-002' || positionId != 'POS-HR-001' || positionId != 'POS-HR-004' || positionId != 'POS-HR-024' || positionId != 'POS-HR-008')
                           SizedBox(height: 30.sp,),
-                        if(positionId != 'POS-HR-002' || positionId != 'POS-HR-001' || positionId != 'POS-HR-004' || positionId != 'POS-HR-024' || positionId != 'POS-HR-008')
+                        if(positionId == 'POS-HR-002' || positionId == 'POS-HR-001' || positionId == 'POS-HR-004' || positionId == 'POS-HR-024' || positionId == 'POS-HR-008')
                           Row(
                             children: [
                               Card(
@@ -933,6 +938,7 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                                               onTap: () {
                                                   // Get.to(ViewMyPerjalananDinas());
                                                   // Get.to(const allMyInventoryRequest());
+                                                  Get.to(const ViewAllMyPinjaman());
                                               },
                                               child: Text('Lihat semua', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
                                             )
@@ -943,7 +949,7 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                                                 children: [
                                                   GestureDetector(
                                                     onTap: () {
-                                                      Get.to(PinjamanKaryawanDetail(pinjamanKaryawanID: myLoanList[indexA]['loan_id'], jumlahPinjaman: myLoanList[indexA]['loan_amount'], alasanPinjaman: myLoanList[indexA]['loan_reason'], caraBayarPinjaman: myLoanList[indexA]['loan_topay'], statusPinjaman: myLoanList[indexA]['status_name'], sudahLunasPinjaman: myLoanList[indexA]['is_paid'], tanggalPengajuan: myLoanList[indexA]['insert_dt'], namaKaryawan: myLoanList[indexA]['employee_name'], requestorID: myLoanList[indexA]['insert_by'],));
+                                                      Get.to(PinjamanKaryawanDetail(pinjamanKaryawanID: myLoanList[indexA]['loan_id'], jumlahPinjaman: myLoanList[indexA]['loan_amount'], alasanPinjaman: myLoanList[indexA]['loan_reason'], caraBayarPinjaman: myLoanList[indexA]['loan_topay'], statusPinjaman: myLoanList[indexA]['status_name'], sudahLunasPinjaman: myLoanList[indexA]['is_paid'], tanggalPengajuan: myLoanList[indexA]['insert_dt'], namaKaryawan: myLoanList[indexA]['employee_name'], requestorID: myLoanList[indexA]['insert_by'], jabatan: myLoanList[indexA]['position_name'], departemen: myLoanList[indexA]['department_name'],));
                                                     },
                                                     child: Card(
                                                       child: ListTile(
@@ -995,6 +1001,7 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                                               onTap: () {
                                                   // Get.to(ViewMyPerjalananDinas());
                                                   // Get.to(const allMyInventoryRequest());
+                                                  Get.to(const ViewAllPinjaman());
                                               },
                                               child: Text('Lihat semua', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
                                             )
@@ -1005,7 +1012,7 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                                                 children: [
                                                   GestureDetector(
                                                     onTap: () {
-                                                      Get.to(PinjamanKaryawanDetail(pinjamanKaryawanID: LoanList[indexB]['loan_id'], jumlahPinjaman: LoanList[indexB]['loan_amount'], alasanPinjaman: LoanList[indexB]['loan_reason'], caraBayarPinjaman: LoanList[indexB]['loan_topay'], statusPinjaman: LoanList[indexB]['status_name'], sudahLunasPinjaman: LoanList[indexB]['is_paid'], tanggalPengajuan: LoanList[indexB]['insert_dt'], namaKaryawan: LoanList[indexB]['employee_name'], requestorID: LoanList[indexB]['insert_by'],));
+                                                      Get.to(PinjamanKaryawanDetail(pinjamanKaryawanID: LoanList[indexB]['loan_id'], jumlahPinjaman: LoanList[indexB]['loan_amount'], alasanPinjaman: LoanList[indexB]['loan_reason'], caraBayarPinjaman: LoanList[indexB]['loan_topay'], statusPinjaman: LoanList[indexB]['status_name'], sudahLunasPinjaman: LoanList[indexB]['is_paid'], tanggalPengajuan: LoanList[indexB]['insert_dt'], namaKaryawan: LoanList[indexB]['employee_name'], requestorID: LoanList[indexB]['insert_by'], jabatan:  LoanList[indexB]['position_name'], departemen: LoanList[indexB]['department_name'],));
                                                     },
                                                     child: Card(
                                                       child: ListTile(

@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, non_constant_identifier_names
+// ignore_for_file: use_build_context_synchronously, non_constant_identifier_names, avoid_print, file_names
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -1351,10 +1351,10 @@ class _ViewLPDState extends State<ViewLPD> {
                                         base64Decode(photo),
                                       ),
                                     ),
-                                    title: Text("$employeeName",
+                                    title: Text(employeeName,
                                       style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                                     ),
-                                    subtitle: Text("$employeeEmail",
+                                    subtitle: Text(employeeEmail,
                                       style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                                     ),
                                   ),
@@ -1560,7 +1560,7 @@ class _ViewLPDState extends State<ViewLPD> {
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 4,
-                              child: Text('Tiket Pesawat'),
+                              child: const Text('Tiket Pesawat'),
                             ),
                             SizedBox(width: 5.w,),
                             SizedBox(
@@ -1589,7 +1589,7 @@ class _ViewLPDState extends State<ViewLPD> {
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 4,
-                              child: Text('Hotel / Penginapan'),
+                              child: const Text('Hotel / Penginapan'),
                             ),
                             SizedBox(width: 5.w,),
                             SizedBox(
@@ -1771,7 +1771,7 @@ class _ViewLPDState extends State<ViewLPD> {
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 4,
-                              child: Text('Transport (Taxi) Lokal/sewa mobil harian'),
+                              child: const Text('Transport (Taxi) Lokal/sewa mobil harian'),
                             ),
                             SizedBox(width: 5.w,),
                             SizedBox(
@@ -1953,7 +1953,7 @@ class _ViewLPDState extends State<ViewLPD> {
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 4,
-                              child: Text('By entertain'),
+                              child: const Text('By entertain'),
                             ),
                             SizedBox(width: 5.w,),
                             SizedBox(
@@ -1982,7 +1982,7 @@ class _ViewLPDState extends State<ViewLPD> {
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 4,
-                              child: Text('Lain-lain'),
+                              child: const Text('Lain-lain'),
                             ),
                             SizedBox(width: 5.w,),
                             SizedBox(
@@ -2111,7 +2111,7 @@ class _ViewLPDState extends State<ViewLPD> {
                                   backgroundColor: Colors.green,
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                 ),
-                                child: Text('Terima')
+                                child: const Text('Terima')
                               ),
                               SizedBox(width: 10.w,),
                               ElevatedButton(
@@ -2126,7 +2126,7 @@ class _ViewLPDState extends State<ViewLPD> {
                                   backgroundColor: Colors.red,
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                 ),
-                                child: Text('Tolak')
+                                child: const Text('Tolak')
                               ),
                             ],
                           ),
@@ -2146,7 +2146,7 @@ class _ViewLPDState extends State<ViewLPD> {
                                   backgroundColor: Colors.green,
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                 ),
-                                child: Text('Terima')
+                                child: const Text('Terima')
                               ),
                               SizedBox(width: 10.w,),
                               ElevatedButton(
@@ -2161,7 +2161,7 @@ class _ViewLPDState extends State<ViewLPD> {
                                   backgroundColor: Colors.red,
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                 ),
-                                child: Text('Tolak')
+                                child: const Text('Tolak')
                               ),
                             ],
                           ),

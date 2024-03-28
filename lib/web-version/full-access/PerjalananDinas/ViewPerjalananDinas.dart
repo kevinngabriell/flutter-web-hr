@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, avoid_print, file_names, unnecessary_string_interpolations
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -236,12 +236,12 @@ class _ViewPerjalananDinasState extends State<ViewPerjalananDinas> {
     }
   }
   
-  Future<void> actionPerjalananDinas (action_id) async {
+  Future<void> actionPerjalananDinas (actionId) async {
 
     String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/perjalanandinas/perjalanandinas.php';
     String employeeId = storage.read('employee_id').toString();
 
-    if(action_id == '1'){
+    if(actionId == '1'){
       try{
         isLoading = true;
 
@@ -315,7 +315,7 @@ class _ViewPerjalananDinasState extends State<ViewPerjalananDinas> {
       } finally {
         isLoading = false;
       }
-    } else if (action_id == '2'){
+    } else if (actionId == '2'){
       try{
         isLoading = true;
 
@@ -389,7 +389,7 @@ class _ViewPerjalananDinasState extends State<ViewPerjalananDinas> {
       } finally {
         isLoading = false;
       }
-    } else if (action_id == '3'){
+    } else if (actionId == '3'){
       try{
         isLoading = true;
 
@@ -462,7 +462,7 @@ class _ViewPerjalananDinasState extends State<ViewPerjalananDinas> {
       } finally {
         isLoading = false;
       }
-    } else if (action_id == '4'){
+    } else if (actionId == '4'){
       try{
         isLoading = true;
 

@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, avoid_print, file_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -740,10 +742,10 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
                                         base64Decode(photo),
                                       ),
                                     ),
-                                    title: Text("$employeeName",
+                                    title: Text(employeeName,
                                       style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                                     ),
-                                    subtitle: Text("$employeeEmail",
+                                    subtitle: Text(employeeEmail,
                                       style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                                     ),
                                   ),
@@ -890,7 +892,7 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
                                           ),
                                           GestureDetector(
                                             onTap: () {
-                                              Get.to(ViewMyPerjalananDinas());
+                                              Get.to(const ViewMyPerjalananDinas());
                                               // Get.to(const allMyInventoryRequest());
                                             },
                                             child: Text('Lihat semua', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
@@ -970,7 +972,7 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
                                             ),
                                             GestureDetector(
                                               onTap: () {
-                                                Get.to(ViewAllApprovalPerjalananDinas());
+                                                Get.to(const ViewAllApprovalPerjalananDinas());
                                                 // Get.to(const allMyInventoryRequest());
                                               },
                                               child: Text('Lihat semua', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
@@ -1048,7 +1050,7 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
                                             ),
                                             GestureDetector(
                                               onTap: () {
-                                                Get.to(ViewMyLPD());
+                                                Get.to(const ViewMyLPD());
                                                 // Get.to(ViewLPD(businessTripID: businessTripID));
                                                 // Get.to(const allMyInventoryRequest());
                                               },
@@ -1121,7 +1123,7 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
                                             ),
                                             GestureDetector(
                                               onTap: () {
-                                                Get.to(ViewMyLPD());
+                                                Get.to(const ViewMyLPD());
                                                 // Get.to(const allMyInventoryRequest());
                                               },
                                               child: Text('Lihat semua', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
@@ -1188,7 +1190,7 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
                                             ),
                                             GestureDetector(
                                               onTap: () {
-                                                Get.to(ViewAllApprovalLPD());
+                                                Get.to(const ViewAllApprovalLPD());
                                                 // Get.to(const allMyInventoryRequest());
                                               },
                                               child: Text('Lihat semua', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))

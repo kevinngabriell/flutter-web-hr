@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, non_constant_identifier_names
+
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -179,18 +181,18 @@ class _ListEmployeeSalaryState extends State<ListEmployeeSalary> {
                         dense: true,
                         horizontalTitleGap: 0.0, // Adjust this value as needed
                         leading: Container(
-                          margin: EdgeInsets.only(right: 2.0), // Add margin to the right of the image
+                          margin: const EdgeInsets.only(right: 2.0), // Add margin to the right of the image
                           child: Image.asset(
                             'images/kinglab.png',
                             width: MediaQuery.of(context).size.width * 0.08,
                           ),
                         ),
                         title: Text(
-                          "$companyName",
+                          companyName,
                           style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
                         ),
                         subtitle: Text(
-                          '$trimmedCompanyAddress',
+                          trimmedCompanyAddress,
                           style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
                         ),
                       ),
@@ -266,7 +268,7 @@ class _ListEmployeeSalaryState extends State<ListEmployeeSalary> {
                         padding: EdgeInsets.only(left: 5.w, right: 5.w),
                         child: ElevatedButton(
                           onPressed: () {
-                            Get.to(SalaryIndex());
+                            Get.to(const SalaryIndex());
                           },
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
@@ -297,7 +299,7 @@ class _ListEmployeeSalaryState extends State<ListEmployeeSalary> {
                         padding: EdgeInsets.only(left: 5.w, right: 5.w),
                         child: ElevatedButton(
                           onPressed: () {
-                            Get.to(PerformanceIndex());
+                            Get.to(const PerformanceIndex());
                           },
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
@@ -328,7 +330,7 @@ class _ListEmployeeSalaryState extends State<ListEmployeeSalary> {
                         padding: EdgeInsets.only(left: 5.w, right: 5.w),
                         child: ElevatedButton(
                           onPressed: () {
-                            Get.to(TrainingIndex());
+                            Get.to(const TrainingIndex());
                           },
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
@@ -359,7 +361,7 @@ class _ListEmployeeSalaryState extends State<ListEmployeeSalary> {
                         padding: EdgeInsets.only(left: 5.w, right: 5.w),
                         child: ElevatedButton(
                           onPressed: () {
-                            Get.to(EventIndex());
+                            Get.to(const EventIndex());
                           },
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
@@ -390,7 +392,7 @@ class _ListEmployeeSalaryState extends State<ListEmployeeSalary> {
                               padding: EdgeInsets.only(left: 5.w, right: 5.w),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Get.to(ReportIndex());
+                                  Get.to(const ReportIndex());
                                 },
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
@@ -429,7 +431,7 @@ class _ListEmployeeSalaryState extends State<ListEmployeeSalary> {
                         padding: EdgeInsets.only(left: 5.w, right: 5.w),
                         child: ElevatedButton(
                           onPressed: () {
-                            Get.to(SettingIndex());
+                            Get.to(const SettingIndex());
                           },
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
@@ -460,7 +462,7 @@ class _ListEmployeeSalaryState extends State<ListEmployeeSalary> {
                         padding: EdgeInsets.only(left: 5.w, right: 5.w),
                         child: ElevatedButton(
                           onPressed: () {
-                            Get.to(StructureIndex());
+                            Get.to(const StructureIndex());
                           },
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
@@ -558,7 +560,7 @@ class _ListEmployeeSalaryState extends State<ListEmployeeSalary> {
                             width: MediaQuery.of(context).size.width / 4.5,
                             child: GestureDetector(
                               onTap: () {
-                                Get.to(ProfilePage());
+                                Get.to(const ProfilePage());
                               },
                               child: ListTile(
                                 contentPadding: const EdgeInsets.only(left: 0, right: 0),
@@ -570,10 +572,10 @@ class _ListEmployeeSalaryState extends State<ListEmployeeSalary> {
                                 base64Decode(photo),
                               ),
                             ),
-                                title: Text("$employeeName",
+                                title: Text(employeeName,
                                   style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                                 ),
-                                subtitle: Text("$employeeEmail",
+                                subtitle: Text(employeeEmail,
                                   style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                                 ),
                               ),
@@ -582,7 +584,7 @@ class _ListEmployeeSalaryState extends State<ListEmployeeSalary> {
                         ],
                       ),
                       SizedBox(height: 30.sp,),
-                      Text('Tanggal pengambilan absen'),
+                      const Text('Tanggal pengambilan absen'),
                       Row(
                         children: [
                           SizedBox(
@@ -629,88 +631,86 @@ class _ListEmployeeSalaryState extends State<ListEmployeeSalary> {
                                 backgroundColor: const Color(0xff4ec3fc),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                               ),
-                              child: Text('Cari')
+                              child: const Text('Cari')
                             ),
                           )
                         ],
                       ),
                       SizedBox(height: 50.sp,),
                       if (isLoading)
-                        CircularProgressIndicator()
+                        const CircularProgressIndicator()
                       else if (TanggalMulai == null || TanggalAkhir == null)
-                        Text('Silahkan mengisi tanggal mulai dan akhir untuk melihat rekap absen')
+                        const Text('Silahkan mengisi tanggal mulai dan akhir untuk melihat rekap absen')
                       else if (differenceDays != null && differenceDays! <= 28)
-                        Text('Rentang waktu yang anda pilih kurang dari 28 hari kalender')
+                        const Text('Rentang waktu yang anda pilih kurang dari 28 hari kalender')
                       else if (differenceDays != null && differenceDays! >= 28)
-                        Container(
-                          child: FutureBuilder<List<Map<String, dynamic>>>(
-                            future: fetchEmployeeList(), // Assuming you have a function to fetch the employee list
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return Center(child: CircularProgressIndicator());
-                              } else if (snapshot.hasError) {
-                                return Center(child: Text('Error: ${snapshot.error}'));
-                              } else if (snapshot.hasData) {
-                                return SingleChildScrollView(
-                                  child: Column(
-                                    children: [
-                                      // Your other widgets here
-                                      SizedBox(
-                                        height: MediaQuery.of(context).size.height - 130.h,
-                                        child: ListView.builder(
-                                          itemCount: snapshot.data?.length,
-                                          itemBuilder: (context, index) {
-                                            Map<String, dynamic> employeeData = snapshot.data![index];
-                                            
-                                            String statusText;
-                                            String complete;                                            
-                                            if (employeeData['is_complete'] == null || employeeData['is_complete'] == '0') {
-                                              statusText = 'Belum Selesai';
-                                              complete = '0';
-                                            } else {
-                                              statusText = 'Selesai';
-                                              complete = '1';
-                                            }
-                                            // ID = employeeData['id'];
-                                            Color cardColor = statusText == 'Belum Selesai' ? Colors.red : Colors.green;
-
-                                            return SizedBox(
-                                              width: 150,
-                                              height: MediaQuery.of(context).size.height / 10,
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  selectedEmployeeName = employeeData['employee_name'];
-                                                  ID = employeeData['id'];
-                                                  Get.to(DetailSalaryPage(TanggalMulai!, TanggalAkhir!, ID, selectedEmployeeName, complete));
-                                                },
-                                                child: Card(
-                                                  child: Center(
-                                                    child: ListTile(
-                                                      title: Text(employeeData['employee_name']),
-                                                      trailing: Card(
-                                                        color: cardColor,
-                                                        child: Padding(
-                                                          padding: EdgeInsets.only(left: 10.sp, right: 10.sp, top: 7.sp, bottom: 7.sp),
-                                                          child: Text(statusText, style: TextStyle(color: Colors.white),),
-                                                        )
-                                                      ),
-                                                      // Other properties based on your data
+                        FutureBuilder<List<Map<String, dynamic>>>(
+                          future: fetchEmployeeList(), // Assuming you have a function to fetch the employee list
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const Center(child: CircularProgressIndicator());
+                            } else if (snapshot.hasError) {
+                              return Center(child: Text('Error: ${snapshot.error}'));
+                            } else if (snapshot.hasData) {
+                              return SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    // Your other widgets here
+                                    SizedBox(
+                                      height: MediaQuery.of(context).size.height - 130.h,
+                                      child: ListView.builder(
+                                        itemCount: snapshot.data?.length,
+                                        itemBuilder: (context, index) {
+                                          Map<String, dynamic> employeeData = snapshot.data![index];
+                                          
+                                          String statusText;
+                                          String complete;                                            
+                                          if (employeeData['is_complete'] == null || employeeData['is_complete'] == '0') {
+                                            statusText = 'Belum Selesai';
+                                            complete = '0';
+                                          } else {
+                                            statusText = 'Selesai';
+                                            complete = '1';
+                                          }
+                                          // ID = employeeData['id'];
+                                          Color cardColor = statusText == 'Belum Selesai' ? Colors.red : Colors.green;
+                        
+                                          return SizedBox(
+                                            width: 150,
+                                            height: MediaQuery.of(context).size.height / 10,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                selectedEmployeeName = employeeData['employee_name'];
+                                                ID = employeeData['id'];
+                                                Get.to(DetailSalaryPage(TanggalMulai!, TanggalAkhir!, ID, selectedEmployeeName, complete));
+                                              },
+                                              child: Card(
+                                                child: Center(
+                                                  child: ListTile(
+                                                    title: Text(employeeData['employee_name']),
+                                                    trailing: Card(
+                                                      color: cardColor,
+                                                      child: Padding(
+                                                        padding: EdgeInsets.only(left: 10.sp, right: 10.sp, top: 7.sp, bottom: 7.sp),
+                                                        child: Text(statusText, style: const TextStyle(color: Colors.white),),
+                                                      )
                                                     ),
+                                                    // Other properties based on your data
                                                   ),
                                                 ),
                                               ),
-                                            );
-                                          },
-                                        ),
+                                            ),
+                                          );
+                                        },
                                       ),
-                                    ],
-                                  ),
-                                );
-                              } else {
-                                return Text('No data available'); // Adjust this text as needed
-                              }
-                            },
-                          ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            } else {
+                              return const Text('No data available'); // Adjust this text as needed
+                            }
+                          },
                         ),
                       SizedBox(height: 30.sp,),
                     ],

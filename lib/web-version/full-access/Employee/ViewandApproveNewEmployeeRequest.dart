@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, file_names, avoid_print
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, file_names, avoid_print, use_key_in_widget_constructors, prefer_const_constructors_in_immutables
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -512,7 +512,7 @@ class _ViewApproveNewEmployeeRequestState extends State<ViewApproveNewEmployeeRe
                             padding: EdgeInsets.only(left: 5.w, right: 5.w),
                             child: ElevatedButton(
                               onPressed: () {
-                                Get.to(SalaryIndex());
+                                Get.to(const SalaryIndex());
                               },
                               style: ElevatedButton.styleFrom(
                                 elevation: 0,
@@ -543,7 +543,7 @@ class _ViewApproveNewEmployeeRequestState extends State<ViewApproveNewEmployeeRe
                             padding: EdgeInsets.only(left: 5.w, right: 5.w),
                             child: ElevatedButton(
                               onPressed: () {
-                                Get.to(PerformanceIndex());
+                                Get.to(const PerformanceIndex());
                               },
                               style: ElevatedButton.styleFrom(
                                 elevation: 0,
@@ -574,7 +574,7 @@ class _ViewApproveNewEmployeeRequestState extends State<ViewApproveNewEmployeeRe
                             padding: EdgeInsets.only(left: 5.w, right: 5.w),
                             child: ElevatedButton(
                               onPressed: () {
-                                Get.to(TrainingIndex());
+                                Get.to(const TrainingIndex());
                               },
                               style: ElevatedButton.styleFrom(
                                 elevation: 0,
@@ -605,7 +605,7 @@ class _ViewApproveNewEmployeeRequestState extends State<ViewApproveNewEmployeeRe
                             padding: EdgeInsets.only(left: 5.w, right: 5.w),
                             child: ElevatedButton(
                               onPressed: () {
-                                Get.to(EventIndex());
+                                Get.to(const EventIndex());
                               },
                               style: ElevatedButton.styleFrom(
                                 elevation: 0,
@@ -636,7 +636,7 @@ class _ViewApproveNewEmployeeRequestState extends State<ViewApproveNewEmployeeRe
                               padding: EdgeInsets.only(left: 5.w, right: 5.w),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Get.to(ReportIndex());
+                                  Get.to(const ReportIndex());
                                 },
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
@@ -675,7 +675,7 @@ class _ViewApproveNewEmployeeRequestState extends State<ViewApproveNewEmployeeRe
                             padding: EdgeInsets.only(left: 5.w, right: 5.w),
                             child: ElevatedButton(
                               onPressed: () {
-                                Get.to(SettingIndex());
+                                Get.to(const SettingIndex());
                               },
                               style: ElevatedButton.styleFrom(
                                 elevation: 0,
@@ -706,7 +706,7 @@ class _ViewApproveNewEmployeeRequestState extends State<ViewApproveNewEmployeeRe
                             padding: EdgeInsets.only(left: 5.w, right: 5.w),
                             child: ElevatedButton(
                               onPressed: () {
-                                Get.to(StructureIndex());
+                                Get.to(const StructureIndex());
                               },
                               style: ElevatedButton.styleFrom(
                                 elevation: 0,

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, file_names
+
 import 'dart:convert';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
@@ -55,7 +57,6 @@ class _CutiDashboardPageState extends State<CutiDashboardPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fetchData();
   }

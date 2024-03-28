@@ -1,4 +1,4 @@
-// ignore_for_file: unused_local_variable, unused_import, depend_on_referenced_packages, avoid_web_libraries_in_flutter, avoid_print, use_build_context_synchronously
+// ignore_for_file: unused_local_variable, unused_import, depend_on_referenced_packages, avoid_web_libraries_in_flutter, avoid_print, use_build_context_synchronously, prefer_interpolation_to_compose_strings
 
 import 'dart:io';
 import 'dart:typed_data';
@@ -25,13 +25,26 @@ Future<void> main() async {
 
   final cameras = await availableCameras();
 
-  final firstCamera = cameras.first;
+  CameraDescription? frontCamera;
+
+  // Iterate through the list of available cameras to find the front camera.
+  for (CameraDescription camera in cameras) {
+    if (camera.lensDirection == CameraLensDirection.front) {
+      frontCamera = camera;
+      break; // Stop the loop once the front camera is found
+    }
+  }
+
+  if (frontCamera == null) {
+    Get.snackbar('Error','No front camera found!');
+    return; // or handle this case appropriately
+  }
 
   runApp(
     MaterialApp(
       theme: ThemeData.dark(),
       home: TakePictureScreen(
-        camera: firstCamera,
+        camera: frontCamera,
       ),
     ),
   );
@@ -56,7 +69,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   late CameraController controller;
   late Future<void> initializeControllerFuture;
 
-    String companyName = '';
+  String companyName = '';
   String companyAddress = '';
   String employeeName = '';
   String employeeEmail = '';
@@ -131,34 +144,24 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
    Future<void> _captureImage() async {
     try {
+      isLoading = true;
       final image = await controller.takePicture();
       final Uint8List imageData = await image.readAsBytes();
       final String base64Image = base64Encode(imageData);
-      print(base64Image);
 
       var datenow = DateTime.now();
       String timestamp = datenow.toString();
 
-      // Combine timestamp and location information
-      String stampText = "Waktu: $timestamp\n\nLokasi: ";
-      print(stampText);
+      if (!mounted) return;
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => DisplayPictureScreen(
+            imagePath: base64Image,
+            timestamp: timestamp,
+          ),
+        ),
+      );
 
-      // Add timestamp and location information to the image
-      // addTextWatermark(base64Image, stampText);
-
-            if (!mounted) return;
-            await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => DisplayPictureScreen(
-                  imagePath: image.path,
-                  timestamp: timestamp,
-                  // location: location,
-                ),
-              ),
-            );
-
-      // final html.Image capturedImage = html.Image.memory(imageData);
-      // html.document.body.append(capturedImage);
     } catch (e) {
       print(e);
     }
@@ -186,77 +189,15 @@ class TakePictureScreenState extends State<TakePictureScreen> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         onPressed: _captureImage,
-      //  onPressed: () async {
-      //   try {
-      //     final image = await ImagePickerWeb.getImageAsFile();
-      //     if (image != null) {
-      //       print('masuk');
-      //       // Handle the captured image
-      //       // Get current timestamp
-      //       var datenow = DateTime.now();
-      //       String timestamp = datenow.toString();
-
-      //       // Get current location (using Geolocator package)
-      //       // String location = await _getCurrentLocation();
-
-      //       // Combine timestamp and location information
-      //       String stampText = "Waktu: $timestamp\n\nLokasi: ";
-
-      //       // Add timestamp and location information to the image
-      //       // _addTextWatermark(image.path, stampText);
-
-      //       // if (!mounted) return;
-      //       // await Navigator.of(context).push(
-      //       //   MaterialPageRoute(
-      //       //     builder: (context) => DisplayPictureScreen(
-      //       //       imagePath: image.path,
-      //       //       timestamp: timestamp,
-      //       //       // location: location,
-      //       //     ),
-      //       //   ),
-      //       // );
-      //     }
-      //   } catch (e) {
-      //     print(e);
-      //   }
-      // },
-
         child: const Icon(Icons.camera_alt),
       ),
     );
   }
 
-  void addTextWatermark(String base64Image, String watermarkText) {
-  // Decode base64 image to bytes
-  Uint8List bytes = base64Decode(base64Image);
-
-  // Decode image using image package
-  img.Image image = img.decodeImage(bytes)!;
-
-  // Create a recorder to draw on a canvas
-  ui.PictureRecorder recorder = ui.PictureRecorder();
-  Canvas canvas = Canvas(recorder, Rect.fromPoints(const Offset(0.0, 0.0), Offset(image.width.toDouble(), image.height.toDouble())));
-
-  ui.ParagraphBuilder builder = ui.ParagraphBuilder(
-    ui.ParagraphStyle(
-      textAlign: TextAlign.left,
-      fontSize: 24.0,
-    ),
-  );
-
-  ui.Paragraph paragraph = builder.build()..layout(ui.ParagraphConstraints(width: image.width.toDouble()));
-
-  // Draw the image onto the canvas
-  // canvas.drawImage(img.Image.fromBytes(image.width, image.height, image.getBytes(), width: 150, height: 15, bytes: 15), Offset.zero, Paint());
-
-  // // Draw the text watermark on the canvas
-  canvas.drawParagraph(paragraph, Offset(10.0, image.height.toDouble() - 50.0));
-
-}
 }
 
 // A widget that displays the picture taken by the user.
-class DisplayPictureScreen extends StatelessWidget {
+class DisplayPictureScreen extends StatefulWidget {
   final String imagePath;
   final String timestamp;
   // final String location;
@@ -267,12 +208,107 @@ class DisplayPictureScreen extends StatelessWidget {
     required this.timestamp,
     // required this.location,
   });
-  
+
+  @override
+  State<DisplayPictureScreen> createState() => _DisplayPictureScreenState();
+}
+
+class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
+  bool isLoading = false;
+  String? leaveoptions;
+  String companyName = '';
+  String companyAddress = '';
+  String employeeName = '';
+  String employeeEmail = '';
+  String trimmedCompanyAddress = '';
+  final storage = GetStorage();
+  List<Map<String, dynamic>> noticationList = [];
+
+  Future<void> sendAbsence(String based64Image, String absenceTypeId, int employeeId, String companyId, String location, String formattedTime, String formattedDate) async {
+    try{
+      isLoading = true;
+
+      String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-systems-data-v.1/AbsenceProcess/InsertAbsen.php';
+
+      var data = {
+        'employee_id': employeeId,
+        'company_id': companyId,
+        'date': formattedDate,
+        'time': formattedTime,
+        'location': 'Absen melalui web',
+        'absence_type': absenceTypeId,
+        'photo': based64Image,
+      };
+
+      var dioClient = dio.Dio();
+      dio.Response response = await dioClient.post(apiUrl, data: dio.FormData.fromMap(data));
+
+      if (response.statusCode == 200) {
+        showDialog(
+          context: context, // Make sure to have access to the context
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Sukses'),
+              content: const Text('Anda telah berhasil melakukan absensi'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    final GetStorage storage = GetStorage();
+
+                    String employeeName = storage.read('employee_name') ?? '';
+                    String positionName = storage.read('position_name') ?? '';
+                    Get.to(indexMobile(EmployeeID: employeeId.toString()));
+                  },
+                  child: const Text('Kembali ke Halaman Utama'),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        showDialog(
+            context: context, 
+            builder: (_) {
+            return AlertDialog(
+              title: const Text('Error'),
+              content: Text('Error ' + response.data),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {Get.to(indexMobile(EmployeeID: employeeId.toString()));}, 
+                  child: const Text("Oke")
+                ),
+              ],
+            );
+          }
+        );
+      }
+
+    } catch (e){
+      showDialog(
+          context: context, 
+          builder: (_) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: Text('Error $e'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {Get.to(indexMobile(EmployeeID: employeeId.toString()));}, 
+                child: const Text("Oke")
+              ),
+            ],
+          );
+        }
+      );
+    } finally {
+      isLoading = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final storage = GetStorage();
     String absenceType = GetStorage().read('absence_type');
+    Uint8List bytes = base64Decode(widget.imagePath);
 
     return Scaffold(
       appBar: AppBar(
@@ -303,7 +339,7 @@ class DisplayPictureScreen extends StatelessWidget {
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 50 , // Set a specific width
                     child: TextFormField(
-                      initialValue: DateFormat('dd MMM yyyy HH:mm').format(DateTime.parse(timestamp)),
+                      initialValue: DateFormat('dd MMM yyyy HH:mm').format(DateTime.parse(widget.timestamp)),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         fillColor: Color.fromRGBO(235, 235, 235, 1),
@@ -421,59 +457,23 @@ class DisplayPictureScreen extends StatelessWidget {
                 children: [
                   SizedBox(
                     width: MediaQuery.of(context).size.width / 2,
-                    child: Image.file(File(imagePath)),
+                    child: Image.memory(bytes),
                   ),
                 ],
               ),
               SizedBox(height: 20.h,),
               ElevatedButton(
                 onPressed: ()  {
-                  File imageFile = File(imagePath);
-                  print(File(imagePath));
-
-                  // Get other necessary data
+                  File imageFile = File(widget.imagePath);
                   String absenceTypeId = GetStorage().read('absence_type_id');
                   // Assuming 'employee_id' is stored as a String
-                  //String employeeIdString = GetStorage().read('employee_id');
-
-                  // Parse the String to an int
-                  int employeeId = GetStorage().read('employee_id'); // 0 is the default value if parsing fails
+                  int employeeId = GetStorage().read('employee_id'); 
 
                   String companyId = GetStorage().read('company_id');
-                  // String locationSend = location;
-                  String formattedTime = DateFormat('HH:mm').format(DateTime.parse(timestamp));
-                  String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.parse(timestamp));
-                  // sendAbsenceData(imageFile, absenceTypeId, employeeId, companyId, locationSend, formattedTime, formattedDate);
-                  // String absenceType_id = GetStorage().read('absence_type_id');
-                  // String employee_id = GetStorage().read('employee_id');
-
-                  // String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.parse(timestamp));
-                  // String formattedTime = DateFormat('HH:mm').format(DateTime.parse(timestamp));
-
-                  // Future<Uint8List> getImageBytes(File file) async {
-                  //   final bytes = await file.readAsBytes();
-                  //   final image = img.decodeImage(Uint8List.fromList(bytes));
-
-                  //   // Encode the image to PNG format
-                  //   final pngBytes = img.encodePng(image!);
-
-                  //   // Convert to Uint8List
-                  //   return Uint8List.fromList(pngBytes);
-                  // }
-
-                  // // Usage:
-                  // Uint8List imageBytes = getImageBytes(File(imagePath)) as Uint8List;
-
-                  // print('Absence Type ID: $absenceType_id');
-                  // print('Employee ID: $employee_id');
-                  // print('Formatted Date: $formattedDate');
-                  // print('Formatted Time: $formattedTime');
-                  // print('Image Bytes Length: ${imageBytes.length}');
-
-                  // Here you can use imageBytes for further processing or upload it to a server
-                  // For example, you might want to upload the image using an HTTP package:
-                  // await uploadImageToServer(imageBytes);
-
+                  String formattedTime = DateFormat('HH:mm').format(DateTime.parse(widget.timestamp));
+                  String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.parse(widget.timestamp));
+                  String a = widget.imagePath;
+                  sendAbsence(a, absenceTypeId, employeeId, companyId, 'Absen melalui web', formattedTime, formattedDate);
                 }, 
                 child: const Text('Kumpulkan')
               )

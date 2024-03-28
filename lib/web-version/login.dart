@@ -183,21 +183,21 @@ class _LoginPageDesktopState extends State<LoginPageDesktop> {
                   'Masuk',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 48.sp,
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 SizedBox(
-                  height: 6.sp,
+                  height: 3.sp,
                 ),
                 Text('Silahkan masukkan username dan password anda untuk masuk',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 15.sp,
+                      fontSize: 5.sp,
                       fontWeight: FontWeight.w300,
                     )),
                 SizedBox(
-                  height: 40.sp,
+                  height: 10.sp,
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,7 +207,7 @@ class _LoginPageDesktopState extends State<LoginPageDesktop> {
                       child: Text(
                         'Username',
                         style: TextStyle(
-                          fontSize: 16.sp,
+                          fontSize: 5.sp,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -233,7 +233,7 @@ class _LoginPageDesktopState extends State<LoginPageDesktop> {
                   ),
                 ),
                 SizedBox(
-                  height: 20.sp,
+                  height: 8.sp,
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -243,7 +243,7 @@ class _LoginPageDesktopState extends State<LoginPageDesktop> {
                       child: Text(
                         'Password',
                         style: TextStyle(
-                          fontSize: 16.sp,
+                          fontSize: 5.sp,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -268,7 +268,7 @@ class _LoginPageDesktopState extends State<LoginPageDesktop> {
                   ),
                 ),
                 SizedBox(
-                  height: 10.sp,
+                  height: 8.sp,
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -297,7 +297,7 @@ class _LoginPageDesktopState extends State<LoginPageDesktop> {
                         child: Text('Lupa password',
                             style: TextStyle(
                               color: Colors.red,
-                              fontSize: 15.sp,
+                              fontSize: 5.sp,
                               fontWeight: FontWeight.w600,
                             )),
                       ),
@@ -320,7 +320,7 @@ class _LoginPageDesktopState extends State<LoginPageDesktop> {
                       'Masuk',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontSize: 20.sp, fontWeight: FontWeight.w700),
+                          fontSize: 5.sp, fontWeight: FontWeight.w700),
                     ),
                   ),
                   onPressed: () => {

@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, avoid_print, prefer_const_constructors, prefer_final_fields, unnecessary_string_interpolations, non_constant_identifier_names
+// ignore_for_file: file_names, avoid_print, prefer_const_constructors, prefer_final_fields, unnecessary_string_interpolations, non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';

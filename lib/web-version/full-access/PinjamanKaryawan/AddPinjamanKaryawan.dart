@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, avoid_print, use_build_context_synchronously, file_names
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -771,10 +771,10 @@ class _AddNewPinjamanKaryawanState extends State<AddNewPinjamanKaryawan> {
                                         base64Decode(photo),
                                       ),
                                     ),
-                                    title: Text("$employeeName",
+                                    title: Text(employeeName,
                                       style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                                     ),
-                                    subtitle: Text("$employeeEmail",
+                                    subtitle: Text(employeeEmail,
                                       style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                                     ),
                                   ),
@@ -930,7 +930,7 @@ class _AddNewPinjamanKaryawanState extends State<AddNewPinjamanKaryawan> {
                                 backgroundColor: const Color(0xff4ec3fc),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                               ),
-                              child: Text('Kumpulkan')
+                              child: const Text('Kumpulkan')
                             )
                           ],
                         )

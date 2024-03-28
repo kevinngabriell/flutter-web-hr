@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, empty_catches, avoid_print, use_key_in_widget_constructors, prefer_const_constructors_in_immutables
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -450,7 +450,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
       if(response.statusCode == 200){
         Get.back();
       } else {
-        Get.snackbar('Error : ', '${response.body}');
+        Get.snackbar('Error : ', response.body);
         print('Response body: ${response.body}');
       }
 
@@ -803,7 +803,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                           padding: EdgeInsets.only(left: 5.w, right: 5.w),
                           child: ElevatedButton(
                             onPressed: () {
-                              Get.to(PerformanceIndex());
+                              Get.to(const PerformanceIndex());
                             },
                             style: ElevatedButton.styleFrom(
                               elevation: 0,
@@ -834,7 +834,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                           padding: EdgeInsets.only(left: 5.w, right: 5.w),
                           child: ElevatedButton(
                             onPressed: () {
-                              Get.to(TrainingIndex());
+                              Get.to(const TrainingIndex());
                             },
                             style: ElevatedButton.styleFrom(
                               elevation: 0,
@@ -865,7 +865,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                           padding: EdgeInsets.only(left: 5.w, right: 5.w),
                           child: ElevatedButton(
                             onPressed: () {
-                              Get.to(EventIndex());
+                              Get.to(const EventIndex());
                             },
                             style: ElevatedButton.styleFrom(
                               elevation: 0,
@@ -896,7 +896,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                               padding: EdgeInsets.only(left: 5.w, right: 5.w),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Get.to(ReportIndex());
+                                  Get.to(const ReportIndex());
                                 },
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
@@ -935,7 +935,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                           padding: EdgeInsets.only(left: 5.w, right: 5.w),
                           child: ElevatedButton(
                             onPressed: () {
-                              Get.to(SettingIndex());
+                              Get.to(const SettingIndex());
                             },
                             style: ElevatedButton.styleFrom(
                               elevation: 0,
@@ -966,7 +966,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                           padding: EdgeInsets.only(left: 5.w, right: 5.w),
                           child: ElevatedButton(
                             onPressed: () {
-                              Get.to(StructureIndex());
+                              Get.to(const StructureIndex());
                             },
                             style: ElevatedButton.styleFrom(
                               elevation: 0,
@@ -1200,7 +1200,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                   SizedBox(height: 10.h,),
                                   DropdownButtonFormField(
                                     value: 01,
-                                    items: [
+                                    items: const [
                                       DropdownMenuItem(
                                         value: 01,
                                         child: Text('Metode 1')
@@ -1271,7 +1271,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                   children: [
                                     Text('Perhatian', style: TextStyle(fontSize: 16.sp, color: Colors.white, fontWeight: FontWeight.bold)), // Set text color
                                     SizedBox(height: 7.sp,),
-                                    Text(
+                                    const Text(
                                       'Jika angka total perhitungan gaji tidak berubah, silahkan coba hapus salah satu 0 dan tambahkan kembali pada pendapatan dan potongan',
                                       style: TextStyle(color: Colors.white), // Set text color
                                     ),
@@ -1673,7 +1673,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                       backgroundColor: const Color(0xff4ec3fc),
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                     ),
-                                    child: Text('Ambil data dari bulan lalu')
+                                    child: const Text('Ambil data dari bulan lalu')
                                   )
                                 ],
                               ),
@@ -1994,21 +1994,21 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                     context: context, 
                                     builder: (_){
                                       return AlertDialog(
-                                        title: Text('Konfirmasi'),
-                                        content: Text('Apakah anda yakin ingin mengumpulkan data ? Data yang sudah dikumpulkan tidak dapat diubah'),
+                                        title: const Text('Konfirmasi'),
+                                        content: const Text('Apakah anda yakin ingin mengumpulkan data ? Data yang sudah dikumpulkan tidak dapat diubah'),
                                         actions: [
                                           TextButton(
                                             onPressed: (){
                                               Get.back();
                                             }, 
-                                            child: Text('Batal')
+                                            child: const Text('Batal')
                                           ),
                                           TextButton(
                                             onPressed: (){
                                               Get.back();
                                               savePayroll();
                                             }, 
-                                            child: Text('Kumpul')
+                                            child: const Text('Kumpul')
                                           )
                                         ],
                                       );

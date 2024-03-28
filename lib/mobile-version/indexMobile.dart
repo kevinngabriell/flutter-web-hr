@@ -291,7 +291,7 @@ class _indexMobileState extends State<indexMobile> {
           }else if(index == 3){
             _currentMenu = 'Account';
           } else if (index == 4){
-            Get.to(MyProfileMobile());
+            Get.to(const MyProfileMobile());
             // logoutServicesMobile();
             // Get.to(MobileLogin());
             // Get.to(ProfilePage(EmployeeName: "${widget.EmployeeName}", PositionName: "${widget.PositionName}",));
@@ -304,7 +304,7 @@ class _indexMobileState extends State<indexMobile> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: isLoading ? Center(child: CircularProgressIndicator(),) : SingleChildScrollView(
+      body: isLoading ? const Center(child: CircularProgressIndicator(),) : SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,

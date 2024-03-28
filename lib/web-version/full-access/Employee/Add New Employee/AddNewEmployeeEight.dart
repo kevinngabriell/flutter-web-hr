@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, avoid_print, unnecessary_string_interpolations
+// ignore_for_file: file_names, avoid_print, unnecessary_string_interpolations, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

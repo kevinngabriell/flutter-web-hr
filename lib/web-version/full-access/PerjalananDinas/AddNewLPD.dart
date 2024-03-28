@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, avoid_print, file_names
 
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
@@ -189,8 +189,6 @@ class _AddNewLPDState extends State<AddNewLPD> {
         // Handle the case where the server did not return a 200 OK response
         print("Failed to load members data");
       }
-    } catch (e){
-
     } finally {
       isLoading = false;
     }
@@ -919,10 +917,10 @@ class _AddNewLPDState extends State<AddNewLPD> {
                                         base64Decode(photo),
                                       ),
                                     ),
-                                    title: Text("$employeeName",
+                                    title: Text(employeeName,
                                       style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                                     ),
-                                    subtitle: Text("$employeeEmail",
+                                    subtitle: Text(employeeEmail,
                                       style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
                                     ),
                                   ),
@@ -1177,7 +1175,7 @@ class _AddNewLPDState extends State<AddNewLPD> {
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 4,
-                              child: Text('Tiket Pesawat'),
+                              child: const Text('Tiket Pesawat'),
                             ),
                             SizedBox(width: 5.w,),
                             SizedBox(
@@ -1253,7 +1251,7 @@ class _AddNewLPDState extends State<AddNewLPD> {
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 4,
-                              child: Text('Hotel / Penginapan'),
+                              child: const Text('Hotel / Penginapan'),
                             ),
                             SizedBox(width: 5.w,),
                             SizedBox(
@@ -1717,7 +1715,7 @@ class _AddNewLPDState extends State<AddNewLPD> {
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 4,
-                              child: Text('Transport(Taxi) Lokal/Sewa mobil harian'),
+                              child: const Text('Transport(Taxi) Lokal/Sewa mobil harian'),
                             ),
                             SizedBox(width: 5.w,),
                             SizedBox(
@@ -2182,7 +2180,7 @@ class _AddNewLPDState extends State<AddNewLPD> {
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 4,
-                              child: Text('By entertain'),
+                              child: const Text('By entertain'),
                             ),
                             SizedBox(width: 5.w,),
                             SizedBox(
@@ -2258,7 +2256,7 @@ class _AddNewLPDState extends State<AddNewLPD> {
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 4,
-                              child: Text('Lain-lain'),
+                              child: const Text('Lain-lain'),
                             ),
                             SizedBox(width: 5.w,),
                             SizedBox(
@@ -2435,7 +2433,7 @@ class _AddNewLPDState extends State<AddNewLPD> {
                                   backgroundColor: const Color(0xff4ec3fc),
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                 ),
-                              child: Text('Kumpulkan')
+                              child: const Text('Kumpulkan')
                             )
                           ],
                         ),
