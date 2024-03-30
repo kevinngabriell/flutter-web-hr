@@ -237,14 +237,14 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width * 0.36,
                                   child: Padding(
-                                    padding: EdgeInsets.all(15.0.sp),
+                                    padding: EdgeInsets.only(left: 4.sp, top: 4.sp, bottom: 4.sp, right: 4.sp),
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text('Jumlah Pinjaman saya', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400,)),
+                                        Text('Jumlah Pinjaman saya', style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w400,)),
                                         SizedBox(height: 5.h,),
-                                        Text(myLoan, style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700,)),
+                                        Text(myLoan, style: TextStyle(fontSize: 7.sp, fontWeight: FontWeight.w700,)),
                                       ],
                                     ),
                                   )
@@ -259,14 +259,14 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width * 0.36,
                                   child: Padding(
-                                    padding: EdgeInsets.all(15.0.sp),
+                                    padding: EdgeInsets.only(left: 4.sp, top: 4.sp, bottom: 4.sp, right: 4.sp),
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text('Total Pinjaman Saya', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400,)),
+                                        Text('Total Pinjaman Saya', style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w400,)),
                                         SizedBox(height: 5.h,),
-                                        Text(formatCurrency2(totalMyLoan), style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700,)),
+                                        Text(formatCurrency2(totalMyLoan), style: TextStyle(fontSize: 7.sp, fontWeight: FontWeight.w700,)),
                                       ],
                                     ),
                                   )
@@ -275,19 +275,17 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                             ],
                           ),
                         if(positionId != 'POS-HR-002')
-                          SizedBox(height: 30.sp,),
+                          SizedBox(height: 10.sp,),
                         if(positionId != 'POS-HR-002' && positionId != 'POS-HR-001' && positionId != 'POS-HR-004' && positionId != 'POS-HR-024' && positionId != 'POS-HR-008')
                           Card(
                             shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
                             color: Colors.white,
                             shadowColor: Colors.black,
                             child: SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.74,
+                              width: MediaQuery.of(context).size.width * 0.35,
                               child: Padding(
-                                padding: EdgeInsets.all(15.0.sp),
+                                padding: EdgeInsets.only(left: 4.sp, top: 4.sp, bottom: 4.sp, right: 4.sp),
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -295,9 +293,9 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                                         Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Text('Pinjaman Saya',style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700,)),
-                                            SizedBox(height: 5.sp,),
-                                            Text( 'Kelola pinjaman saya', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w300,)),
+                                            Text('Pinjaman Saya',style: TextStyle(fontSize: 6.sp, fontWeight: FontWeight.w700,)),
+                                            SizedBox(height: 1.sp,),
+                                            Text( 'Kelola pinjaman saya', style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w300,)),
                                           ],
                                         ),
                                         GestureDetector(
@@ -306,10 +304,11 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                                               // Get.to(ViewMyPerjalananDinas());
                                               // Get.to(const allMyInventoryRequest());
                                           },
-                                          child: Text('Lihat semua', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
+                                          child: Text('Lihat semua', style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
                                         )
                                       ],
                                     ),
+                                    SizedBox( height: 7.sp,),
                                     for (int indexA = 0; indexA < 3; indexA++)
                                           Column(
                                             children: [
@@ -323,24 +322,24 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                                                       indexA < myLoanList.length
                                                           ? '${myLoanList[indexA]['employee_name']}'
                                                           : '-',
-                                                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
+                                                      style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w700),
                                                     ),
                                                     subtitle: Text(
                                                       indexA < myLoanList.length
                                                           ? formatCurrency2(myLoanList[indexA]['loan_amount'])
                                                           : '-',
-                                                      style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w400),
+                                                      style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w400),
                                                     ),
                                                     trailing: Text(
                                                       indexA < myLoanList.length
                                                           ? '${myLoanList[indexA]['status_name']}'
                                                           : '-',
-                                                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
+                                                      style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w700),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                              SizedBox(height: 10.sp,),
+                                              SizedBox(height: 5.sp,),
                                             ],
                                           ),
                                   ],
@@ -350,6 +349,7 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                           ),
                         if(positionId == 'POS-HR-002')
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Card(
                                 shape: const RoundedRectangleBorder(
@@ -357,60 +357,57 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                                 color: Colors.white,
                                 shadowColor: Colors.black,
                                 child: SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.235,
+                                  width: MediaQuery.of(context).size.width * 0.24,
                                   child: Padding(
-                                    padding: EdgeInsets.all(15.0.sp),
+                                    padding: EdgeInsets.only(left: 7.sp, top: 5.sp, bottom: 5.sp, right: 7.sp),
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text('Jumlah Pinjaman saya', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400,)),
+                                        Text('Jumlah Pinjaman saya', style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w400,)),
                                         SizedBox(height: 5.h,),
-                                        Text(myLoan, style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700,)),
+                                        Text(myLoan, style: TextStyle(fontSize: 7.sp, fontWeight: FontWeight.w700,)),
                                       ],
                                     ),
                                   )
                                 ),
                               ),
-                              SizedBox(width: 6.w,),
                               Card(
                                 shape: const RoundedRectangleBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(12))),
                                 color: Colors.white,
                                 shadowColor: Colors.black,
                                 child: SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.235,
+                                  width: MediaQuery.of(context).size.width * 0.24,
                                   child: Padding(
-                                    padding: EdgeInsets.all(15.0.sp),
+                                    padding: EdgeInsets.only(left: 7.sp, top: 5.sp, bottom: 5.sp, right: 7.sp),
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text('Total Pinjaman Saya', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400,)),
+                                        Text('Total Pinjaman Saya', style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w400,)),
                                         SizedBox(height: 5.h,),
-                                        Text(formatCurrency2(totalMyLoan), style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700,)),
+                                        Text(formatCurrency2(totalMyLoan), style: TextStyle(fontSize: 7.sp, fontWeight: FontWeight.w700,)),
                                       ],
                                     ),
                                   )
                                 ),
                               ),
-                              SizedBox(width: 6.w,),
                               Card(
                                 shape: const RoundedRectangleBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(12))),
                                 color: Colors.white,
                                 shadowColor: Colors.black,
                                 child: SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.235,
+                                  width: MediaQuery.of(context).size.width * 0.24,
                                   child: Padding(
-                                    padding: EdgeInsets.all(15.0.sp),
+                                    padding: EdgeInsets.only(left: 7.sp, top: 5.sp, bottom: 5.sp, right: 7.sp),
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text('Total Pinjaman', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400,)),
+                                        Text('Total Pinjaman', style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w400,)),
                                         SizedBox(height: 5.h,),
-                                        Text(formatCurrency2(totalLoan), style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700,)),
+                                        Text(formatCurrency2(totalLoan), style: TextStyle(fontSize: 7.sp, fontWeight: FontWeight.w700,)),
                                       ],
                                     ),
                                   )
@@ -419,7 +416,7 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                             ],
                           ),
                         if(positionId == 'POS-HR-002' || positionId != 'POS-HR-001' || positionId != 'POS-HR-004' || positionId != 'POS-HR-024' || positionId != 'POS-HR-008')
-                          SizedBox(height: 30.sp,),
+                          SizedBox(height: 10.sp,),
                         if(positionId == 'POS-HR-002' || positionId == 'POS-HR-001' || positionId == 'POS-HR-004' || positionId == 'POS-HR-024' || positionId == 'POS-HR-008')
                           Row(
                             children: [
@@ -428,12 +425,10 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                                 color: Colors.white,
                                 shadowColor: Colors.black,
                                 child: SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.36,
+                                  width: MediaQuery.of(context).size.width * 0.35,
                                   child: Padding(
-                                    padding: EdgeInsets.all(15.0.sp),
+                                    padding: EdgeInsets.only(left: 4.sp, top: 4.sp, bottom: 4.sp, right: 4.sp),
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -441,21 +436,20 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                                             Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Text('Pinjaman Saya',style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700,)),
-                                                SizedBox(height: 5.sp,),
-                                                Text( 'Kelola pinjaman saya', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w300,)),
+                                                Text('Pinjaman Saya',style: TextStyle(fontSize: 6.sp, fontWeight: FontWeight.w700,)),
+                                                SizedBox(height: 1.sp,),
+                                                Text( 'Kelola pinjaman saya', style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w300,)),
                                               ],
                                             ),
                                             GestureDetector(
                                               onTap: () {
-                                                  // Get.to(ViewMyPerjalananDinas());
-                                                  // Get.to(const allMyInventoryRequest());
                                                   Get.to(const ViewAllMyPinjaman());
                                               },
-                                              child: Text('Lihat semua', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
+                                              child: Text('Lihat semua', style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
                                             )
                                           ],
                                         ),
+                                        SizedBox( height: 7.sp,),
                                         for (int indexA = 0; indexA < 3; indexA++)
                                               Column(
                                                 children: [
@@ -466,18 +460,18 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                                                     child: Card(
                                                       child: ListTile(
                                                         title: Text(indexA < myLoanList.length ? '${myLoanList[indexA]['employee_name']}' : '-',
-                                                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
+                                                          style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w700),
                                                         ),
                                                         subtitle: Text(indexA < myLoanList.length ? formatCurrency2(myLoanList[indexA]['loan_amount']) : '-',
-                                                          style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w400),
+                                                          style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w400),
                                                         ),
                                                         trailing: Text(indexA < myLoanList.length ? '${myLoanList[indexA]['status_name']}' : '-',
-                                                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
+                                                          style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w700),
                                                         ),
                                                       ),
                                                     ),
                                                   ),
-                                                  SizedBox(height: 10.sp,),
+                                                  SizedBox(height: 5.sp,),
                                                 ],
                                               ),
                                       ],
@@ -491,12 +485,10 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                                 color: Colors.white,
                                 shadowColor: Colors.black,
                                 child: SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.36,
+                                  width: MediaQuery.of(context).size.width * 0.35,
                                   child: Padding(
-                                    padding: EdgeInsets.all(15.0.sp),
+                                    padding: EdgeInsets.only(left: 4.sp, top: 4.sp, bottom: 4.sp, right: 4.sp),
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -504,21 +496,20 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                                             Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Text('Pinjaman Karyawan',style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700,)),
-                                                SizedBox(height: 5.sp,),
-                                                Text( 'Kelola pinjaman karyawan', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w300,)),
+                                                Text('Pinjaman Karyawan',style: TextStyle(fontSize: 6.sp, fontWeight: FontWeight.w700,)),
+                                                SizedBox(height: 1.sp,),
+                                                Text( 'Kelola pinjaman karyawan', style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w300,)),
                                               ],
                                             ),
                                             GestureDetector(
                                               onTap: () {
-                                                  // Get.to(ViewMyPerjalananDinas());
-                                                  // Get.to(const allMyInventoryRequest());
                                                   Get.to(const ViewAllPinjaman());
                                               },
-                                              child: Text('Lihat semua', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
+                                              child: Text('Lihat semua', style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
                                             )
                                           ],
                                         ),
+                                        SizedBox( height: 7.sp,),
                                         for (int indexB = 0; indexB < 3; indexB++)
                                               Column(
                                                 children: [
@@ -529,18 +520,18 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
                                                     child: Card(
                                                       child: ListTile(
                                                         title: Text( indexB < LoanList.length? '${LoanList[indexB]['employee_name']}' : '-',
-                                                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
+                                                          style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w700),
                                                         ),
                                                         subtitle: Text( indexB < LoanList.length ? formatCurrency2(LoanList[indexB]['loan_amount']) : '-',
-                                                          style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w400),
+                                                          style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w400),
                                                         ),
                                                         trailing: Text( indexB < LoanList.length ? '${LoanList[indexB]['status_name']}' : '-',
-                                                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
+                                                          style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w700),
                                                         ),
                                                       ),
                                                     ),
                                                   ),
-                                                  SizedBox(height: 10.sp,),
+                                                  SizedBox(height: 5.sp,),
                                                 ],
                                               ),
                                       ],
@@ -562,11 +553,4 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
     );
   }
 
-  String _formatDate(String date) {
-    // Parse the date string
-    DateTime parsedDate = DateFormat("yyyy-MM-dd HH:mm").parse(date);
-
-    // Format the date as "dd MMMM yyyy"
-    return DateFormat("d MMMM yyyy HH:mm").format(parsedDate);
-  }
 }

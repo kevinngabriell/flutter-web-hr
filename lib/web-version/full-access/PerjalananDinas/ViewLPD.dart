@@ -4,21 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:hr_systems_web/web-version/full-access/Event/event.dart';
-import 'package:hr_systems_web/web-version/full-access/Performance/performance.dart';
+import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
 import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/PerjalananDinasIndex.dart';
-import 'package:hr_systems_web/web-version/full-access/Report/report.dart';
-import 'package:hr_systems_web/web-version/full-access/Salary/salary.dart';
-import 'package:hr_systems_web/web-version/full-access/Settings/setting.dart';
-import 'package:hr_systems_web/web-version/full-access/Structure/structure.dart';
-import 'package:hr_systems_web/web-version/full-access/Training/traning.dart';
-import 'package:hr_systems_web/web-version/full-access/profile.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'dart:convert';
-import '../../login.dart';
-import '../employee.dart';
-import '../index.dart';
 
 class ViewLPD extends StatefulWidget {
   final String businessTripID;
@@ -842,370 +832,33 @@ class _ViewLPDState extends State<ViewLPD> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 15.sp,),
-                        //company logo and name
-                        ListTile(
-                        contentPadding: const EdgeInsets.only(left: 0, right: 0),
-                        dense: true,
-                        horizontalTitleGap: 0.0, // Adjust this value as needed
-                        leading: Container(
-                          margin: const EdgeInsets.only(right: 2.0), // Add margin to the right of the image
-                          child: Image.asset(
-                            'images/kinglab.png',
-                            width: MediaQuery.of(context).size.width * 0.08,
-                          ),
-                        ),
-                        title: Text(
-                          companyName,
-                          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
-                        ),
-                        subtitle: Text(
-                          trimmedCompanyAddress,
-                          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
-                        ),
-                      ),
+                        SizedBox(height: 5.sp,),
+                        NamaPerusahaanMenu(companyName: companyName, companyAddress: trimmedCompanyAddress),
+                        SizedBox(height: 10.sp,),
+                        const HalamanUtamaMenu(),
+                        SizedBox(height: 5.sp,),
+                        BerandaNonActive(employeeId: employeeId.toString()),
+                        SizedBox(height: 5.sp,),
+                        KaryawanActive(employeeId: employeeId.toString()),
+                        SizedBox(height: 5.sp,),
+                        const GajiNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const PerformaNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const PelatihanNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const AcaraNonActive(),
+                        SizedBox(height: 5.sp,),
+                        LaporanNonActive(positionId: positionId.toString()),
+                        SizedBox(height: 10.sp,),
+                        const PengaturanMenu(),
+                        SizedBox(height: 5.sp,),
+                        const PengaturanNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const StrukturNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const Logout(),
                         SizedBox(height: 30.sp,),
-                        //halaman utama title
-                        Padding(
-                          padding: EdgeInsets.only(left: 5.w),
-                          child: Text("Halaman utama", 
-                            style: TextStyle( fontSize: 20.sp, fontWeight: FontWeight.w600,)
-                          ),
-                        ),
-                        SizedBox(height: 10.sp,),
-                        //beranda button
-                        Padding(
-                          padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                          child: ElevatedButton(
-                            onPressed: () {Get.to(FullIndexWeb(employeeId));},
-                            style: ElevatedButton.styleFrom(
-                              elevation: 0,
-                              alignment: Alignment.centerLeft,
-                              minimumSize: Size(60.w, 55.h),
-                              foregroundColor: const Color(0xDDDDDDDD),
-                              backgroundColor: const Color(0xFFFFFFFF),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Image.asset('images/home-inactive.png')
-                                ),
-                                SizedBox(width: 2.w),
-                                Text('Beranda',
-                                  style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                )
-                              ],
-                            )
-                          ),
-                            ),
-                        SizedBox(height: 10.sp,),
-                        //karyawan button
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                              child: ElevatedButton(
-                                onPressed: () {Get.to(EmployeePage(employee_id: employeeId,));},
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(60.w, 55.h),
-                                  foregroundColor: const Color(0xFFFFFFFF),
-                                  backgroundColor: const Color(0xff4ec3fc),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset('images/employee-active.png')
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    Text('Karyawan',
-                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                    )
-                                  ],
-                                )
-                              ),
-                            ),
-                            SizedBox(height: 10.sp,),
-                            //gaji button
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Get.to(const SalaryIndex());
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(60.w, 55.h),
-                                  foregroundColor: const Color(0xDDDDDDDD),
-                                  backgroundColor: const Color(0xFFFFFFFF),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset('images/gaji-inactive.png')
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    Text('Gaji',
-                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                    )
-                                  ],
-                                )
-                              ),
-                            ),
-                            SizedBox(height: 10.sp,),
-                            //performa button
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Get.to(const PerformanceIndex());
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(60.w, 55.h),
-                                  foregroundColor: const Color(0xDDDDDDDD),
-                                  backgroundColor: const Color(0xFFFFFFFF),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset('images/performa-inactive.png')
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    Text('Performa',
-                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                    )
-                                  ],
-                                )
-                              ),
-                            ),
-                            SizedBox(height: 10.sp,),
-                            //pelatihan button
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Get.to(const TrainingIndex());
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(60.w, 55.h),
-                                  foregroundColor: const Color(0xDDDDDDDD),
-                                  backgroundColor: const Color(0xFFFFFFFF),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset('images/pelatihan-inactive.png')
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    Text('Pelatihan',
-                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                    )
-                                  ],
-                                )
-                              ),
-                            ),
-                            SizedBox(height: 10.sp,),
-                            //acara button
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Get.to(const EventIndex());
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(60.w, 55.h),
-                                  foregroundColor: const Color(0xDDDDDDDD),
-                                  backgroundColor: const Color(0xFFFFFFFF),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset('images/acara-inactive.png')
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    Text('Acara',
-                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                    )
-                                  ],
-                                )
-                              ),
-                            ),
-                            SizedBox(height: 10.sp,),
-                            //laporan button
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Get.to(const ReportIndex());
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(60.w, 55.h),
-                                  foregroundColor: const Color(0xDDDDDDDD),
-                                  backgroundColor: const Color(0xFFFFFFFF),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset('images/laporan-inactive.png')
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    Text('Laporan',
-                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                    )
-                                  ],
-                                )
-                              ),
-                            ),
-                            SizedBox(height: 30.sp,),
-                            //pengaturan title
-                            Padding(
-                                padding: EdgeInsets.only(left: 5.w),
-                                child: Text("Pengaturan", 
-                                  style: TextStyle( fontSize: 20.sp, fontWeight: FontWeight.w600,)
-                                ),
-                            ),
-                            SizedBox(height: 10.sp,),
-                            //pengaturan button
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Get.to(const SettingIndex());
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(60.w, 55.h),
-                                  foregroundColor: const Color(0xDDDDDDDD),
-                                  backgroundColor: const Color(0xFFFFFFFF),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset('images/pengaturan-inactive.png')
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    Text('Pengaturan',
-                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                    )
-                                  ],
-                                )
-                              ),
-                            ),
-                            SizedBox(height: 10.sp,),
-                            //struktur button
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Get.to(const StructureIndex());
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(60.w, 55.h),
-                                  foregroundColor: const Color(0xDDDDDDDD),
-                                  backgroundColor: const Color(0xFFFFFFFF),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset('images/struktur-inactive.png')
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    Text('Struktur',
-                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                    )
-                                  ],
-                                )
-                              ),
-                            ),
-                            SizedBox(height: 10.sp,),
-                            //keluar button
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  //show dialog sure to exit ?
-                                  showDialog(
-                                    context: context, 
-                                    builder: (_) {
-                                      return AlertDialog(
-                                        title: const Text("Keluar"),
-                                        content: const Text('Apakah anda yakin akan keluar ?'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () {Get.back();},
-                                            child: const Text('Cancel'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () {Get.off(const LoginPageDesktop());},
-                                            child: const Text('OK',),
-                                          ),
-                                        ],
-                                      );
-                                    }
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(60.w, 55.h),
-                                  foregroundColor: const Color(0xDDDDDDDD),
-                                  backgroundColor: const Color(0xFFFFFFFF),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset('images/logout.png')
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    Text('Keluar',
-                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, color: Colors.red)
-                                    )
-                                  ],
-                                )
-                              ),
-                            ),
-                            SizedBox(height: 30.sp,),
                       ],
                     ),
                   ),
@@ -1219,152 +872,11 @@ class _ViewLPDState extends State<ViewLPD> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 35.sp,),
-                        Padding(
-                          padding: EdgeInsets.only(right: 20.sp),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  showDialog(
-                                    context: context, 
-                                    builder: (BuildContext context){
-                                      return AlertDialog(
-                                        title: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text('Notifikasi', style: TextStyle(
-                                              fontSize: 20.sp, fontWeight: FontWeight.w700,
-                                            )),
-                                            GestureDetector(
-                                              onTap: () {
-                                                
-                                              },
-                                              child: Text('Hapus semua', style: TextStyle(
-                                                fontSize: 12.sp, fontWeight: FontWeight.w600,
-                                              )),
-                                            ),
-                                          ],
-                                        ),
-                                        content: SizedBox(
-                                          width: MediaQuery.of(context).size.width / 2,
-                                          height: MediaQuery.of(context).size.height / 2,
-                                          child: ListView.builder(
-                                            itemCount: noticationList.length,
-                                            itemBuilder: (context, index) {
-                                              return GestureDetector(
-                                                onTap: (){
-                                                  if(noticationList[index]['sender'] != ''){
-                                                      showDialog(
-                                                      context: context, 
-                                                      builder: (_) {
-                                                        return AlertDialog(
-                                                          title: Center(child: Text("${noticationList[index]['title']} ", style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700))),
-                                                          content: SizedBox(
-                                                            width: MediaQuery.of(context).size.width / 4,
-                                                            height: MediaQuery.of(context).size.height / 4,
-                                                            child: Column(
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: [
-                                                                Text('Tanggal : ${_formatDate('${noticationList[index]['send_date']}')}'),
-                                                                SizedBox(height: 2.h,),
-                                                                Text('Dari : ${noticationList[index]['sender'] == 'Kevin Gabriel Florentino' ? 'System' : noticationList[index]['sender']} '),
-                                                                SizedBox(height: 10.h,),
-                                                                Text('${noticationList[index]['message']} ')
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          actions: [
-                                                            TextButton(
-                                                              onPressed: () {
-                                                                Get.back();
-                                                              }, 
-                                                              child: const Text("Ok")
-                                                            ),
-                                                          ],
-                                                        );
-                                                      }
-                                                    );
-                                                  }
-                                                },
-                                                child: Card(
-                                                  child: ListTile(
-                                                    title: Text(index < noticationList.length ? '${noticationList[index]['title']} ' : '-',
-                                                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
-                                                    ),
-                                                    subtitle: Text(
-                                                        index < noticationList.length
-                                                        ? 'From ${noticationList[index]['sender'] == 'Kevin Gabriel Florentino' ? 'System' : noticationList[index]['sender']} '
-                                                        : '-',
-                                                        style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w400),
-                                                      ),
-                                                  ),
-                                                ),
-                                              );
-                                            }
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  );
-                                },
-                                child: Stack(
-                                  children: [
-                                    const Icon(Icons.notifications),
-                                    // if (noti.isNotEmpty)
-                                      Positioned(
-                                        top: 0,
-                                        right: 0,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(1),
-                                          decoration: BoxDecoration(
-                                            color: Colors.red,
-                                            borderRadius: BorderRadius.circular(10),
-                                          ),
-                                          child: Text(
-                                            noticationList.length.toString(),
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: 40.sp,),
-                              GestureDetector(
-                                onTap: () {
-                                  Get.to(const ProfilePage());
-                                },
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width - 290.w,
-                                  child: ListTile(
-                                    contentPadding: const EdgeInsets.only(left: 0, right: 0),
-                                    dense: true,
-                                    horizontalTitleGap: 20.0,
-                                    leading: Container(
-                                      margin: const EdgeInsets.only(right: 2.0),
-                                      child: Image.memory(
-                                        base64Decode(photo),
-                                      ),
-                                    ),
-                                    title: Text(employeeName,
-                                      style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
-                                    ),
-                                    subtitle: Text(employeeEmail,
-                                      style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 30.sp,),
+                        SizedBox(height: 5.sp,),
+                        NotificationnProfile(employeeName: employeeName, employeeAddress: employeeEmail, photo: photo),
+                        SizedBox(height: 7.sp,),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 3,
@@ -1372,7 +884,7 @@ class _ViewLPDState extends State<ViewLPD> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Nomor SPPD', style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                     )),
                                   SizedBox(height: 10.h,),
@@ -1380,14 +892,13 @@ class _ViewLPDState extends State<ViewLPD> {
                                 ],
                               ),
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 3,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Nama', style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                     )),
                                   SizedBox(height: 10.h,),
@@ -1395,14 +906,13 @@ class _ViewLPDState extends State<ViewLPD> {
                                 ],
                               ),
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 3,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Departemen', style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                     )),
                                   SizedBox(height: 10.h,),
@@ -1412,8 +922,9 @@ class _ViewLPDState extends State<ViewLPD> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 30.sp,),
+                        SizedBox(height: 7.sp,),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
@@ -1422,7 +933,7 @@ class _ViewLPDState extends State<ViewLPD> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Perjalanan disetujui oleh', style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                     )),
                                   SizedBox(height: 10.h,),
@@ -1430,14 +941,13 @@ class _ViewLPDState extends State<ViewLPD> {
                                 ],
                               ),
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 3,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Nama-nama yang ikut serta', style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                     )),
                                   SizedBox(height: 10.h,),
@@ -1445,14 +955,13 @@ class _ViewLPDState extends State<ViewLPD> {
                                 ],
                               ),
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 3,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Proyek', style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                     )),
                                   SizedBox(height: 10.h,),
@@ -1462,8 +971,9 @@ class _ViewLPDState extends State<ViewLPD> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 30.sp,),
+                        SizedBox(height: 7.sp,),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 3,
@@ -1471,7 +981,7 @@ class _ViewLPDState extends State<ViewLPD> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Tanggal Mulai Dinas', style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                     )),
                                   SizedBox(height: 10.h,),
@@ -1479,14 +989,13 @@ class _ViewLPDState extends State<ViewLPD> {
                                 ],
                               ),
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 3,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Tanggal Akhir Dinas', style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                     )),
                                   SizedBox(height: 10.h,),
@@ -1494,14 +1003,13 @@ class _ViewLPDState extends State<ViewLPD> {
                                 ],
                               ),
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 3,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Status', style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                     )),
                                   SizedBox(height: 10.h,),
@@ -1511,161 +1019,146 @@ class _ViewLPDState extends State<ViewLPD> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 40.sp,),
+                        SizedBox(height: 10.sp,),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 4,
                               child: Text('Uraian Pembiayaan', style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                     ), textAlign: TextAlign.center,),
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text('Jumlah Hari', style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                     ), textAlign: TextAlign.center),
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text('Satuan', style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                     ), textAlign: TextAlign.center),
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 5,
                               child: Text('Jumlah Biaya', style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                     ), textAlign: TextAlign.center),
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 5,
                               child: Text('Jumlah (IDR)', style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                     ), textAlign: TextAlign.center),
                             ),
                           ],
                         ),
-                        SizedBox(height: 20.sp,),
+                        SizedBox(height: 7.sp,),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 4,
                               child: const Text('Tiket Pesawat'),
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text('$countDayTiket hari', textAlign: TextAlign.center,)
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text(formatCurrency2(priceTiket), textAlign: TextAlign.end,)
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 5,
                               child: Text(formatCurrency2(totalTiket), textAlign: TextAlign.end,)
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text(formatCurrency(JumlahTiket), textAlign: TextAlign.end,)
                             ),
                           ],
                         ),
-                        SizedBox(height: 20.sp,),
+                        SizedBox(height: 7.sp,),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 4,
                               child: const Text('Hotel / Penginapan'),
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text('$countDayPenginapan hari', textAlign: TextAlign.center,)
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text(formatCurrency2(pricePenginapan), textAlign: TextAlign.end,)
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 5,
                               child: Text(formatCurrency2(totalPenginapan), textAlign: TextAlign.end,)
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text(formatCurrency(JumlahHotel), textAlign: TextAlign.end,)
                             ),
                           ],
                         ),
-                        SizedBox(height: 20.sp,),
+                        SizedBox(height: 7.sp,),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 4,
                               child: Text('Uang Saku $namaKaryawan'),
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text('$countDayUangSaku hari', textAlign: TextAlign.center,)
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text(formatCurrency2(priceUangSaku), textAlign: TextAlign.end,)
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 5,
                               child: Text(formatCurrency2(totalUangSaku), textAlign: TextAlign.end,)
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text(formatCurrency(JumlahUangSaku), textAlign: TextAlign.end,)
                             ),
                           ],
                         ),
-                        SizedBox(height: 20.sp,),
+                        SizedBox(height: 7.sp,),
                         if(memberOne != '-')
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 4,
                                 child: Text('Uang Saku $memberOne'),
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text('$countDayUangSakuDua hari', textAlign: TextAlign.center,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text(formatCurrency2(priceUangSakuDua), textAlign: TextAlign.end,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 5,
                                 child: Text(formatCurrency2(totalUangSakuDua), textAlign: TextAlign.end,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text(formatCurrency(JumlahUangSakuDua), textAlign: TextAlign.end,)
@@ -1673,30 +1166,27 @@ class _ViewLPDState extends State<ViewLPD> {
                             ],
                           ),
                         if(memberOne != '-')
-                          SizedBox(height: 20.sp,),
+                          SizedBox(height: 7.sp,),
                         if(memberTwo != '-')
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 4,
                                 child: Text('Uang Saku $memberTwo'),
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text('$countDayUangSakuTiga hari', textAlign: TextAlign.center,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text(formatCurrency2(priceUangSakuTiga), textAlign: TextAlign.end,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 5,
                                 child: Text(formatCurrency2(totalUangSakuTiga), textAlign: TextAlign.end,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text(formatCurrency(JumlahUangSakuTiga), textAlign: TextAlign.end,)
@@ -1704,30 +1194,27 @@ class _ViewLPDState extends State<ViewLPD> {
                             ],
                           ),
                         if(memberTwo != '-')
-                          SizedBox(height: 20.sp,),
+                          SizedBox(height: 7.sp,),
                         if(memberThree != '-')
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 4,
                                 child: Text('Uang Saku $memberThree'),
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text('$countDayUangSakuEmpat hari', textAlign: TextAlign.center,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text(formatCurrency2(priceUangSakuEmpat), textAlign: TextAlign.end,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 5,
                                 child: Text(formatCurrency2(totalUangSakuEmpat), textAlign: TextAlign.end,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text(formatCurrency(JumlahUangSakuEmpat), textAlign: TextAlign.end,)
@@ -1735,30 +1222,27 @@ class _ViewLPDState extends State<ViewLPD> {
                             ],
                           ),
                         if(memberThree != '-')
-                          SizedBox(height: 20.sp,),
+                          SizedBox(height: 7.sp,),
                         if(memberFour != '-')
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 4,
                                 child: Text('Uang Saku $memberFour'),
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text('$countDayUangSakuLima hari', textAlign: TextAlign.center,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text(formatCurrency2(priceUangSakuLima), textAlign: TextAlign.end,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 5,
                                 child: Text(formatCurrency2(totalUangSakuLima), textAlign: TextAlign.end,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text(formatCurrency(JumlahUangSakuLima), textAlign: TextAlign.end,)
@@ -1766,88 +1250,79 @@ class _ViewLPDState extends State<ViewLPD> {
                             ],
                           ),
                         if(memberFour != '-')
-                          SizedBox(height: 20.sp,),
+                          SizedBox(height: 7.sp,),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 4,
                               child: const Text('Transport (Taxi) Lokal/sewa mobil harian'),
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text('$countDayTransport hari', textAlign: TextAlign.center,)
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text(formatCurrency2(priceTransport), textAlign: TextAlign.end,)
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 5,
                               child: Text(formatCurrency2(totalTransport), textAlign: TextAlign.end,)
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text(formatCurrency(JumlahTransport), textAlign: TextAlign.end,)
                             ),
                           ],
                         ),
-                        SizedBox(height: 20.sp,),
+                        SizedBox(height: 7.sp,),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 4,
                               child: Text('Uang Makan $namaKaryawan'),
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text('$countDayUangMakan hari', textAlign: TextAlign.center,)
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text(formatCurrency2(priceUangMakan), textAlign: TextAlign.end,)
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 5,
                               child: Text(formatCurrency2(totalUangMakan), textAlign: TextAlign.end,)
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text(formatCurrency(JumlahUangMakan), textAlign: TextAlign.end,)
                             ),
                           ],
                         ),
-                        SizedBox(height: 20.sp,),
+                        SizedBox(height: 7.sp,),
                         if(memberOne != '-')
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 4,
                                 child: Text('Uang Makan $memberOne'),
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text('$countDayUangMakanDua hari', textAlign: TextAlign.center,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text(formatCurrency2(priceUangMakanDua), textAlign: TextAlign.end,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 5,
                                 child: Text(formatCurrency2(totalUangMakanDua), textAlign: TextAlign.end,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text(formatCurrency(JumlahUangMakanDua), textAlign: TextAlign.end,)
@@ -1855,30 +1330,27 @@ class _ViewLPDState extends State<ViewLPD> {
                             ],
                           ),
                         if(memberOne != '-')
-                          SizedBox(height: 20.sp,),
+                          SizedBox(height: 7.sp,),
                         if(memberTwo != '-')
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 4,
                                 child: Text('Uang Makan $memberTwo'),
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text('$countDayUangMakanTiga hari', textAlign: TextAlign.center,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text(formatCurrency2(priceUangMakanTiga), textAlign: TextAlign.end,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 5,
                                 child: Text(formatCurrency2(totalUangMakanTiga), textAlign: TextAlign.end,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text(formatCurrency(JumlahUangMakanTiga), textAlign: TextAlign.end,)
@@ -1886,30 +1358,27 @@ class _ViewLPDState extends State<ViewLPD> {
                             ],
                           ),
                         if(memberTwo != '-')
-                          SizedBox(height: 20.sp,),
+                          SizedBox(height: 7.sp,),
                         if(memberThree != '-')
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 4,
                                 child: Text('Uang Makan $memberThree'),
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text('$countDayUangMakanEmpat hari', textAlign: TextAlign.center,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text(formatCurrency2(priceUangMakanEmpat), textAlign: TextAlign.end,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 5,
                                 child: Text(formatCurrency2(totalUangMakanEmpat), textAlign: TextAlign.end,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text(formatCurrency(JumlahUangMakanEmpat), textAlign: TextAlign.end,)
@@ -1917,30 +1386,27 @@ class _ViewLPDState extends State<ViewLPD> {
                             ],
                           ),
                         if(memberThree != '-')
-                          SizedBox(height: 20.sp,),
+                          SizedBox(height: 7.sp,),
                         if(memberFour != '-')
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 4,
                                 child: Text('Uang Makan $memberFour'),
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text('$countDayUangMakanLima hari', textAlign: TextAlign.center,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text(formatCurrency2(priceUangMakanLima), textAlign: TextAlign.end,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 5,
                                 child: Text(formatCurrency2(totalUangMakanLima), textAlign: TextAlign.end,)
                               ),
-                              SizedBox(width: 5.w,),
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 150.w) / 5,
                                 child: Text(formatCurrency(JumlahUangMakanLima), textAlign: TextAlign.end,)
@@ -1948,121 +1414,115 @@ class _ViewLPDState extends State<ViewLPD> {
                             ],
                           ),
                         if(memberFour != '-')
-                          SizedBox(height: 20.sp,),
+                          SizedBox(height: 7.sp,),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 4,
                               child: const Text('By entertain'),
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text('$countDayEntertain hari', textAlign: TextAlign.center,)
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text(formatCurrency2(priceEntertain), textAlign: TextAlign.end,)
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 5,
                               child: Text(formatCurrency2(totalEntertain), textAlign: TextAlign.end,)
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text(formatCurrency(JumlahEntertain), textAlign: TextAlign.end,)
                             ),
                           ],
                         ),
-                        SizedBox(height: 20.sp,),
+                        SizedBox(height: 7.sp,),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 4,
                               child: const Text('Lain-lain'),
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text('$countDayLain hari', textAlign: TextAlign.center,)
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text(formatCurrency2(priceLain), textAlign: TextAlign.end,)
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 100.w) / 5,
                               child: Text(formatCurrency2(totalLain), textAlign: TextAlign.end,)
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 150.w) / 5,
                               child: Text(formatCurrency(JumlahLain), textAlign: TextAlign.end,)
                             ),
                           ],
                         ),
-                        SizedBox(height: 20.sp,),
+                        SizedBox(height: 7.sp,),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 145.w),
                               child: Text('Grand Total', textAlign: TextAlign.end, style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                     )),
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 317.w),
                               child: Text(formatCurrency(GrandTotal), textAlign: TextAlign.end, ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 20.sp,),
+                        SizedBox(height: 7.sp,),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 145.w),
                               child: Text('UANG MUKA (Advance)', textAlign: TextAlign.end, style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                     )),
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 317.w),
                               child: Text(formatCurrency2(advancedCash), textAlign: TextAlign.end, ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 30.sp,),
+                        SizedBox(height: 10.sp,),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 145.w),
                               child: Text('Kekurangan/Kelebihan', textAlign: TextAlign.end, style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                     )),
                             ),
-                            SizedBox(width: 5.w,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 317.w),
                               child: Text(formatCurrency(Kekurangan), textAlign: TextAlign.end, ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 30.sp,),
+                        SizedBox(height: 10.sp,),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('Uraikan', style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                     )),
                             SizedBox(height: 10.h,),
@@ -2072,7 +1532,7 @@ class _ViewLPDState extends State<ViewLPD> {
                             )
                           ],
                         ),
-                        SizedBox(height: 30.sp,),
+                        SizedBox(height: 10.sp,),
                         // ElevatedButton(
                         //   onPressed: (){
                         //     String strtDate = _formatDate2(startDate);
@@ -2165,7 +1625,7 @@ class _ViewLPDState extends State<ViewLPD> {
                               ),
                             ],
                           ),
-                        SizedBox(height: 30.sp,),
+                        SizedBox(height: 10.sp,),
                         SizedBox(
                           height: MediaQuery.of(context).size.height,
                           child: ListView.builder(
@@ -2177,14 +1637,14 @@ class _ViewLPDState extends State<ViewLPD> {
                                   backgroundColor: const Color(0xff4ec3fc),
                                   child: Text('${index + 1}', style: const TextStyle(color: Colors.white),),
                                 ),
-                                title: Text(item['employee_name'], style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),),
-                                subtitle: Text(item['action'], style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400),),
-                                trailing: Text(_formatDate(item['action_dt']), style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400),),
+                                title: Text(item['employee_name'], style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w600),),
+                                subtitle: Text(item['action'], style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w400),),
+                                trailing: Text(_formatDate(item['action_dt']), style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w400),),
                               );
                             }
                           ),
                         ),
-                        SizedBox(height: 50.sp,)
+                        SizedBox(height: 5.sp,)
                       ]
                     )
                   )

@@ -258,6 +258,8 @@ class _AbsenceState extends State<Absence> {
       var datenow = DateTime.now();
       String timestamp = datenow.toString();
 
+      await controller.dispose();
+
       if (!mounted) return;
       await Navigator.of(context).push(
         MaterialPageRoute(

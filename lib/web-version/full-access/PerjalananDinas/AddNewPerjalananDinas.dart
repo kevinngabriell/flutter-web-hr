@@ -8,7 +8,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
 import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/PerjalananDinasIndex.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'dart:convert';
 
 class AddNewPerjalananDinas extends StatefulWidget {
@@ -783,11 +782,4 @@ class _AddNewPerjalananDinasState extends State<AddNewPerjalananDinas> {
     );
   }
 
-  String _formatDate(String date) {
-    // Parse the date string
-    DateTime parsedDate = DateFormat("yyyy-MM-dd HH:mm").parse(date);
-
-    // Format the date as "dd MMMM yyyy"
-    return DateFormat("d MMMM yyyy HH:mm").format(parsedDate);
-  }
 }

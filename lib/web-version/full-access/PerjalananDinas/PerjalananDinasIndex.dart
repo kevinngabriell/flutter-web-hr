@@ -13,7 +13,6 @@ import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/ViewMyLPD
 import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/ViewMyPerjalananDinas.dart';
 import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/ViewPerjalananDinas.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'dart:convert';
 
 class PerjalananDinasIndex extends StatefulWidget {
@@ -781,11 +780,5 @@ class _PerjalananDinasIndexState extends State<PerjalananDinasIndex> {
     );
   }
 
-  String _formatDate(String date) {
-    // Parse the date string
-    DateTime parsedDate = DateFormat("yyyy-MM-dd HH:mm").parse(date);
 
-    // Format the date as "dd MMMM yyyy"
-    return DateFormat("d MMMM yyyy HH:mm").format(parsedDate);
-  }
 }
