@@ -8,8 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:hr_systems_web/web-version/full-access/Employee/Employee%20Detail/EmployeeDetailOne.dart';
 import 'package:hr_systems_web/web-version/full-access/Employee/EmployeeList.dart';
+import 'package:hr_systems_web/web-version/full-access/Inventory/detailInventory.dart';
+import 'package:hr_systems_web/web-version/full-access/Inventory/detailInventoryRequest.dart';
 import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
+import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/ViewLPD.dart';
+import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/ViewPerjalananDinas.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart' as dio;
@@ -33,7 +38,8 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
   late TabController tabController;
   late Future<Map<String, dynamic>> employeeData;
   late Future<List<Map<String, dynamic>>> absenceData;
-
+  bool isLoading = false;
+  bool isLoadingA = false;
   String companyName = '';
   String companyAddress = '';
   String employeeName = '';
@@ -41,7 +47,18 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
   String trimmedCompanyAddress = '';
   List<dynamic> profileData = [];
   List<Map<String, String>> spvs = [];
+  List<Map<String, String>> spvName = [];
   String? selectedSPV;
+  String? namaSPV;
+  String spvID = '';
+  String employeeID = '';
+  String employeeNIK = '';
+  String username = '';
+  String gender = '';
+  String dob = '';
+  String pob = '';
+  String status = '';
+  String phone = '';
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
@@ -59,22 +76,33 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
   TextEditingController txtLokasiAbsen = TextEditingController();
   DateTime? TanggalAbsen;
   String? JamAbsen;
-  bool isLoading = false;
   List<Map<String, String>> listlokasiabsen = [];
   String selectedLokasiAbsen = '';
   DateTime? expDate;
   int? leaveCount;
   String expDateCuti = '';
   TextEditingController txtCutiUpdate = TextEditingController();
-
+  String namaKaryawan = '';
   String selectedFile = '';
   Uint8List? image;
-  
+  String emailKaryawan = '';
+
+  List<Map<String, dynamic>> myInventory = [];
+  List<Map<String, dynamic>> myRequestInventory = [];
+  List<Map<String, dynamic>> myBusinessTrip = [];
+  List<Map<String, dynamic>> myLPD = [];
+
+  String ktp = '-';
+  String simA = '-';
+  String simC = '-';
+  String npwp = '-';
+  String bpjs = '-';
+
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 8, vsync: this);
-    employeeData = fetchEmployeeData(widget.employeeId);
+    tabController = TabController(length: 6, vsync: this);
+    fetchEmployeeData(widget.employeeId);
     absenceData = fetchAbsenceData(widget.employeeId);
     fetchData();
     fetchSPVdata();
@@ -83,6 +111,151 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
     fetchLeaveCountsYears();
     fetchJenisAbsen();
     fetchMasterLokasiAbsen();
+    fetchInventory();
+    fetchMyRequest();
+    fetchPerjalananDinas();
+    getProfileImage();
+  }
+
+  Future<void> getProfileImage() async{
+
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      final storage = GetStorage();
+
+      var employeeId = storage.read('employee_id');
+      String imageUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getemployeedoc.php?action=1&employee_id=${widget.employeeId}';
+      final response = await http.get(Uri.parse(imageUrl));
+
+      if (response.statusCode == 200) {
+        // Decode base64 image
+        Map<String, dynamic> data = json.decode(response.body);
+        setState(() {
+          ktp = data['ktp'];
+        });
+        
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        // Handle error
+        print('Failed to load image. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Handle exception
+      setState(() {
+        isLoading = false;
+      });
+      print('Error: $error');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> fetchPerjalananDinas() async {
+    String employeeId = storage.read('employee_id').toString();
+
+    try{
+      isLoading = true;
+
+      String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/perjalanandinas/getperjalanandinas.php?action=6&employee_id=${widget.employeeId}';
+      var response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+
+        setState(() {
+          myBusinessTrip = List<Map<String, dynamic>>.from(data['Data']);
+        });
+      } else {
+        print('Failed to load data: ${response.statusCode}');
+      }
+
+      isLoading = true;
+
+      String mylpdUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/perjalanandinas/getlpd.php?action=2&employee_id=${widget.employeeId}';
+      var mylpdResponse = await http.get(Uri.parse(mylpdUrl));
+
+      if (mylpdResponse.statusCode == 200) {
+        var mylpdData = json.decode(mylpdResponse.body);
+
+        setState(() {
+          myLPD = List<Map<String, dynamic>>.from(mylpdData['Data']);
+        });
+      } else {
+        print('Failed to load data: ${mylpdResponse.statusCode}');
+      }
+    } catch (e){
+      print(e.toString());
+    } finally {
+      isLoading = false;
+    }
+
+  }
+
+  Future<void> fetchMyRequest() async{
+    String employeeId = storage.read('employee_id').toString();
+   
+    try{
+      setState(() {
+        isLoading = true;
+      });
+
+      String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/inventory/mytoprequest.php?employee_id=${widget.employeeId}';
+
+      var response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+
+        setState(() {
+          myRequestInventory = List<Map<String, dynamic>>.from(data['Data']);
+        });
+      } else {
+        print('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e){
+      print(e.toString());
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+
+  }
+
+  Future<void> fetchInventory() async{
+    String employeeId = storage.read('employee_id').toString();
+    setState(() {
+      isLoading = true;
+    });
+
+    try{  
+      String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/inventory/getinventory.php?action=7&employee_id=${widget.employeeId}';
+
+      var response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+
+        setState(() {
+          myInventory = List<Map<String, dynamic>>.from(data['Data']);
+        });
+      } else {
+        print('Failed to load data: ${response.statusCode}');
+      }
+
+    } catch (e){
+      print('Error: $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> insertAbsenManual() async {
@@ -188,7 +361,6 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
   Future<List<Map<String, dynamic>>> fetchAbsenceData(String employeeId) async {
     String employeeID = widget.employeeId;
     try {
-      print(employeeId);
       final response = await http.get(
         Uri.parse('https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/absent/getabsencebyid.php?employee_id=$employeeID'),
       );
@@ -209,16 +381,51 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
     }
   }
 
-  Future<Map<String, dynamic>> fetchEmployeeData(String employeeId) async {
-    final response = await http.get(
-      Uri.parse(
-          'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getemployeeoverview.php?employee_id=$employeeId'),
-    );
+  Future<void> fetchEmployeeData(String employeeId) async {
+    try{
+      isLoading = true;
 
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to load employee data');
+      final response = await http.get(Uri.parse('https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getemployeeoverview.php?employee_id=$employeeId'),);
+
+      if (response.statusCode == 200) {
+        var jsonData = json.decode(response.body);
+        
+        setState(() {
+          employeeID = jsonData['Data'][0]['employee_id'];
+          status = jsonData['Data'][0]['employee_status_name'];
+          phone = jsonData['Data'][0]['employee_phone_number'];
+          namaKaryawan = jsonData['Data'][0]['employee_name'];
+          emailKaryawan = jsonData['Data'][0]['employee_email'];
+          pob = jsonData['Data'][0]['employee_pob'];
+          dob = jsonData['Data'][0]['employee_dob'];
+          gender = jsonData['Data'][0]['gender_name'];
+          username  = jsonData['Data'][0]['username'];
+          employeeNIK = jsonData['Data'][0]['employee_identity'];
+          spvID = jsonData['Data'][0]['employee_spv'];
+        });
+
+        final responseSPVName = await http.get(Uri.parse('https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getemployee.php?action=3&spv_id=$spvID'));
+
+        if(responseSPVName.statusCode == 200){
+          final SPVNamedata = json.decode(responseSPVName.body);
+          spvName= (SPVNamedata['Data'] as List).map((spv) => Map<String, String>.from(spv)).toList();
+
+          setState(() {
+            namaSPV = spvName[0]['employee_name'];
+          });
+        } else {
+          setState(() {
+            namaSPV = '-';
+          });
+        }
+      } else {
+        throw Exception('Failed to load employee data');
+      }
+    } catch (e){
+      isLoading = false;
+      print('error');
+    } finally {
+      isLoading = false;
     }
   }
 
@@ -228,17 +435,12 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
     String employeeId = storage.read('employee_id').toString();
 
     try {
+      isLoading = true;
       String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/account/getprofileforallpage.php';
 
-      //String employeeId = storage.read('employee_id'); // replace with your logic to get employee ID
-
-      // Create a Map for the request body
       Map<String, dynamic> requestBody = {'employee_id': employeeId};
-
-      // Convert the Map to a JSON string
       String requestBodyJson = json.encode(requestBody);
 
-      // Make the API call with a POST request
       final response = await http.post(
         Uri.parse(apiUrl),
         body: {
@@ -262,6 +464,8 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
       }
     } catch (e) {
       print('Exception during API call: $e');
+    } finally {
+      isLoading = false;
     }
   }
 
@@ -441,21 +645,38 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
 
     if(response.statusCode == 200){
       final data = json.decode(response.body);
-      if (data['StatusCode'] == 200) {
+      try{
         setState(() {
-          spvs= (data['Data'] as List)
-              .map((spv) => Map<String, String>.from(spv))
-              .toList();
-          if (spvs.isNotEmpty) {
-            selectedSPV = spvs[0]['id']!;
-            //showNoDepartments = false;
-          } else {
-            //howNoDepartments = true;
-          }
+          isLoadingA = true;
         });
-      } else {
-        // Handle API error
-        print('Failed to fetch data');
+        if (data['StatusCode'] == 200) {
+          setState(() async {
+            spvs= (data['Data'] as List)
+                .map((spv) => Map<String, String>.from(spv))
+                .toList();
+            if (spvs.isNotEmpty) {
+              selectedSPV = spvs[0]['id']!;
+              
+              
+            } else {
+              setState(() {
+                namaSPV = '-';
+              });
+            }
+          });
+        } else {
+          // Handle API error
+          print('Failed to fetch data');
+        }
+      } catch (e){
+        setState(() {
+          isLoadingA = false;
+          namaSPV = '-';
+        });      
+      } finally {
+        setState(() {
+          isLoadingA = false;
+        });
       }
     }
 
@@ -605,6 +826,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
           'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/permission/getjatahcuti.php?employee_id=$employeeIDfectchLeaveCounts';
 
       try {
+        isLoading = true;
         final response = await http.get(Uri.parse(apiUrl));
 
         if (response.statusCode == 200) {
@@ -621,17 +843,6 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
               leaveCounts['StringCuti$year'] = leaveCount;
             }
 
-            setState(() {
-              // Set the text in the TextFormField for 2030
-              // txtCuti2023Input.text = leaveCounts['StringCuti2023'] ?? '';
-              // txtCuti2024Input.text = leaveCounts['StringCuti2024'] ?? '';
-              // txtCuti2025Input.text = leaveCounts['StringCuti2025'] ?? '';
-              // txtCuti2026Input.text = leaveCounts['StringCuti2026'] ?? '';
-              // txtCuti2027Input.text = leaveCounts['StringCuti2027'] ?? '';
-              // txtCuti2028Input.text = leaveCounts['StringCuti2028'] ?? '';
-              // txtCuti2029Input.text = leaveCounts['StringCuti2029'] ?? '';
-              // txtCuti2030Input.text = leaveCounts['StringCuti2030'] ?? '';
-            });
           } else {
             throw Exception('Failed to fetch data: ${jsonResponse['Status']}');
           }
@@ -640,6 +851,8 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
         }
       } catch (e) {
         throw Exception('Error: $e');
+      } finally {
+        isLoading = false;
       }
     }
 
@@ -683,14 +896,18 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
     } catch (e) {
       isLoading = false;
       print('Error: $e');
+    } finally {
+      isLoading = false;
     }
   }
 
   Future<void> updateCuti() async {
       String employeeIDfectchLeaveCounts = widget.employeeId;
-      isLoading = true;
 
       try {
+        setState(() {
+          isLoading = true;
+        });
         String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/permission/updatecuti.php';
 
         print(txtCutiUpdate.text);
@@ -718,7 +935,11 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
       } catch (e){
         Get.snackbar('Gagal', '$e');
         print('Exception during API call: $e');
-      }    
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
   }
   
   Future<void> _selectFile() async {
@@ -773,9 +994,198 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
     }
   }
   
+  Future<void> ktpFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'bmp'],
+    );
+
+    if (result != null) {
+      String selectedFileName = result.files.first.name;
+      List<int> imageBytes = result.files.first.bytes!;
+
+      // Convert the image bytes to base64
+      try{
+        setState(() {
+          isLoading = true;
+        });
+        String base64Image = base64Encode(imageBytes);
+
+        String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/uploaddoc.php';
+
+        var data = {
+          'employee_id' : widget.employeeId,
+          'doc': base64Image,
+          'action_id' : '1'
+        };
+
+        // Send the request using dio for multipart/form-data
+        var dioClient = dio.Dio();
+        dio.Response response = await dioClient.post(apiUrl, data: dio.FormData.fromMap(data));
+        
+        if (response.statusCode == 200) {
+          showDialog(
+            context: context, // Make sure to have access to the context
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Sukses'),
+                content: Text('Upload ktp $namaKaryawan telah berhasil dilakukan'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const EmployeeListPage());
+                    },
+                    child: const Text('Oke'),
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          print(response.data);
+          Get.snackbar("Error", "Error: ${response.statusCode}, ${response.data}");
+        }
+      } catch (e){
+
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } else {
+      // User canceled the file picking
+    }
+  }
+
+  Future<void> simAFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'bmp'],
+    );
+
+    if (result != null) {
+      String selectedFileName = result.files.first.name;
+      List<int> imageBytes = result.files.first.bytes!;
+
+      // Convert the image bytes to base64
+      try{
+        setState(() {
+          isLoading = true;
+        });
+        String base64Image = base64Encode(imageBytes);
+
+        String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/uploaddoc.php';
+
+        var data = {
+          'employee_id' : widget.employeeId,
+          'doc': base64Image,
+          'action_id' : '2'
+        };
+
+        // Send the request using dio for multipart/form-data
+        var dioClient = dio.Dio();
+        dio.Response response = await dioClient.post(apiUrl, data: dio.FormData.fromMap(data));
+        
+        if (response.statusCode == 200) {
+          showDialog(
+            context: context, // Make sure to have access to the context
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Sukses'),
+                content: Text('Upload sim A $namaKaryawan telah berhasil dilakukan'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const EmployeeListPage());
+                    },
+                    child: const Text('Oke'),
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          print(response.data);
+          Get.snackbar("Error", "Error: ${response.statusCode}, ${response.data}");
+        }
+      } catch (e){
+
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } else {
+      // User canceled the file picking
+    }
+  }
+
+  Future<void> simCFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'bmp'],
+    );
+
+    if (result != null) {
+      String selectedFileName = result.files.first.name;
+      List<int> imageBytes = result.files.first.bytes!;
+
+      // Convert the image bytes to base64
+      try{
+        setState(() {
+          isLoading = true;
+        });
+        String base64Image = base64Encode(imageBytes);
+
+        String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/uploaddoc.php';
+
+        var data = {
+          'employee_id' : widget.employeeId,
+          'doc': base64Image,
+          'action_id' : '3'
+        };
+
+        // Send the request using dio for multipart/form-data
+        var dioClient = dio.Dio();
+        dio.Response response = await dioClient.post(apiUrl, data: dio.FormData.fromMap(data));
+        
+        if (response.statusCode == 200) {
+          showDialog(
+            context: context, // Make sure to have access to the context
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Sukses'),
+                content: Text('Upload sim C $namaKaryawan telah berhasil dilakukan'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const EmployeeListPage());
+                    },
+                    child: const Text('Oke'),
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          print(response.data);
+          Get.snackbar("Error", "Error: ${response.statusCode}, ${response.data}");
+        }
+      } catch (e){
+
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } else {
+      // User canceled the file picking
+    }
+  }
+  
   Widget buildLeaveCard() {
     return SizedBox(
-      width: (MediaQuery.of(context).size.width) / 6,
+      width: (MediaQuery.of(context).size.width) / 4,
       child: GestureDetector(
         onTap: () {
           showDialog(
@@ -786,7 +1196,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                 'Update cuti', 
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 18.sp,
+                  fontSize: 6.sp,
                   fontWeight: FontWeight.w800
                 ),
               ),
@@ -877,17 +1287,17 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
           color: Colors.white,
           shadowColor: Colors.black,
           child: Padding(
-            padding: EdgeInsets.only(left: 10.sp, top: 5.sp, bottom: 5.sp),
+            padding: EdgeInsets.only(left: 5.sp, top: 5.sp, bottom: 5.sp),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   leaveCount.toString(),
-                  style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700),
+                  style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w700),
                 ),
                 Text(
                   'Masa berakhir cuti $expDateCuti ',
-                  style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w400),
+                  style: TextStyle(fontSize: 4.5.sp, fontWeight: FontWeight.w400),
                 ),
               ],
             ),
@@ -896,6 +1306,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
       ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -908,7 +1319,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
     return MaterialApp(
       title: 'Employee Overview',
       home: Scaffold(
-        body: SingleChildScrollView(
+        body: isLoading ? const Center(child: CircularProgressIndicator(),) : SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1003,7 +1414,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                           ),
                           Tab( 
                             child: Text(
-                              'Performa', 
+                              'Inventaris', 
                               style: TextStyle(
                                 fontSize: 4.sp, 
                                 fontWeight: FontWeight.w400,
@@ -1013,7 +1424,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                           ),
                           Tab( 
                             child: Text(
-                              'Permohonan', 
+                              'Perjalanan Dinas', 
                               style: TextStyle(
                                 fontSize: 4.sp, 
                                 fontWeight: FontWeight.w400,
@@ -1031,25 +1442,18 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                               ),
                             ),
                           ),
-                          Tab( 
-                            child: Text(
-                              'Riwayat', 
-                              style: TextStyle(
-                                fontSize: 4.sp, 
-                                fontWeight: FontWeight.w400,
-                                //color: Colors.black
-                              ),
-                            ),
-                          ),
                         ]
                       ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height,
+                      Container(
+                        height: MediaQuery.of(context).size.height + 520.h,
+                        constraints: BoxConstraints(
+                          minHeight: MediaQuery.of(context).size.height,
+                        ),
                         child: TabBarView(
                           controller: tabController,
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(top: 10.sp, right: 10.sp),
+                              padding: EdgeInsets.only(top: 5.sp, right: 10.sp),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -1057,57 +1461,29 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                     width: MediaQuery.of(context).size.width / 2,
                                     child: Column(
                                       children: [
-                                        FutureBuilder<Map<String, dynamic>>(
-                                          future: employeeData,
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState == ConnectionState.waiting) {
-                                              return const Center(
-                                                child: CircularProgressIndicator(),
-                                              );
-                                            } else if (snapshot.hasError) {
-                                              return Center(
-                                                child: Text('Error: ${snapshot.error}'),
-                                              );
-                                            } else {
-                                              final employee = snapshot.data!['Data'][0];
-                                              final dob = DateTime.parse(employee['employee_dob']);
-                                              final formattedDob = DateFormat('dd MMM yyyy').format(dob);
-
-                                              return Card(
-                                                shape: const RoundedRectangleBorder( 
-                                                  borderRadius: BorderRadius.all(Radius.circular(12))
-                                                ),
-                                                color: Colors.white,
-                                                shadowColor: Colors.black,
-                                                child: SizedBox(
-                                                  width: MediaQuery.of(context).size.width / 2,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.all(4.sp),
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                        Card(
+                                          shape: const RoundedRectangleBorder( borderRadius: BorderRadius.all(Radius.circular(12))),
+                                          color: Colors.white,
+                                          shadowColor: Colors.black,
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context).size.width / 2,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(4.sp),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text('Informasi Umum', style: TextStyle(fontSize: 7.sp, fontWeight: FontWeight.w700,),),
+                                                    SizedBox(height: 10.h,),
+                                                    Row(
                                                       children: [
-                                                        Text('Informasi Umum', 
-                                                          style: TextStyle(
-                                                            fontSize: 7.sp,
-                                                            fontWeight: FontWeight.w700,
-                                                          ),
+                                                        SizedBox(
+                                                          width: (MediaQuery.of(context).size.width - 900) / 2,
+                                                          child: Text('NIK', style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w700,))
                                                         ),
-                                                        SizedBox(height: 10.h,),
-                                                        Row(
-                                                          children: [
-                                                            SizedBox(
-                                                              width: (MediaQuery.of(context).size.width - 900) / 2,
-                                                              child: Text('NIK', 
-                                                                style: TextStyle(
-                                                                  fontSize: 4.sp,
-                                                                  fontWeight: FontWeight.w700,
-                                                                )
-                                                              )
-                                                            ),
-                                                            SizedBox(
-                                                              width: (MediaQuery.of(context).size.width - 800) / 2,
-                                                              child: Text('${employee['employee_id']}')
-                                                            ),
+                                                        SizedBox(
+                                                          width: (MediaQuery.of(context).size.width - 800) / 2,
+                                                          child: Text(employeeID)
+                                                        ),
                                                           ],
                                                         ),
                                                         SizedBox(height: 20.h,),
@@ -1124,7 +1500,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                             ),
                                                             SizedBox(
                                                               width: (MediaQuery.of(context).size.width - 800) / 2,
-                                                              child: Text('${employee['employee_name']}')
+                                                              child: Text(namaKaryawan)
                                                             ),
                                                           ],
                                                         ),
@@ -1142,7 +1518,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                             ),
                                                             SizedBox(
                                                               width: (MediaQuery.of(context).size.width - 800) / 2,
-                                                              child: Text('${employee['employee_pob']}, $formattedDob')
+                                                              child: Text('$pob, $dob')
                                                             ),
                                                           ],
                                                         ),
@@ -1160,7 +1536,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                             ),
                                                             SizedBox(
                                                               width: (MediaQuery.of(context).size.width - 800) / 2,
-                                                              child: Text('${employee['gender_name']}')
+                                                              child: Text(gender)
                                                             ),
                                                           ],
                                                         ),
@@ -1178,7 +1554,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                             ),
                                                             SizedBox(
                                                               width: (MediaQuery.of(context).size.width - 800) / 2,
-                                                              child: Text('${employee['employee_identity']}')
+                                                              child: Text(employeeNIK)
                                                             ),
                                                           ],
                                                         ),
@@ -1196,7 +1572,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                             ),
                                                             SizedBox(
                                                               width: (MediaQuery.of(context).size.width - 800) / 2,
-                                                              child: Text('${employee['username']}')
+                                                              child: Text(username)
                                                             ),
                                                           ],
                                                         ),
@@ -1214,7 +1590,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                             ),
                                                             SizedBox(
                                                               width: (MediaQuery.of(context).size.width - 800) / 2,
-                                                              child: Text('${employee['employee_email']}')
+                                                              child: Text(emailKaryawan)
                                                             ),
                                                           ],
                                                         ),
@@ -1230,16 +1606,10 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                                 )
                                                               )
                                                             ),
-                                                            if (employee['employee_phone_number'] != null)
-                                                              SizedBox(
-                                                                width: (MediaQuery.of(context).size.width - 800) / 2,
-                                                                child: Text('${employee['employee_phone_number']}')
-                                                              ),
-                                                            if (employee['employee_phone_number'] == null)
-                                                              SizedBox(
-                                                                width: (MediaQuery.of(context).size.width - 800) / 2,
-                                                                child: const Text('-')
-                                                              ),
+                                                            SizedBox(
+                                                              width: (MediaQuery.of(context).size.width - 800) / 2,
+                                                              child: Text(phone)
+                                                            ),
                                                           ],
                                                         ),
                                                         SizedBox(height: 20.h,),
@@ -1254,15 +1624,9 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                                 )
                                                               )
                                                             ),
-                                                            if (employee['employee_status_name'] != null)
                                                             SizedBox(
                                                               width: (MediaQuery.of(context).size.width - 800) / 2,
-                                                              child: Text('${employee['employee_status_name']}')
-                                                            ),
-                                                            if (employee['employee_status_name'] == null)
-                                                            SizedBox(
-                                                              width: (MediaQuery.of(context).size.width - 800) / 2,
-                                                              child: const Text('-')
+                                                              child: Text(status)
                                                             ),
                                                           ],
                                                         ),
@@ -1278,16 +1642,10 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                                 )
                                                               )
                                                             ),
-                                                            if (employee['employee_spv'] != null)
-                                                              SizedBox(
-                                                                width: (MediaQuery.of(context).size.width - 800) / 2,
-                                                                child: Text('${employee['employee_spv']}')
-                                                              ),
-                                                            if (employee['employee_spv'] == null)
-                                                              SizedBox(
-                                                                width: (MediaQuery.of(context).size.width - 800) / 2,
-                                                                child: const Text('-')
-                                                              ),
+                                                            SizedBox(
+                                                              width: (MediaQuery.of(context).size.width - 800) / 2,
+                                                              child: Text(namaSPV!)
+                                                            ),
                                                           ],
                                                         ),
                                                         SizedBox(height: 20.h,),
@@ -1295,40 +1653,12 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                     ),
                                                   ),
                                                 ),
-                                              );
-                                            }
-                                          }
-                                        ),
-                                        SizedBox(height: 20.h,),
-                                        Card(
-                                          shape: const RoundedRectangleBorder( 
-                                            borderRadius: BorderRadius.all(Radius.circular(12))
-                                          ),
-                                          color: Colors.white,
-                                          shadowColor: Colors.black,
-                                          child: SizedBox(
-                                            width: MediaQuery.of(context).size.width / 2,
-                                            child: Padding(
-                                              padding: EdgeInsets.all(4.sp),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text('Catatan Posisi', 
-                                                    style: TextStyle(
-                                                      fontSize: 7.sp,
-                                                      fontWeight: FontWeight.w700,
-                                                    ),
-                                                  ),
-                                                ],
                                               ),
-                                            )
-                                          ),
-                                        )
                                       ],
                                     )
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(left: 10.sp),
+                                    padding: EdgeInsets.only(left: 5.sp),
                                     child: SizedBox(
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1336,23 +1666,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                           if(positionId == 'POS-HR-002' || positionId == 'POS-HR-008')
                                             ElevatedButton(
                                               onPressed: () {
-                                                showDialog(
-                                                  context: context, 
-                                                  builder: (_) {
-                                                    return AlertDialog(
-                                                      title: const Text('Under Construction'),
-                                                      content: const Text("Fitur ini belum tersedia"),
-                                                      actions: <Widget>[
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            Get.back();
-                                                          }, 
-                                                          child: const Text("Ok")
-                                                        ),
-                                                      ],
-                                                    );
-                                                  }
-                                                );
+                                                Get.to(EmployeeDetailOne(widget.employeeId));
                                               }, 
                                               style: ElevatedButton.styleFrom(
                                                 minimumSize: Size(80.w, 45.h),
@@ -1879,7 +2193,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                         } else if (snapshot.hasError) {
                                           return Text('Error: ${snapshot.error}');
                                         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                                          return const Text('No data available'); // Handle case where data is empty
+                                          return const Center(child: Text('Tidak ada data absen pada hari tersebut')); // Handle case where data is empty
                                         } else {
                                           List<Map<String, dynamic>> data = snapshot.data!;
                                           // Use the fetched data to build your UI
@@ -2130,37 +2444,22 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                         }
                                       },
                                     )
-
                                   ),
-
                                 ],
                               ),
                             if (storedEmployeeIdNumber == employeeId || positionId == 'POS-HR-002' || positionId == 'POS-HR-008')
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  SizedBox(height: 15.h,),
-                                  SizedBox(
-                                    width: (MediaQuery.of(context).size.width),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        buildLeaveCard()
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(height: 25.h,),
+                                  SizedBox(height: 10.h,),
                                   if (positionId == 'POS-HR-002' || positionId == 'POS-HR-008')
                                     SizedBox(
                                       width: (MediaQuery.of(context).size.width - 160.w) / 4,
                                       child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
-                                          minimumSize:
-                                            Size(0.sp, 45.sp),
-                                            foregroundColor:
-                                              const Color(0xFFFFFFFF),
-                                            backgroundColor:
-                                              const Color(0xff4ec3fc),
+                                          minimumSize: Size(40.w, 55.h),
+                                          foregroundColor:const Color(0xFFFFFFFF),
+                                          backgroundColor:const Color(0xff4ec3fc),
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                 BorderRadius.circular(8),
@@ -2185,7 +2484,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                                   'Input cuti', 
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                    fontSize: 18.sp,
+                                                    fontSize: 4.sp,
                                                     fontWeight: FontWeight.w800
                                                   ),
                                                 ),
@@ -2270,85 +2569,467 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
                                         },
                                       ),
                                     ),
-                                  SizedBox(height: 25.h,),
-                                  Card(
-                                    shape: const RoundedRectangleBorder( 
-                                      borderRadius: BorderRadius.all(Radius.circular(12))
+                                  SizedBox(height: 15.h,),
+                                  SizedBox(
+                                    width: (MediaQuery.of(context).size.width),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        buildLeaveCard()
+                                      ],
                                     ),
-                                    color: Colors.white,
-                                    shadowColor: Colors.black,
-                                    child: SizedBox(
-                                       width: (MediaQuery.of(context).size.width),
-                                      child: Padding(
-                                        padding: EdgeInsets.only(left: 17.sp, top: 5.sp, bottom: 4.sp,right: 7.sp),
-                                        child: Column(
-                                          children: [
-                                            SizedBox(height: 10.sp,),
-                                            Row(
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    Get.to(const ShowAllMyPermission());
-                                                  },
-                                                  child: Text('Izin saya',
-                                                    style: TextStyle(
-                                                      fontSize: 20.sp, fontWeight: FontWeight.w700,
-                                                    )
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(height: 3.sp,),
-                                            Row(
-                                              children: [
-                                                Text( 'Kelola dan tijau izin yang telah diajukan',
-                                                  style: TextStyle(
-                                                    fontSize: 12.sp, fontWeight: FontWeight.w300,
-                                                  )
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox( height: 4.sp,),
-                                            for (int index = 0; index < 3; index++)
-                                              Column(
+                                  ),
+                                  SizedBox(height: 25.h,),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Card(
+                                      shape: const RoundedRectangleBorder( 
+                                        borderRadius: BorderRadius.all(Radius.circular(12))
+                                      ),
+                                      color: Colors.white,
+                                      shadowColor: Colors.black,
+                                      child: SizedBox(
+                                         width: (MediaQuery.of(context).size.width),
+                                        child: Padding(
+                                          padding: EdgeInsets.only(left: 4.sp, top: 2.sp, bottom: 4.sp,right: 4.sp),
+                                          child: Column(
+                                            children: [
+                                              SizedBox(height: 4.sp,),
+                                              Row(
                                                 children: [
                                                   GestureDetector(
                                                     onTap: () {
-                                                      Get.to(ViewOnlyPermission(permission_id : permissionDataLimit[index]['id_permission']));
+                                                      Get.to(const ShowAllMyPermission());
                                                     },
-                                                    child: Card(
-                                                      child: ListTile(
-                                                        title: Text(
-                                                          index < permissionDataLimit.length
-                                                              ? '${permissionDataLimit[index]['employee_name']} | ${permissionDataLimit[index]['permission_type_name']}'
-                                                              : '-',
-                                                          style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w700),
-                                                        ),
-                                                        subtitle: Text(
-                                                          index < permissionDataLimit.length
-                                                              ? permissionDataLimit[index]['permission_status_name']
-                                                              : '-',
-                                                          style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w400),
+                                                    child: Text('Izin $namaKaryawan',
+                                                      style: TextStyle(
+                                                        fontSize: 6.sp, fontWeight: FontWeight.w700,
+                                                      )
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(height: 3.sp,),
+                                              Row(
+                                                children: [
+                                                  Text( 'Kelola dan tijau izin yang telah diajukan',
+                                                    style: TextStyle(
+                                                      fontSize: 3.sp, fontWeight: FontWeight.w300,
+                                                    )
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox( height: 4.sp,),
+                                              for (int index = 0; index < 3; index++)
+                                                Column(
+                                                  children: [
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        Get.to(ViewOnlyPermission(permission_id : permissionDataLimit[index]['id_permission']));
+                                                      },
+                                                      child: Card(
+                                                        child: ListTile(
+                                                          title: Text(
+                                                            index < permissionDataLimit.length
+                                                                ? '${permissionDataLimit[index]['employee_name']} | ${permissionDataLimit[index]['permission_type_name']}'
+                                                                : '-',
+                                                            style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w700),
+                                                          ),
+                                                          subtitle: Text(
+                                                            index < permissionDataLimit.length
+                                                                ? permissionDataLimit[index]['permission_status_name']
+                                                                : '-',
+                                                            style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w400),
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
-                                                  ),
-                                                  SizedBox(height: 10.sp,),
-                                                ],
-                                              ),
-                                          ],
+                                                    SizedBox(height: 5.sp,),
+                                                  ],
+                                                ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
-                            const Text('Anda tidak memiliki akses'),
-                            const Text('Anda tidak memiliki akses'),
-                            const Text('Anda tidak memiliki akses'),
-                            const Text('Anda tidak memiliki akses'),
-                            const Text('Anda tidak memiliki akses'),
-                            // const Text('7')
+                            Column(
+                              children: [
+                                SizedBox(height: 10.sp,),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      width: (MediaQuery.of(context).size.width - 100.w) / 2,
+                                      child: Card(
+                                        shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(12))),
+                                        color: Colors.white,
+                                        shadowColor: Colors.black,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(left: 4.sp, top: 4.sp, bottom: 4.sp, right: 4.sp),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('List Permohonan',style: TextStyle(fontSize: 6.sp, fontWeight: FontWeight.w700,)),
+                                              SizedBox(height: 1.sp,),
+                                              Text('List permohonan $namaKaryawan', style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w300,)),
+                                              SizedBox(height: 7.sp,),
+                                              SizedBox(
+                                                width: MediaQuery.of(context).size.width,
+                                                height: (MediaQuery.of(context).size.height - 50.sp),
+                                                child: ListView.builder(
+                                                  itemCount: myRequestInventory.length,
+                                                  itemBuilder: (context, index){
+                                                    var item = myRequestInventory[index];
+                                                    return Padding(
+                                                      padding: EdgeInsets.only(bottom: 3.sp),
+                                                      child: Card(
+                                                        child: ListTile(
+                                                          title: Text(item['employee_name'] + ' | ' + item['item_request'], style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w700)),
+                                                          subtitle: Text(item['status_name'], style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w400)),
+                                                          onTap: () {
+                                                            Get.to(DetailInventoryRequest((item['request_id'])));
+                                                          },
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    ),
+                                    SizedBox(
+                                      width: (MediaQuery.of(context).size.width - 100.w) / 2,
+                                      child: Card(
+                                        shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(12))),
+                                        color: Colors.white,
+                                        shadowColor: Colors.black,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(left: 4.sp, top: 4.sp, bottom: 4.sp, right: 4.sp),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('Inventaris',style: TextStyle(fontSize: 6.sp, fontWeight: FontWeight.w700,)),
+                                              SizedBox(height: 1.sp,),
+                                              Text('List inventaris $namaKaryawan', style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w300,)),
+                                              SizedBox(height: 7.sp,),
+                                              SizedBox(
+                                                width: MediaQuery.of(context).size.width,
+                                                height: (MediaQuery.of(context).size.height - 50.sp),
+                                                child: ListView.builder(
+                                                  itemCount: myInventory.length,
+                                                  itemBuilder: (context, index){
+                                                    var item = myInventory[index];
+                                                    return Padding(
+                                                      padding: EdgeInsets.only(bottom: 3.sp),
+                                                      child: Card(
+                                                        child: ListTile(
+                                                          title: Text(item['inventory_name'], style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w700)),
+                                                          subtitle: Text(item['inventory_id'], style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w400)),
+                                                          trailing: Container(
+                                                            alignment: Alignment.center,
+                                                            constraints: BoxConstraints(
+                                                              maxWidth: 30.w,
+                                                            ),
+                                                            decoration: const BoxDecoration(
+                                                              borderRadius: BorderRadius.all(Radius.circular(12)),
+                                                              color: Colors.green,
+                                                            ),
+                                                            child: Text(item['status_name'], textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 3.sp),),
+                                                          ),
+                                                          onTap: () {
+                                                            Get.to(detailInventory((item['inventory_id'])));
+                                                          },
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                SizedBox(height: 10.sp,),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      width: (MediaQuery.of(context).size.width - 100.w) / 2,
+                                      child: Card(
+                                        shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(12))),
+                                        color: Colors.white,
+                                        shadowColor: Colors.black,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(left: 4.sp, top: 4.sp, bottom: 4.sp, right: 4.sp),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('Perjalanan Dinas',style: TextStyle(fontSize: 6.sp, fontWeight: FontWeight.w700,)),
+                                              SizedBox(height: 1.sp,),
+                                              Text('List perjalanan dinas $namaKaryawan', style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w300,)),
+                                              SizedBox(height: 7.sp,),
+                                              SizedBox(
+                                                width: MediaQuery.of(context).size.width,
+                                                height: (MediaQuery.of(context).size.height - 50.sp),
+                                                child: ListView.builder(
+                                                  itemCount: myBusinessTrip.length,
+                                                  itemBuilder: (context, index){
+                                                    return Padding(
+                                                      padding: EdgeInsets.only(bottom: 3.sp),
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          Get.to(ViewPerjalananDinas(perjalananDinasID: myBusinessTrip[index]['businesstrip_id'], perjalananDinasStatus: myBusinessTrip[index]['status_name'],  tanggalPermohonan: myBusinessTrip[index]['insert_dt'], namaKota: myBusinessTrip[index]['nama_kota'], lamaDurasi: myBusinessTrip[index]['duration_name'], keterangan: myBusinessTrip[index]['reason'], tim: myBusinessTrip[index]['team'], pembayaran: myBusinessTrip[index]['payment_name'], tranportasi: myBusinessTrip[index]['transport_name'], namaKaryawan: myBusinessTrip[index]['employee_name'], namaDepartemen: myBusinessTrip[index]['department_name'], requestorID: myBusinessTrip[index]['insert_by'],));
+                                                        },
+                                                        child: Card(
+                                                          child: ListTile(
+                                                            title: Text(myBusinessTrip[index]['employee_name'], style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w700),),
+                                                            subtitle: Text('${myBusinessTrip[index]['nama_kota']} (${myBusinessTrip[index]['duration_name']})', style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w400),),
+                                                            trailing: Text(myBusinessTrip[index]['status_name'], style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w700),),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: (MediaQuery.of(context).size.width - 100.w) / 2,
+                                      child: Card(
+                                        shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(12))),
+                                        color: Colors.white,
+                                        shadowColor: Colors.black,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(left: 4.sp, top: 4.sp, bottom: 4.sp, right: 4.sp),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('Laporan Perjalanan Dinas',style: TextStyle(fontSize: 6.sp, fontWeight: FontWeight.w700,)),
+                                              SizedBox(height: 1.sp,),
+                                              Text('List laporan perjalanan dinas $namaKaryawan', style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w300,)),
+                                              SizedBox(height: 7.sp,),
+                                              SizedBox(
+                                                width: MediaQuery.of(context).size.width,
+                                                height: (MediaQuery.of(context).size.height - 50.sp),
+                                                child: ListView.builder(
+                                                  itemCount: myLPD.length,
+                                                  itemBuilder: (context, index){
+                                                    return Padding(
+                                                      padding: EdgeInsets.only(bottom: 3.sp),
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          Get.to(ViewLPD(businessTripID: myLPD[index]['businesstrip_id']));
+                                                        },
+                                                        child: Card(
+                                                          child: ListTile(
+                                                            title: Text(myLPD[index]['employee_name'], style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w700),),
+                                                            subtitle: Text('${myLPD[index]['name']} (${myLPD[index]['project_name']})', style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w400),),
+                                                            trailing: Text(myLPD[index]['status_name'], style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w700),),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 10.sp,),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        width: (MediaQuery.of(context).size.width - 100.w) / 2,
+                                        child: Card(
+                                          shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(Radius.circular(12))),
+                                          color: Colors.white,
+                                          shadowColor: Colors.black,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(left: 4.sp, top: 4.sp, bottom: 4.sp, right: 4.sp),
+                                            child: Column(
+                                              children: [
+                                                Center(child: Text('File KTP', style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w700,),)),
+                                                SizedBox(height: 5.sp,),
+                                                if(ktp == '-')
+                                                  const Center(child: Text('File KTP belum diupload ke dalam sistem')),
+                                                if(ktp != '-')
+                                                  Image.memory(base64Decode(ktp)),
+                                                SizedBox(height: 5.sp,),
+                                                ElevatedButton(
+                                                  onPressed: (){
+                                                    ktpFile();
+                                                  }, 
+                                                  style: ElevatedButton.styleFrom(
+                                                    minimumSize: Size(50.w, 55.h),
+                                                    foregroundColor: const Color(0xFFFFFFFF),
+                                                    backgroundColor: const Color(0xff4ec3fc),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(8),
+                                                    ),
+                                                  ),
+                                                  child: const Text('Upload KTP')
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: (MediaQuery.of(context).size.width - 100.w) / 2,
+                                        child: Card(
+                                          shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(Radius.circular(12))),
+                                          color: Colors.white,
+                                          shadowColor: Colors.black,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(left: 4.sp, top: 4.sp, bottom: 4.sp, right: 4.sp),
+                                            child: Column(
+                                              children: [
+                                                Center(child: Text('File SIM A', style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w700,),)),
+                                                SizedBox(height: 5.sp,),
+                                                if(simA == '-')
+                                                  const Center(child: Text('File SIM A belum diupload ke dalam sistem')),
+                                                if(simA != '-')
+                                                  Image.memory(base64Decode(ktp)),
+                                                SizedBox(height: 5.sp,),
+                                                ElevatedButton(
+                                                  onPressed: (){
+                                                    simAFile();
+                                                    // Get.to(EmployeeDetailTwo(widget.employeeID));
+                                                  }, 
+                                                  style: ElevatedButton.styleFrom(
+                                                    minimumSize: Size(50.w, 55.h),
+                                                    foregroundColor: const Color(0xFFFFFFFF),
+                                                    backgroundColor: const Color(0xff4ec3fc),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(8),
+                                                    ),
+                                                  ),
+                                                  child: const Text('Upload SIM A')
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: 7.sp,),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        width: (MediaQuery.of(context).size.width - 100.w) / 2,
+                                        child: Card(
+                                          shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(Radius.circular(12))),
+                                          color: Colors.white,
+                                          shadowColor: Colors.black,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(left: 4.sp, top: 4.sp, bottom: 4.sp, right: 4.sp),
+                                            child: Column(
+                                              children: [
+                                                Center(child: Text('File SIM C', style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w700,),)),
+                                                SizedBox(height: 5.sp,),
+                                                if(simC == '-')
+                                                  const Center(child: Text('File SIM C belum diupload ke dalam sistem')),
+                                                if(simC != '-')
+                                                  Image.memory(base64Decode(simC)),
+                                                SizedBox(height: 5.sp,),
+                                                ElevatedButton(
+                                                  onPressed: (){
+                                                    simCFile();
+                                                    // Get.to(EmployeeDetailTwo(widget.employeeID));
+                                                  }, 
+                                                  style: ElevatedButton.styleFrom(
+                                                    minimumSize: Size(50.w, 55.h),
+                                                    foregroundColor: const Color(0xFFFFFFFF),
+                                                    backgroundColor: const Color(0xff4ec3fc),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(8),
+                                                    ),
+                                                  ),
+                                                  child: const Text('Upload SIM C')
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: (MediaQuery.of(context).size.width - 100.w) / 2,
+                                        child: Card(
+                                          shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(Radius.circular(12))),
+                                          color: Colors.white,
+                                          shadowColor: Colors.black,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(left: 4.sp, top: 4.sp, bottom: 4.sp, right: 4.sp),
+                                            child: Column(
+                                              children: [
+                                                Center(child: Text('NPWP', style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w700,),)),
+                                                SizedBox(height: 5.sp,),
+                                                if(npwp == '-')
+                                                  const Center(child: Text('File NPWP belum diupload ke dalam sistem')),
+                                                if(npwp != '-')
+                                                  Image.memory(base64Decode(npwp)),
+                                                SizedBox(height: 5.sp,),
+                                                ElevatedButton(
+                                                  onPressed: (){
+                                                    // Get.to(EmployeeDetailTwo(widget.employeeID));
+                                                  }, 
+                                                  style: ElevatedButton.styleFrom(
+                                                    minimumSize: Size(50.w, 55.h),
+                                                    foregroundColor: const Color(0xFFFFFFFF),
+                                                    backgroundColor: const Color(0xff4ec3fc),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(8),
+                                                    ),
+                                                  ),
+                                                  child: const Text('Upload NPWP')
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
                           ]
                         ),
                       )

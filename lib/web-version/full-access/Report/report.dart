@@ -660,7 +660,7 @@ class _ReportIndexState extends State<ReportIndex> {
                               );
                             }, 
                             style: ElevatedButton.styleFrom(
-                              minimumSize: Size(50.w, 45.h),
+                              minimumSize: Size(50.w, 55.h),
                               foregroundColor: const Color(0xFFFFFFFF),
                               backgroundColor: const Color(0xff4ec3fc),
                               shape: RoundedRectangleBorder(
@@ -671,12 +671,12 @@ class _ReportIndexState extends State<ReportIndex> {
                           )
                         ],
                       ),
-                      SizedBox(height: 30.sp,),
+                      SizedBox(height: 7.sp,),
                       SizedBox(
                         width: MediaQuery.of(context).size.width,
                         child: Card(
                           child: Padding(
-                            padding: EdgeInsets.only(top: 20.sp, bottom: 20.sp, left: 10.sp, right: 10.sp),
+                            padding: EdgeInsets.only(top: 5.sp, bottom: 5.sp, left: 5.sp, right: 5.sp),
                             child: Column(
                               children: [
                                 Row(
@@ -711,7 +711,7 @@ class _ReportIndexState extends State<ReportIndex> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 10.h,),
+                                SizedBox(height: 7.h,),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
@@ -723,9 +723,9 @@ class _ReportIndexState extends State<ReportIndex> {
                                           child: Column(
                                             children: [
                                               Center(
-                                                child: Text('Demografi',style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700,))
+                                                child: Text('Demografi',style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w700,))
                                               ),
-                                              SizedBox(height: 20.sp,),
+                                              SizedBox(height: 5.sp,),
                                               SizedBox(
                                                 width: (MediaQuery.of(context).size.width - 150.w) / 4,
                                                 height: (MediaQuery.of(context).size.height - 380.h),
@@ -802,9 +802,9 @@ class _ReportIndexState extends State<ReportIndex> {
                                           child: Column(
                                             children: [
                                               Center(
-                                                child: Text('Pendidikan Terakhir', style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700,))
+                                                child: Text('Pendidikan Terakhir', style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w700,))
                                               ),
-                                              SizedBox(height: 20.sp,),
+                                              SizedBox(height: 5.sp,),
                                               SizedBox(
                                                 width: (MediaQuery.of(context).size.width - 150.w) / 4,
                                                 height: (MediaQuery.of(context).size.height - 380.h),
@@ -838,8 +838,8 @@ class _ReportIndexState extends State<ReportIndex> {
                                           padding: EdgeInsets.only(top: 10.sp, bottom: 10.sp),
                                           child: Column(
                                             children: [
-                                              Text('Agama', style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700,)),
-                                              SizedBox(height: 20.sp,),
+                                              Text('Agama', style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w700,)),
+                                              SizedBox(height: 5.sp,),
                                               SizedBox(
                                                 width: (MediaQuery.of(context).size.width - 150.w) / 4,
                                                 height: (MediaQuery.of(context).size.height - 250.h),
@@ -1007,8 +1007,8 @@ class _ReportIndexState extends State<ReportIndex> {
                                           padding: EdgeInsets.only(top: 10.sp, bottom: 10.sp),
                                           child: Column(
                                             children: [
-                                              Text('Status Karyawan', style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700,)),
-                                              SizedBox(height: 20.sp,),
+                                              Text('Status Karyawan', style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w700,)),
+                                              SizedBox(height: 5.sp,),
                                               SizedBox(
                                                 width: (MediaQuery.of(context).size.width - 140.w) / 4,
                                                 height: (MediaQuery.of(context).size.height - 255.h),
@@ -1084,8 +1084,8 @@ class _ReportIndexState extends State<ReportIndex> {
                                           padding: EdgeInsets.only(top: 10.sp, bottom: 10.sp),
                                           child: Column(
                                             children: [
-                                              Text('Masa Kerja', style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700,)),
-                                              SizedBox(height: 20.sp,),
+                                              Text('Masa Kerja', style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w700,)),
+                                              SizedBox(height: 5.sp,),
                                               SizedBox(
                                                 width: (MediaQuery.of(context).size.width - 130.w) / 4,
                                                 height: (MediaQuery.of(context).size.height - 250.h),

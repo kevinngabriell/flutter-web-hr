@@ -923,7 +923,7 @@ class _LaporanActiveState extends State<LaporanActive> {
               child: Image.asset('images/laporan-active.png')
             ),
             SizedBox(width: 2.w),
-            Text('Laporan',style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,))
+            Text('Laporan',style: TextStyle(fontSize: 6.sp, fontWeight: FontWeight.w600,))
           ],
         )
       ),
