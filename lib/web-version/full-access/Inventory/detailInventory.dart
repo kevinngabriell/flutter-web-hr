@@ -4,21 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:hr_systems_web/web-version/full-access/Event/event.dart';
 import 'package:hr_systems_web/web-version/full-access/Inventory/InventoryDashboard.dart';
-import 'package:hr_systems_web/web-version/full-access/Performance/performance.dart';
-import 'package:hr_systems_web/web-version/full-access/Report/report.dart';
-import 'package:hr_systems_web/web-version/full-access/Salary/salary.dart';
-import 'package:hr_systems_web/web-version/full-access/Settings/setting.dart';
-import 'package:hr_systems_web/web-version/full-access/Structure/structure.dart';
-import 'package:hr_systems_web/web-version/full-access/Training/traning.dart';
-import 'package:hr_systems_web/web-version/full-access/profile.dart';
+import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'dart:convert';
-import '../../login.dart';
-import '../employee.dart';
-import '../index.dart';
 
 class detailInventory extends StatefulWidget {
   final String inventory_id;
@@ -540,370 +530,32 @@ class _detailInventoryState extends State<detailInventory> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 15.sp,),
-                        //company logo and name
-                        ListTile(
-                        contentPadding: const EdgeInsets.only(left: 0, right: 0),
-                        dense: true,
-                        horizontalTitleGap: 0.0, // Adjust this value as needed
-                        leading: Container(
-                          margin: const EdgeInsets.only(right: 2.0), // Add margin to the right of the image
-                          child: Image.asset(
-                            'images/kinglab.png',
-                            width: MediaQuery.of(context).size.width * 0.08,
-                          ),
-                        ),
-                        title: Text(
-                          companyName,
-                          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
-                        ),
-                        subtitle: Text(
-                          trimmedCompanyAddress,
-                          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
-                        ),
-                      ),
+                        NamaPerusahaanMenu(companyName: companyName, companyAddress: trimmedCompanyAddress),
+                        SizedBox(height: 10.sp,),
+                        const HalamanUtamaMenu(),
+                        SizedBox(height: 5.sp,),
+                        BerandaNonActive(employeeId: employeeId.toString()),
+                        SizedBox(height: 5.sp,),
+                        KaryawanActive(employeeId: employeeId.toString()),
+                        SizedBox(height: 5.sp,),
+                        const GajiNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const PerformaNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const PelatihanNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const AcaraNonActive(),
+                        SizedBox(height: 5.sp,),
+                        LaporanNonActive(positionId: positionId.toString()),
+                        SizedBox(height: 10.sp,),
+                        const PengaturanMenu(),
+                        SizedBox(height: 5.sp,),
+                        const PengaturanNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const StrukturNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const Logout(),
                         SizedBox(height: 30.sp,),
-                        //halaman utama title
-                        Padding(
-                          padding: EdgeInsets.only(left: 5.w),
-                          child: Text("Halaman utama", 
-                            style: TextStyle( fontSize: 20.sp, fontWeight: FontWeight.w600,)
-                          ),
-                        ),
-                        SizedBox(height: 10.sp,),
-                        //beranda button
-                        Padding(
-                          padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                          child: ElevatedButton(
-                            onPressed: () {Get.to(FullIndexWeb(employeeId));},
-                            style: ElevatedButton.styleFrom(
-                              elevation: 0,
-                              alignment: Alignment.centerLeft,
-                              minimumSize: Size(60.w, 55.h),
-                              foregroundColor: const Color(0xDDDDDDDD),
-                              backgroundColor: const Color(0xFFFFFFFF),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Image.asset('images/home-inactive.png')
-                                ),
-                                SizedBox(width: 2.w),
-                                Text('Beranda',
-                                  style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                )
-                              ],
-                            )
-                          ),
-                            ),
-                        SizedBox(height: 10.sp,),
-                        //karyawan button
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                              child: ElevatedButton(
-                                onPressed: () {Get.to(EmployeePage(employee_id: employeeId,));},
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(60.w, 55.h),
-                                  foregroundColor: const Color(0xFFFFFFFF),
-                                  backgroundColor: const Color(0xff4ec3fc),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset('images/employee-active.png')
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    Text('Karyawan',
-                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                    )
-                                  ],
-                                )
-                              ),
-                            ),
-                            SizedBox(height: 10.sp,),
-                            //gaji button
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Get.to(const SalaryIndex());
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(60.w, 55.h),
-                                  foregroundColor: const Color(0xDDDDDDDD),
-                                  backgroundColor: const Color(0xFFFFFFFF),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset('images/gaji-inactive.png')
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    Text('Gaji',
-                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                    )
-                                  ],
-                                )
-                              ),
-                            ),
-                            SizedBox(height: 10.sp,),
-                            //performa button
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Get.to(const PerformanceIndex());
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(60.w, 55.h),
-                                  foregroundColor: const Color(0xDDDDDDDD),
-                                  backgroundColor: const Color(0xFFFFFFFF),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset('images/performa-inactive.png')
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    Text('Performa',
-                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                    )
-                                  ],
-                                )
-                              ),
-                            ),
-                            SizedBox(height: 10.sp,),
-                            //pelatihan button
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Get.to(const TrainingIndex());
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(60.w, 55.h),
-                                  foregroundColor: const Color(0xDDDDDDDD),
-                                  backgroundColor: const Color(0xFFFFFFFF),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset('images/pelatihan-inactive.png')
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    Text('Pelatihan',
-                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                    )
-                                  ],
-                                )
-                              ),
-                            ),
-                            SizedBox(height: 10.sp,),
-                            //acara button
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Get.to(const EventIndex());
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(60.w, 55.h),
-                                  foregroundColor: const Color(0xDDDDDDDD),
-                                  backgroundColor: const Color(0xFFFFFFFF),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset('images/acara-inactive.png')
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    Text('Acara',
-                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                    )
-                                  ],
-                                )
-                              ),
-                            ),
-                            SizedBox(height: 10.sp,),
-                            //laporan button
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Get.to(const ReportIndex());
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(60.w, 55.h),
-                                  foregroundColor: const Color(0xDDDDDDDD),
-                                  backgroundColor: const Color(0xFFFFFFFF),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset('images/laporan-inactive.png')
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    Text('Laporan',
-                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                    )
-                                  ],
-                                )
-                              ),
-                            ),
-                            SizedBox(height: 30.sp,),
-                            //pengaturan title
-                            Padding(
-                                padding: EdgeInsets.only(left: 5.w),
-                                child: Text("Pengaturan", 
-                                  style: TextStyle( fontSize: 20.sp, fontWeight: FontWeight.w600,)
-                                ),
-                            ),
-                            SizedBox(height: 10.sp,),
-                            //pengaturan button
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Get.to(const SettingIndex());
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(60.w, 55.h),
-                                  foregroundColor: const Color(0xDDDDDDDD),
-                                  backgroundColor: const Color(0xFFFFFFFF),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset('images/pengaturan-inactive.png')
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    Text('Pengaturan',
-                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                    )
-                                  ],
-                                )
-                              ),
-                            ),
-                            SizedBox(height: 10.sp,),
-                            //struktur button
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Get.to(const StructureIndex());
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(60.w, 55.h),
-                                  foregroundColor: const Color(0xDDDDDDDD),
-                                  backgroundColor: const Color(0xFFFFFFFF),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset('images/struktur-inactive.png')
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    Text('Struktur',
-                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                    )
-                                  ],
-                                )
-                              ),
-                            ),
-                            SizedBox(height: 10.sp,),
-                            //keluar button
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  //show dialog sure to exit ?
-                                  showDialog(
-                                    context: context, 
-                                    builder: (_) {
-                                      return AlertDialog(
-                                        title: const Text("Keluar"),
-                                        content: const Text('Apakah anda yakin akan keluar ?'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () {Get.back();},
-                                            child: const Text('Cancel'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () {Get.off(const LoginPageDesktop());},
-                                            child: const Text('OK',),
-                                          ),
-                                        ],
-                                      );
-                                    }
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(60.w, 55.h),
-                                  foregroundColor: const Color(0xDDDDDDDD),
-                                  backgroundColor: const Color(0xFFFFFFFF),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset('images/logout.png')
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    Text('Keluar',
-                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, color: Colors.red)
-                                    )
-                                  ],
-                                )
-                              ),
-                            ),
-                            SizedBox(height: 30.sp,),
                       ],
                     ),
                   ),
@@ -917,151 +569,9 @@ class _detailInventoryState extends State<detailInventory> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 35.sp,),
-                        Padding(
-                          padding: EdgeInsets.only(right: 20.sp),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  showDialog(
-                                    context: context, 
-                                    builder: (BuildContext context){
-                                      return AlertDialog(
-                                        title: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text('Notifikasi', style: TextStyle(
-                                              fontSize: 20.sp, fontWeight: FontWeight.w700,
-                                            )),
-                                            GestureDetector(
-                                              onTap: () {
-                                                
-                                              },
-                                              child: Text('Hapus semua', style: TextStyle(
-                                                fontSize: 12.sp, fontWeight: FontWeight.w600,
-                                              )),
-                                            ),
-                                          ],
-                                        ),
-                                        content: SizedBox(
-                                          width: MediaQuery.of(context).size.width / 2,
-                                          height: MediaQuery.of(context).size.height / 2,
-                                          child: ListView.builder(
-                                            itemCount: noticationList.length,
-                                            itemBuilder: (context, index) {
-                                              return GestureDetector(
-                                                onTap: (){
-                                                  if(noticationList[index]['sender'] != ''){
-                                                      showDialog(
-                                                      context: context, 
-                                                      builder: (_) {
-                                                        return AlertDialog(
-                                                          title: Center(child: Text("${noticationList[index]['title']} ", style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700))),
-                                                          content: SizedBox(
-                                                            width: MediaQuery.of(context).size.width / 4,
-                                                            height: MediaQuery.of(context).size.height / 4,
-                                                            child: Column(
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: [
-                                                                Text('Tanggal : ${_formatDate('${noticationList[index]['send_date']}')}'),
-                                                                SizedBox(height: 2.h,),
-                                                                Text('Dari : ${noticationList[index]['sender'] == 'Kevin Gabriel Florentino' ? 'System' : noticationList[index]['sender']} '),
-                                                                SizedBox(height: 10.h,),
-                                                                Text('${noticationList[index]['message']} ')
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          actions: [
-                                                            TextButton(
-                                                              onPressed: () {
-                                                                Get.back();
-                                                              }, 
-                                                              child: const Text("Ok")
-                                                            ),
-                                                          ],
-                                                        );
-                                                      }
-                                                    );
-                                                  }
-                                                },
-                                                child: Card(
-                                                  child: ListTile(
-                                                    title: Text(index < noticationList.length ? '${noticationList[index]['title']} ' : '-',
-                                                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
-                                                    ),
-                                                    subtitle: Text(
-                                                        index < noticationList.length
-                                                        ? 'From ${noticationList[index]['sender'] == 'Kevin Gabriel Florentino' ? 'System' : noticationList[index]['sender']} '
-                                                        : '-',
-                                                        style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w400),
-                                                      ),
-                                                  ),
-                                                ),
-                                              );
-                                            }
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  );
-                                },
-                                child: Stack(
-                                  children: [
-                                    const Icon(Icons.notifications),
-                                    // if (noti.isNotEmpty)
-                                      Positioned(
-                                        top: 0,
-                                        right: 0,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(1),
-                                          decoration: BoxDecoration(
-                                            color: Colors.red,
-                                            borderRadius: BorderRadius.circular(10),
-                                          ),
-                                          child: Text(
-                                            noticationList.length.toString(),
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: 40.sp,),
-                              GestureDetector(
-                                onTap: () {
-                                  Get.to(const ProfilePage());
-                                },
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width - 290.w,
-                                  child: ListTile(
-                                    contentPadding: const EdgeInsets.only(left: 0, right: 0),
-                                    dense: true,
-                                    horizontalTitleGap: 20.0,
-                                    leading: Container(
-                                      margin: const EdgeInsets.only(right: 2.0),
-                                      child: Image.memory(
-                                        base64Decode(photo),
-                                      ),
-                                    ),
-                                    title: Text(employeeName,
-                                      style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
-                                    ),
-                                    subtitle: Text(employeeEmail,
-                                      style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 30.sp,),
+                        SizedBox(height: 5.sp,),
+                        NotificationnProfile(employeeName: employeeName, employeeAddress: employeeEmail, photo: photo),
+                        SizedBox(height: 10.sp,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -1084,9 +594,9 @@ class _detailInventoryState extends State<detailInventory> {
                                                 backgroundColor: const Color(0xff4ec3fc),
                                                 child: Text('${index + 1}', style: const TextStyle(color: Colors.white),),
                                               ),
-                                              title: Text(item['employee_name'], style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),),
-                                              subtitle: Text(item['action'], style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400),),
-                                              trailing: Text(_formatDate(item['action_dt']), style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400),),
+                                              title: Text(item['employee_name'], style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w600),),
+                                              subtitle: Text(item['action'], style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w400),),
+                                              trailing: Text(_formatDate(item['action_dt']), style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w400),),
                                             );
                                           }
                                         ),
@@ -1103,437 +613,405 @@ class _detailInventoryState extends State<detailInventory> {
                                   }
                                 );
                               },
-                              child: Text('Lihat riwayat inventaris', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
+                              child: Text('Lihat riwayat inventaris', style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
                             )
                           ],
                         ),
-                        SizedBox(height: 30.sp,),
-                        Padding(
-                          padding: EdgeInsets.only(right: 10.sp),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Nomor Inventaris', style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                  )),
-                                    Text(widget.inventory_id),
-                                  ],
-                                ),
+                        SizedBox(height: 10.sp,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Nomor Inventaris', style: TextStyle(
+                                  fontSize: 4.sp,
+                                  fontWeight: FontWeight.w600,
+                                )),
+                                  Text(widget.inventory_id),
+                                ],
                               ),
-                              SizedBox(width: 5.w,),
-                              SizedBox(
-                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Nama Inventaris', style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                  )),
-                                    Text(inventoryName),
-                                  ],
-                                ),
+                            ),
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Nama Inventaris', style: TextStyle(
+                                  fontSize: 4.sp,
+                                  fontWeight: FontWeight.w600,
+                                )),
+                                  Text(inventoryName),
+                                ],
                               ),
-                              SizedBox(width: 5.w,),
-                              SizedBox(
-                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Kategori Inventaris', style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                  )),
-                                    Text(inventoryCategory),
-                                  ],
-                                ),
+                            ),
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Kategori Inventaris', style: TextStyle(
+                                  fontSize: 4.sp,
+                                  fontWeight: FontWeight.w600,
+                                )),
+                                  Text(inventoryCategory),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 20.sp,),
-                        Padding(
-                          padding: EdgeInsets.only(right: 10.sp),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Tanggal Pembelian', style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                  )),
-                                    Text(_formatDate2(purchaseDate)),
-                                  ],
-                                ),
+                        SizedBox(height: 7.sp,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Tanggal Pembelian', style: TextStyle(
+                                  fontSize: 4.sp,
+                                  fontWeight: FontWeight.w600,
+                                )),
+                                  Text(_formatDate2(purchaseDate)),
+                                ],
                               ),
-                              SizedBox(width: 5.w,),
-                              SizedBox(
-                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Tanggal Masa Akhir Garansi', style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                  )),
-                                    Text(_formatDate2(warrantyDate)),
-                                  ],
-                                ),
+                            ),
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Tanggal Masa Akhir Garansi', style: TextStyle(
+                                  fontSize: 4.sp,
+                                  fontWeight: FontWeight.w600,
+                                )),
+                                  Text(_formatDate2(warrantyDate)),
+                                ],
                               ),
-                              SizedBox(width: 5.w,),
-                              SizedBox(
-                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Kondisi Inventaris', style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                  )),
-                                    Text(conditionName),
-                                  ],
-                                ),
+                            ),
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Kondisi Inventaris', style: TextStyle(
+                                  fontSize: 4.sp,
+                                  fontWeight: FontWeight.w600,
+                                )),
+                                  Text(conditionName),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 20.sp,),
-                        Padding(
-                          padding: EdgeInsets.only(right: 10.sp),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Diserahkan kepada', style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                  )),
-                                    Text(assignedTo),
-                                  ],
-                                ),
+                        SizedBox(height: 7.sp,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Diserahkan kepada', style: TextStyle(
+                                  fontSize: 4.sp,
+                                  fontWeight: FontWeight.w600,
+                                )),
+                                  Text(assignedTo),
+                                ],
                               ),
-                              SizedBox(width: 5.w,),
-                              SizedBox(
-                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Lokasi Inventaris', style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                  )),
-                                    Text(inventoryLocation),
-                                  ],
-                                ),
+                            ),
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Lokasi Inventaris', style: TextStyle(
+                                  fontSize: 4.sp,
+                                  fontWeight: FontWeight.w600,
+                                )),
+                                  Text(inventoryLocation),
+                                ],
                               ),
-                              SizedBox(width: 5.w,),
-                              SizedBox(
-                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Metode Pembelian', style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                  )),
-                                    Text(paymentMethod),
-                                  ],
-                                ),
+                            ),
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Metode Pembelian', style: TextStyle(
+                                  fontSize: 4.sp,
+                                  fontWeight: FontWeight.w600,
+                                )),
+                                  Text(paymentMethod),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 20.sp,),
-                        Padding(
-                          padding: EdgeInsets.only(right: 10.sp),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Periode Cicilan', style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                  )),
-                                    Text(installmentPeriod),
-                                  ],
-                                ),
+                        SizedBox(height: 7.sp,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Periode Cicilan', style: TextStyle(
+                                  fontSize: 4.sp,
+                                  fontWeight: FontWeight.w600,
+                                )),
+                                  Text(installmentPeriod),
+                                ],
                               ),
-                              SizedBox(width: 5.w,),
-                              SizedBox(
-                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Tanggal Jatuh Tempo', style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                  )),
-                                    Text(jatuhTempoFormatDate(dueDate)),
-                                  ],
-                                ),
+                            ),
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Tanggal Jatuh Tempo', style: TextStyle(
+                                  fontSize: 4.sp,
+                                  fontWeight: FontWeight.w600,
+                                )),
+                                  Text(jatuhTempoFormatDate(dueDate)),
+                                ],
                               ),
-                              SizedBox(width: 5.w,),
-                              SizedBox(
-                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Jumlah Cicilan', style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                  )),
-                                    Text(formatCurrency2(installmentPrice)),
-                                  ],
-                                ),
+                            ),
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Jumlah Cicilan', style: TextStyle(
+                                  fontSize: 4.sp,
+                                  fontWeight: FontWeight.w600,
+                                )),
+                                  Text(formatCurrency2(installmentPrice)),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 20.sp,),
-                        Padding(
-                          padding: EdgeInsets.only(right: 10.sp),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
+                        SizedBox(height: 7.sp,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Harga Inventaris', style: TextStyle(
+                                  fontSize: 4.sp,
+                                  fontWeight: FontWeight.w600,
+                                )),
+                                  Text(formatCurrency2(purchasePrice)),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Nama Manufaktur/Supplier', style: TextStyle(
+                                  fontSize: 4.sp,
+                                  fontWeight: FontWeight.w600,
+                                )),
+                                  Text(supplierName),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Status Inventaris', style: TextStyle(
+                                  fontSize: 4.sp,
+                                  fontWeight: FontWeight.w600,
+                                )),
+                                  Text(statusName),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 7.sp,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width - 100.w,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Catatan Inventaris', style: TextStyle(
+                                  fontSize: 4.sp,
+                                  fontWeight: FontWeight.w600,
+                                )),
+                                  Text(inventoryNotes),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10.sp,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            if(positionId == 'POS-HR-002')
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Harga Inventaris', style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                  )),
-                                    Text(formatCurrency2(purchasePrice)),
-                                  ],
-                                ),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    actionInventory('1');
+                                  }, 
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    alignment: Alignment.center,
+                                    minimumSize: Size(60.w, 55.h),
+                                    foregroundColor: const Color(0xFFFFFFFF),
+                                    backgroundColor: Colors.deepOrange,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  ),
+                                  child: const Text('Pemeliharaan')
+                                )
                               ),
-                              SizedBox(width: 5.w,),
+                            if(positionId == 'POS-HR-002')
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Nama Manufaktur/Supplier', style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                  )),
-                                    Text(supplierName),
-                                  ],
-                                ),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    actionInventory('2');
+                                  }, 
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    alignment: Alignment.center,
+                                    minimumSize: Size(60.w, 55.h),
+                                    foregroundColor: const Color(0xFFFFFFFF),
+                                    backgroundColor: Colors.red,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  ),
+                                  child: const Text('Tidak Aktif')
+                                )
                               ),
-                              SizedBox(width: 5.w,),
+                            if(positionId == 'POS-HR-002')
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Status Inventaris', style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                  )),
-                                    Text(statusName),
-                                  ],
-                                ),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    actionInventory('3');
+                                  }, 
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    alignment: Alignment.center,
+                                    minimumSize: Size(60.w, 55.h),
+                                    foregroundColor: const Color(0xFFFFFFFF),
+                                    backgroundColor: const Color(0xff4ec3fc),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  ),
+                                  child: const Text('Dikembalikan ke perusahaan')
+                                )
                               ),
-                            ],
-                          ),
+                          ],
                         ),
-                        SizedBox(height: 20.sp,),
-                        Padding(
-                          padding: EdgeInsets.only(right: 10.sp),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
+                        SizedBox(height: 7.sp,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            if(positionId == 'POS-HR-002')
                               SizedBox(
-                                width: MediaQuery.of(context).size.width - 100.w,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Catatan Inventaris', style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                  )),
-                                    Text(inventoryNotes),
-                                  ],
-                                ),
+                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    actionInventory('4');
+                                  }, 
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    alignment: Alignment.center,
+                                    minimumSize: Size(60.w, 55.h),
+                                    foregroundColor: const Color(0xFFFFFFFF),
+                                    backgroundColor: Colors.red,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  ),
+                                  child: const Text('Rusak')
+                                )
                               ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 20.sp,),
-                        Padding(
-                          padding: EdgeInsets.only(right: 10.sp),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              if(positionId == 'POS-HR-002')
-                                SizedBox(
-                                  width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      actionInventory('1');
-                                    }, 
-                                    style: ElevatedButton.styleFrom(
-                                      elevation: 0,
-                                      alignment: Alignment.center,
-                                      minimumSize: Size(60.w, 55.h),
-                                      foregroundColor: const Color(0xFFFFFFFF),
-                                      backgroundColor: Colors.deepOrange,
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                    ),
-                                    child: const Text('Pemeliharaan')
-                                  )
-                                ),
-                              SizedBox(width: 5.w,),
-                              if(positionId == 'POS-HR-002')
-                                SizedBox(
-                                  width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      actionInventory('2');
-                                    }, 
-                                    style: ElevatedButton.styleFrom(
-                                      elevation: 0,
-                                      alignment: Alignment.center,
-                                      minimumSize: Size(60.w, 55.h),
-                                      foregroundColor: const Color(0xFFFFFFFF),
-                                      backgroundColor: Colors.red,
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                    ),
-                                    child: const Text('Tidak Aktif')
-                                  )
-                                ),
-                              SizedBox(width: 5.w,),
-                              if(positionId == 'POS-HR-002')
-                                SizedBox(
-                                  width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      actionInventory('3');
-                                    }, 
-                                    style: ElevatedButton.styleFrom(
-                                      elevation: 0,
-                                      alignment: Alignment.center,
-                                      minimumSize: Size(60.w, 55.h),
-                                      foregroundColor: const Color(0xFFFFFFFF),
-                                      backgroundColor: const Color(0xff4ec3fc),
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                    ),
-                                    child: const Text('Dikembalikan ke perusahaan')
-                                  )
-                                ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 20.sp,),
-                        Padding(
-                          padding: EdgeInsets.only(right: 10.sp),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              if(positionId == 'POS-HR-002')
-                                SizedBox(
-                                  width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      actionInventory('4');
-                                    }, 
-                                    style: ElevatedButton.styleFrom(
-                                      elevation: 0,
-                                      alignment: Alignment.center,
-                                      minimumSize: Size(60.w, 55.h),
-                                      foregroundColor: const Color(0xFFFFFFFF),
-                                      backgroundColor: Colors.red,
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                    ),
-                                    child: const Text('Rusak')
-                                  )
-                                ),
-                              SizedBox(width: 5.w,),
-                              if(positionId == 'POS-HR-002')
-                                SizedBox(
-                                  width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context, 
-                                        builder: (_){
-                                          return AlertDialog(
-                                            title: const Text('List Nama Karyawan'),
-                                            content: SizedBox(
-                                              width: MediaQuery.of(context).size.width,
-                                              height: MediaQuery.of(context).size.height,
-                                              child: ListView.builder(
-                                                itemCount: employeeList.length,
-                                                itemBuilder: (context, index){
-                                                  var item = employeeList[index];
-                                                  return ListTile(
-                                                    title: Text(item['employee_name']),
-                                                    subtitle: Text(item['department_name']),
-                                                    trailing: ElevatedButton(
-                                                      onPressed: (){
-                                                        selectedEmployee = item['id'];
-                                                        selectedEmployeeName = item['employee_name'];
-                                                        actionInventory('5');
-                                                      }, 
-                                                      style: ElevatedButton.styleFrom(
-                                                        elevation: 0,
-                                                        alignment: Alignment.center,
-                                                        minimumSize: Size(40.w, 55.h),
-                                                        foregroundColor: const Color(0xFFFFFFFF),
-                                                        backgroundColor: const Color(0xff4ec3fc),
-                                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                                      ),
-                                                      child: const Text('Pilih')
+                            if(positionId == 'POS-HR-002')
+                              SizedBox(
+                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context, 
+                                      builder: (_){
+                                        return AlertDialog(
+                                          title: const Text('List Nama Karyawan'),
+                                          content: SizedBox(
+                                            width: MediaQuery.of(context).size.width,
+                                            height: MediaQuery.of(context).size.height,
+                                            child: ListView.builder(
+                                              itemCount: employeeList.length,
+                                              itemBuilder: (context, index){
+                                                var item = employeeList[index];
+                                                return ListTile(
+                                                  title: Text(item['employee_name']),
+                                                  subtitle: Text(item['department_name']),
+                                                  trailing: ElevatedButton(
+                                                    onPressed: (){
+                                                      selectedEmployee = item['id'];
+                                                      selectedEmployeeName = item['employee_name'];
+                                                      actionInventory('5');
+                                                    }, 
+                                                    style: ElevatedButton.styleFrom(
+                                                      elevation: 0,
+                                                      alignment: Alignment.center,
+                                                      minimumSize: Size(40.w, 55.h),
+                                                      foregroundColor: const Color(0xFFFFFFFF),
+                                                      backgroundColor: const Color(0xff4ec3fc),
+                                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                                     ),
-                                                  );
-                                                }
-                                              ),
+                                                    child: const Text('Pilih')
+                                                  ),
+                                                );
+                                              }
                                             ),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: (){
-                                                  Get.back();
-                                                }, 
-                                                child: const Text('Kembali')
-                                              )
-                                            ],
-                                          );
-                                        }
-                                      );
-                                    }, 
-                                    style: ElevatedButton.styleFrom(
-                                      elevation: 0,
-                                      alignment: Alignment.center,
-                                      minimumSize: Size(60.w, 55.h),
-                                      foregroundColor: const Color(0xFFFFFFFF),
-                                      backgroundColor: const Color(0xff4ec3fc),
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                    ),
-                                    child: const Text('Diberikan kepada')
-                                  )
-                                ),
-                            ],
-                          ),
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: (){
+                                                Get.back();
+                                              }, 
+                                              child: const Text('Kembali')
+                                            )
+                                          ],
+                                        );
+                                      }
+                                    );
+                                  }, 
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    alignment: Alignment.center,
+                                    minimumSize: Size(60.w, 55.h),
+                                    foregroundColor: const Color(0xFFFFFFFF),
+                                    backgroundColor: const Color(0xff4ec3fc),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  ),
+                                  child: const Text('Diberikan kepada')
+                                )
+                              ),
+                            if(positionId == 'POS-HR-002')
+                              SizedBox(
+                                width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                                child: (Container())
+                              ),
+                          ],
                         ),
                       ]
                     )

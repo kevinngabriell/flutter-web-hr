@@ -1909,11 +1909,4 @@ class _AddNewLPDState extends State<AddNewLPD> {
     );
   }
 
-  String _formatDate(String date) {
-    // Parse the date string
-    DateTime parsedDate = DateFormat("yyyy-MM-dd HH:mm").parse(date);
-
-    // Format the date as "dd MMMM yyyy"
-    return DateFormat("d MMMM yyyy HH:mm").format(parsedDate);
-  }
 }
