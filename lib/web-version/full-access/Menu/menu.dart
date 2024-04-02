@@ -78,7 +78,7 @@ class _BerandaActiveState extends State<BerandaActive> {
               child: Image.asset('images/home-active.png')
             ),
             SizedBox(width: 2.w),
-            Text('Beranda',style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w600,) )
+            Text('Beranda',style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w600) )
           ],
         )
       ),
@@ -134,7 +134,7 @@ class _KaryawanNonActiveState extends State<KaryawanNonActive> {
                 child: Image.asset('images/employee-inactive.png')
               ),
               SizedBox(width: 2.w),
-              Text('Karyawan',style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w600,))
+              Text('Karyawan',style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w600))
             ],
           )
         ),
@@ -514,6 +514,7 @@ class NotificationnProfile extends StatefulWidget {
 class _NotificationnProfileState extends State<NotificationnProfile> {
   List<Map<String, dynamic>> noticationList = [];
   final storage = GetStorage();
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -521,8 +522,15 @@ class _NotificationnProfileState extends State<NotificationnProfile> {
     fetchNotification();
   }
 
-  Future<void> fetchNotification() async{
-    try{  
+  Future<void> fetchNotification() async {
+    try {
+      // Set isLoading to true only if the widget is still mounted
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
+
       String employeeId = storage.read('employee_id').toString();
       String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/notification/getlimitnotif.php?employee_id=$employeeId';
 
@@ -531,23 +539,34 @@ class _NotificationnProfileState extends State<NotificationnProfile> {
       if (response.statusCode == 200) {
         var data = json.decode(response.body);
 
-        setState(() {
-          noticationList = List<Map<String, dynamic>>.from(data['Data']);
-        });
-      } else if (response.statusCode == 404){
-        print('404, No Data Found');
+        // Check again if the widget is still mounted before calling setState
+        if (mounted) {
+          setState(() {
+            noticationList = List<Map<String, dynamic>>.from(data['Data']);
+            isLoading = false;
+          });
+        }
+      } else if (response.statusCode == 404) {
+        print('404, No Notification Data Found');
       }
-
-    } catch (e){
-      print('Error: $e');
+    } catch (e) {
+      print('Error Notification: $e');
+    } finally {
+      // Ensure isLoading is set to false when done, if the widget is still mounted
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(right: 5.sp),
-      child: Row(
+      child: isLoading ? const Center(child: CircularProgressIndicator(),) : Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           GestureDetector(
@@ -572,45 +591,50 @@ class _NotificationnProfileState extends State<NotificationnProfile> {
                       child: ListView.builder(
                         itemCount: noticationList.length,
                         itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: (){
-                              if(noticationList[index]['sender'] != ''){
-                                showDialog(
-                                  context: context, 
-                                  builder: (_) {
-                                  return AlertDialog(
-                                    title: Center(child: Text("${noticationList[index]['title']} ", style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w700))),
-                                    content: SizedBox(
-                                      width: MediaQuery.of(context).size.width / 4,
-                                      height: MediaQuery.of(context).size.height / 4,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text('Tanggal : ${_formatDate('${noticationList[index]['send_date']}')}'),
-                                          SizedBox(height: 2.h,),
-                                          Text('Dari : ${noticationList[index]['sender'] == 'Kevin Gabriel Florentino' ? 'System' : noticationList[index]['sender']} '),
-                                          SizedBox(height: 10.h,),
-                                          Text('${noticationList[index]['message']} ')
+                          return Column(
+                            children: [
+                              GestureDetector(
+                                onTap: (){
+                                  if(noticationList[index]['sender'] != ''){
+                                    showDialog(
+                                      context: context, 
+                                      builder: (_) {
+                                      return AlertDialog(
+                                        title: Center(child: Text("${noticationList[index]['title']} ", style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w600))),
+                                        content: SizedBox(
+                                          width: MediaQuery.of(context).size.width / 4,
+                                          height: MediaQuery.of(context).size.height / 4,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('Tanggal : ${_formatDate('${noticationList[index]['send_date']}')}'),
+                                              SizedBox(height: 2.h,),
+                                              Text('Dari : ${noticationList[index]['sender'] == 'Kevin Gabriel Florentino' ? 'System' : noticationList[index]['sender']} '),
+                                              SizedBox(height: 10.h,),
+                                              Text('${noticationList[index]['message']} ')
+                                            ],
+                                          ),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {Get.back();}, 
+                                            child: const Text("Ok")
+                                          ),
                                         ],
-                                      ),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {Get.back();}, 
-                                        child: const Text("Ok")
-                                      ),
-                                    ],
-                                  );
+                                      );
+                                      }
+                                    );
                                   }
-                                );
-                              }
-                            },
-                            child: Card(
-                              child: ListTile(
-                                title: Text(index < noticationList.length ? '${noticationList[index]['title']} ' : '-',style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w600),),
-                                subtitle: Text(index < noticationList.length ? 'From ${noticationList[index]['sender'] == 'Kevin Gabriel Florentino' ? 'System' : noticationList[index]['sender']} ' : '-', style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w400),),
+                                },
+                                child: Card(
+                                  child: ListTile(
+                                    title: Text(index < noticationList.length ? '${noticationList[index]['title']} ' : '-',style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w600),),
+                                    subtitle: Text(index < noticationList.length ? 'From ${noticationList[index]['sender'] == 'Kevin Gabriel Florentino' ? 'System' : noticationList[index]['sender']} ' : '-', style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w400),),
+                                  ),
+                                ),
                               ),
-                            ),
+                              SizedBox(height: 2.sp,)
+                            ],
                           );
                         }
                       ),
@@ -694,7 +718,7 @@ class _KaryawanActiveState extends State<KaryawanActive> {
               child: Image.asset('images/employee-active.png')
             ),
             SizedBox(width: 2.w),
-            Text('Karyawan',style: TextStyle(fontSize: 6.sp, fontWeight: FontWeight.w600,))
+            Text('Karyawan',style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w600))
           ],
         )
       ),
@@ -733,7 +757,7 @@ class _BerandaNonActiveState extends State<BerandaNonActive> {
                 child: Image.asset('images/home-inactive.png')
               ),
               SizedBox(width: 2.w),
-              Text('Beranda', style: TextStyle(fontSize: 6.sp, fontWeight: FontWeight.w600,))
+              Text('Beranda', style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w600))
             ],
           )
         ),
@@ -771,7 +795,7 @@ class _GajiActiveState extends State<GajiActive> {
               child: Image.asset('images/gaji-active.png')
             ),
             SizedBox(width: 2.w),
-            Text('Gaji',style: TextStyle(fontSize: 6.sp, fontWeight: FontWeight.w600,))
+            Text('Gaji',style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w600))
           ],
         )
       ),
@@ -809,7 +833,7 @@ class _PerformaActiveState extends State<PerformaActive> {
               child: Image.asset('images/performa-active.png')
             ),
             SizedBox(width: 2.w),
-            Text('Performa', style: TextStyle(fontSize: 6.sp, fontWeight: FontWeight.w600,))
+            Text('Performa', style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w600))
           ],
         )
       ),
@@ -847,7 +871,7 @@ class _PelatihanActiveState extends State<PelatihanActive> {
               child: Image.asset('images/pelatihan-active.png')
             ),
             SizedBox(width: 2.w),
-            Text('Pelatihan',style: TextStyle(fontSize: 6.sp, fontWeight: FontWeight.w600,))
+            Text('Pelatihan',style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w600))
           ],
         )
       ),
@@ -885,7 +909,7 @@ class _AcaraActiveState extends State<AcaraActive> {
               child: Image.asset('images/acara-active.png')
             ),
             SizedBox(width: 2.w),
-            Text('Acara',style: TextStyle(fontSize: 6.sp, fontWeight: FontWeight.w600,))
+            Text('Acara',style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w600))
           ],
         )
       ),
@@ -923,7 +947,7 @@ class _LaporanActiveState extends State<LaporanActive> {
               child: Image.asset('images/laporan-active.png')
             ),
             SizedBox(width: 2.w),
-            Text('Laporan',style: TextStyle(fontSize: 6.sp, fontWeight: FontWeight.w600,))
+            Text('Laporan',style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w600))
           ],
         )
       ),

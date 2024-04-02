@@ -39,7 +39,6 @@ class _VerifyAbsenceState extends State<VerifyAbsence> {
     super.initState();
     fetchData();
     employeeList = fetchEmployeeList();
-    //https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/absent/getlistemployeeisnotvalid.php
   }
 
   Future<void> fetchData() async {
@@ -254,30 +253,81 @@ class _VerifyAbsenceState extends State<VerifyAbsence> {
                                       DataCell(
                                         ElevatedButton(
                                           onPressed: () async {
-                                              showDialog(
-                                                context: context,
-                                                builder: (_) {
-                                                  return const AlertDialog(
-                                                    content: Row(
-                                                      children: [
-                                                        CircularProgressIndicator(),
-                                                        SizedBox(width: 20),
-                                                        Text('Loading ...'),
-                                                      ],
+                                            showDialog(
+                                              context: context, 
+                                              builder: (_) {
+                                                return AlertDialog(
+                                                  title: Text(
+                                                    'Detail Absen', 
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      fontSize: 7.sp,
+                                                      fontWeight: FontWeight.w800
                                                     ),
-                                                  );
-                                                },
-                                              );
-
-                                              try {
-                                                await updateVerify(employee['absence_id']);
-                                                // await pickFile(); // Wait for pickFile to complete
-                                                // Handle the file data as needed after picking is complete
-                                              } finally {
-                                                isLoading = false;
-                                                Get.snackbar('Sukses', 'Absen telah berhasil diverifikasi');
-                                                Get.to(FullIndexWeb(employeeId));
+                                                  ),
+                                                  content: SingleChildScrollView(
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Text(employee['absence_id']),
+                                                            const SizedBox(width: 30),
+                                                            Column(
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              children: [
+                                                                buildDetailField('Tipe Absen', employee['presence_type_name']),
+                                                                buildDetailField('Tanggal Absen', employee['date']),
+                                                                buildDetailField('Jam Absen', employee['time']),
+                                                                buildDetailField('Lokasi', employee['location'], maxLines: 3),
+                                                              ],
+                                                            ),
+                                                          ]
+                                                        )
+                                                      ]
+                                                    )
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () async {await updateVerify(employee['absence_id']);},
+                                                      child: const Text('Verifikasi Absen')
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () => Navigator.of(context).pop(),
+                                                      child: const Text('Kembali'),
+                                                    ),
+                                                  ],
+                                                );
                                               }
+                                            );
+                                              // showDialog(
+                                              //   context: context,
+                                              //   builder: (_) {
+                                              //     return const AlertDialog(
+                                              //       content: Row(
+                                              //         children: [
+                                              //           CircularProgressIndicator(),
+                                              //           SizedBox(width: 20),
+                                              //           Text('Loading ...'),
+                                              //         ],
+                                              //       ),
+                                              //     );
+                                              //   },
+                                              // );
+
+                                              // try {
+                                              //   await updateVerify(employee['absence_id']);
+                                              //   // await pickFile(); // Wait for pickFile to complete
+                                              //   // Handle the file data as needed after picking is complete
+                                              // } finally {
+                                              //   isLoading = false;
+                                              //   Get.snackbar('Sukses', 'Absen telah berhasil diverifikasi');
+                                              //   Get.to(FullIndexWeb(employeeId));
+                                              // }
                                           }, 
                                           child: const Text('Verifikasi')
                                         )
@@ -308,6 +358,37 @@ class _VerifyAbsenceState extends State<VerifyAbsence> {
           ),
         )
       ),
+    );
+  }
+
+  Widget buildDetailField(String label, String value, {int maxLines = 1}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 4.sp,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(height: 10),
+        SizedBox(
+          width: MediaQuery.of(context).size.width / 4,
+          child: TextFormField(
+            maxLines: maxLines,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            ),
+            readOnly: true,
+            initialValue: value,
+          ),
+        ),
+        const SizedBox(height: 20),
+      ],
     );
   }
 }

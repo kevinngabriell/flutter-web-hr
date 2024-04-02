@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:hr_systems_web/web-version/full-access/Employee/Add%20New%20Employee/AddNewEmployeeFirst.dart';
+import 'package:hr_systems_web/web-version/full-access/Employee/Add%20New%20Employee/AddNewEmployeeOne.dart';
 import 'package:hr_systems_web/web-version/full-access/Employee/Applicant/applicantdashboard.dart';
 import 'package:hr_systems_web/web-version/full-access/Event/event.dart';
 import 'package:hr_systems_web/web-version/full-access/Performance/performance.dart';
@@ -2109,7 +2109,7 @@ class _DetailApplicantState extends State<DetailApplicant> {
                             if(widget.status_name == 'Diterima')
                               ElevatedButton(
                                 onPressed: (){
-                                  Get.to(AddNewEmployeeOne());
+                                  Get.to(AddNewEmployeeFirst());
                                 }, 
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,

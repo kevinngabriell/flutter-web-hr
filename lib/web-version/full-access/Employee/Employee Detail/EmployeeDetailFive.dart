@@ -1,21 +1,21 @@
 import 'dart:convert';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:hr_systems_web/web-version/full-access/Employee/Employee%20Detail/EmployeeDetailThree.dart';
+import 'package:hr_systems_web/web-version/full-access/Employee/Employee%20Detail/EmployeeDetailSix.dart';
 import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
-class EmployeeDetailTwo extends StatefulWidget {
+class EmployeeDetailFive extends StatefulWidget {
   final String employeeID;
-  EmployeeDetailTwo(this.employeeID, {super.key});
+  const EmployeeDetailFive({super.key, required this.employeeID});
 
   @override
-  State<EmployeeDetailTwo> createState() => _EmployeeDetailTwoState();
+  State<EmployeeDetailFive> createState() => _EmployeeDetailFiveState();
 }
 
-class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
+class _EmployeeDetailFiveState extends State<EmployeeDetailFive> {
   String companyName = '';
   String companyAddress = '';
   String employeeName = '';
@@ -24,195 +24,10 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
   final storage = GetStorage();
   bool isLoading = false;
 
-  TextEditingController txtAlamatBefore = TextEditingController();
-  TextEditingController txtRtBefore = TextEditingController();
-  TextEditingController txtRwBefore = TextEditingController();
-  String selectedStatusBefore = '';
-
-  TextEditingController txtAlamatAfter = TextEditingController();
-  TextEditingController txtRtAfter = TextEditingController();
-  TextEditingController txtRwAfter = TextEditingController();
-  String selectedStatusAfter = '';
-
-  List<Map<String, String>> addressStatuses = [];
-
-  String selectedProvinceBefore = '';
-  String selectedProvinceAfter = '';
-  List<Map<String, String>> provinceList = [];
-
-  String selectedCityBefore = '';
-  String selectedCityAfter = '';
-  List<Map<String, String>> cityList = [];
-
-  List<Map<String, String>> identityCityList = [];
-
   @override
   void initState() {
     super.initState();
     fetchData();
-    fetchDetailData();
-    fetchAddressStatuses();
-    fetchProvinceList();
-  }
-
-  Future<void> fetchCityList(String? provinceId) async {
-    if (provinceId != null) {
-      final response = await http.get(
-          Uri.parse('https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/masterdata/getkotakab.php?provinsi=$provinceId'));
-      
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        if (data['StatusCode'] == 200) {
-          final cities = (data['Data'] as List).map((city) => Map<String, String>.from({'id': city['id'],'name': city['name'],})).toList();
-          selectedCityBefore = cities[0]['id']!;
-          // setState(() {
-          //   if (isDomicile) {
-          //     domicileCityList = cities;
-          //     selectedDomicileCity = domicileCityList.isNotEmpty ? domicileCityList[0]['id'] : null;
-          //   } else {
-          //     identityCityList = cities;
-          //     selectedIdentityCity = identityCityList.isNotEmpty ? identityCityList[0]['id'] : null;
-          //   }
-          // });
-        } else {
-          print('Failed to fetch city list');
-        }
-      } else {
-        print('Failed to fetch data');
-      }
-    }
-  }
-
-  Future<void> fetchProvinceList() async {
-    final response = await http.get(
-        Uri.parse('https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/masterdata/getprovince.php'));
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      if (data['StatusCode'] == 200) {
-        final provinces = (data['Data'] as List)
-            .map((province) => Map<String, String>.from({
-                  'id': province['id'],
-                  'name': province['name'],
-                }))
-            .toList();
-
-        setState(() {
-          provinceList = provinces;
-          if (provinceList.isNotEmpty) {
-            selectedProvinceAfter = provinceList[0]['id']!;
-          }
-        });
-      } else {
-        // Handle API error
-        print('Failed to fetch province list');
-      }
-    } else {
-      // Handle HTTP error
-      print('Failed to fetch data');
-    }
-  }
-
-  Future<void> fetchAddressStatuses() async {
-    final response = await http.get(
-        Uri.parse('https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/masterdata/getaddressstatus.php'));
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      if (data['StatusCode'] == 200) {
-        final addressStatusList = (data['Data'] as List)
-            .map((addressStatus) => Map<String, String>.from({
-                  'address_status_id': addressStatus['address_status_id'],
-                  'address_status_name': addressStatus['address_status_name'],
-                }))
-            .toList();
-
-        setState(() {
-          addressStatuses = addressStatusList;
-          if (addressStatuses.isNotEmpty) {
-            selectedStatusAfter = addressStatuses[0]['address_status_id']!;
-          }
-        });
-      } else {
-        // Handle API error
-        print('Failed to fetch address statuses');
-      }
-    } else {
-      // Handle HTTP error
-      print('Failed to fetch data');
-    }
-  }
-
-  Future<void> fetchDetailData() async {
-    try{
-      isLoading = true;
-
-      String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getdetailemployee.php?action=2&employee_id=${widget.employeeID}';
-      var response = await http.get(Uri.parse(apiUrl));
-
-      if (response.statusCode == 200) {
-        Map<String, dynamic> responseData = json.decode(response.body);
-        Map<String, dynamic> data = (responseData['Data'] as List).first;
-
-        setState(() {
-          txtAlamatBefore.text = data['employee_address_ktp'];
-          txtRtBefore.text = data['employee_rt_ktp'];
-          txtRwBefore.text = data['employee_rw_ktp'];
-          selectedStatusBefore = data['employee_address_status_ktp'];
-          selectedProvinceBefore = data['employee_provinsi_ktp'];
-          fetchCityList(selectedProvinceBefore);
-          selectedCityBefore = data['employee_kota_kab_ktp'];
-          
-          if(selectedStatusBefore == ''){
-            selectedStatusBefore = 'AS-HR-001';
-          }
-
-          if(selectedProvinceBefore == ''){
-            selectedProvinceBefore = '31';
-          }
-
-          if(selectedCityBefore == ''){
-            selectedCityBefore = '3173';
-          }
-        });
-
-      } else {
-        txtAlamatBefore.text = '';
-        txtRtBefore.text = '';
-        txtRwBefore.text = '';
-        if(selectedStatusBefore == ''){
-            selectedStatusBefore = 'AS-HR-001';
-          }
-
-          if(selectedProvinceBefore == ''){
-            selectedProvinceBefore = '31';
-          }
-
-          if(selectedCityBefore == ''){
-            selectedCityBefore = '3173';
-          }
-        print('Failed to load data: ${response.statusCode}');
-      }
-
-    } catch (e){
-      print('Error at fetching detail one data : $e');
-      txtAlamatBefore.text = '';
-      txtRtBefore.text = '';
-      txtRwBefore.text = '';
-      if(selectedStatusBefore == ''){
-        selectedStatusBefore = 'AS-HR-001';
-      }
-
-      if(selectedProvinceBefore == ''){
-        selectedProvinceBefore = '31';
-      }
-
-      if(selectedCityBefore == ''){
-        selectedCityBefore = '3173';
-      }
-    } finally {
-      isLoading = false;
-    }
   }
 
   Future<void> fetchData() async {
@@ -261,7 +76,7 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
     return MaterialApp(
       title: "Data Karyawan",
       home: Scaffold(
-        body: isLoading ? const CircularProgressIndicator() : SingleChildScrollView(
+        body: isLoading ? const Center(child: CircularProgressIndicator())  : SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -281,7 +96,7 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                         SizedBox(height: 5.sp,),
                         BerandaNonActive(employeeId: employeeId.toString()),
                         SizedBox(height: 5.sp,),
-                        KaryawanActive(employeeId: employeeId.toString()),
+                        KaryawanNonActive(employeeId: employeeId.toString()),
                         SizedBox(height: 5.sp,),
                         const GajiNonActive(),
                         SizedBox(height: 5.sp,),
@@ -291,7 +106,7 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                         SizedBox(height: 5.sp,),
                         const AcaraNonActive(),
                         SizedBox(height: 5.sp,),
-                        LaporanNonActive(positionId: positionId.toString(),),
+                        const LaporanActive(),
                         SizedBox(height: 10.sp,),
                         const PengaturanMenu(),
                         SizedBox(height: 5.sp,),
@@ -316,52 +131,24 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                       SizedBox(height: 5.sp,),
                       NotificationnProfile(employeeName: employeeName, employeeAddress: employeeEmail, photo: photo),
                       SizedBox(height: 7.sp,),
-                      Center(child: Text('Data Saat Ini',style: TextStyle(fontSize: 5.sp,fontWeight: FontWeight.w700,))),
-                      SizedBox(height: 7.sp,),
+                      Text('Kemampuan Bahasa Pertama',style: TextStyle(fontSize: 5.sp,fontWeight: FontWeight.w700,)),
+                      SizedBox(height: 5.sp,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                            width: (MediaQuery.of(context).size.width - 88.w),
+                            width: (MediaQuery.of(context).size.width - 130.w) / 3,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Alamat sesuai KTP',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                Text('Bahasa',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
                                 TextFormField(
-                                  maxLines: 4,
-                                  controller: txtAlamatBefore,
                                   decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan alamat sesuai KTP'
+                                    hintText: 'Masukkan kemampuan bahasa'
                                   ),
-                                  readOnly: true,
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 7.sp,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('RT',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  controller: txtRtBefore,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan alamat sesuai KTP'
-                                  ),
-                                  readOnly: true,
                                 )
                               ],
                             ),
@@ -371,172 +158,47 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('RW',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                Text('Mendengar',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
                                 TextFormField(
-                                  controller: txtRwBefore,
                                   decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan alamat sesuai KTP'
+                                    hintText: 'Masukkan kemampuan bahasa'
                                   ),
-                                  readOnly: true,
                                 )
                               ],
                             ),
                           ),
                           SizedBox(
-                            width: (MediaQuery.of(context).size.width - 50.w) / 3,
+                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Status',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                DropdownButtonFormField<String>(
-                                  value: selectedStatusBefore,
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      selectedStatusBefore = newValue!;
-                                    });
-                                  },
-                                  items: addressStatuses.map<DropdownMenuItem<String>>(
-                                    (Map<String, String> status) {
-                                      return DropdownMenuItem<String>(
-                                        value: status['address_status_id']!,
-                                        child: Text(status['address_status_name']!),
-                                      );
-                                    },
-                                  ).toList(),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 7.sp,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Provinsi',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                DropdownButtonFormField<String>(
-                                  hint: const Text("Pilih provinsi"),
-                                  value: selectedProvinceBefore,
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      selectedProvinceBefore = newValue!;
-                                      // fetchCityList(selectedIdentityProvince, false);
-                                    });
-                                  },
-                                  items: provinceList.map<DropdownMenuItem<String>>(
-                                    (Map<String, String> province) {
-                                      return DropdownMenuItem<String>(
-                                        value: province['id']!,
-                                        child: Text(province['name']!),
-                                      );
-                                    },
-                                  ).toList(),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Kota/Kab',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                DropdownButtonFormField<String>(
-                                  hint: const Text("Pilih kota/kabupaten KTP"),
-                                  value: selectedCityBefore,
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      selectedCityBefore = newValue!;
-                                      // fetchRegencyList(selectedIdentityCity, false);
-                                    });
-                                  },
-                                  items: identityCityList.map<DropdownMenuItem<String>>(
-                                    (Map<String, String> city) {
-                                      return DropdownMenuItem<String>(
-                                        value: city['id']!,
-                                        child: Text(city['name']!),
-                                      );
-                                    },
-                                  ).toList(),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Kecamatan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 7.sp,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Kelurahan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                            child: const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                            child: const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 7.sp,),
-                      Center(child: Text('Data Saat Baru',style: TextStyle(fontSize: 5.sp,fontWeight: FontWeight.w700,))),
-                      SizedBox(height: 7.sp,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 88.w),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Alamat sesuai KTP',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                Text('Berbicara',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
                                 TextFormField(
-                                  maxLines: 4,
-                                  // controller: alamatKTP,
                                   decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan alamat sesuai KTP'
+                                    hintText: 'Masukkan kemampuan bahasa'
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Membaca',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                SizedBox(height: 2.sp,),
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                    hintText: 'Masukkan kemampuan bahasa'
                                   ),
                                 )
                               ],
@@ -553,14 +215,64 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('RT',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                Text('Menulis',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
                                 TextFormField(
-                                  // controller: alamatKTP,
                                   decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan alamat sesuai KTP'
+                                    hintText: 'Masukkan kemampuan bahasa'
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
+                            child: const Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
+                            child: const Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 130.w) / 3,
+                            child: const Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 7.sp,),
+                      const Divider(),
+                      SizedBox(height: 7.sp,),
+                      Text('Kemampuan Bahasa Kedua',style: TextStyle(fontSize: 5.sp,fontWeight: FontWeight.w700,)),
+                      SizedBox(height: 5.sp,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 130.w) / 3,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Bahasa',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                SizedBox(height: 2.sp,),
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                    hintText: 'Masukkan kemampuan bahasa'
                                   ),
                                 )
                               ],
@@ -571,42 +283,49 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('RW',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                Text('Mendengar',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
                                 TextFormField(
-                                  // controller: alamatKTP,
                                   decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan alamat sesuai KTP'
+                                    hintText: 'Masukkan kemampuan bahasa'
                                   ),
                                 )
                               ],
                             ),
                           ),
                           SizedBox(
-                            width: (MediaQuery.of(context).size.width - 50.w) / 3,
+                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Status',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                Text('Berbicara',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                DropdownButtonFormField<String>(
-                                  value: selectedStatusAfter,
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      selectedStatusAfter = newValue!;
-                                    });
-                                  },
-                                  items: addressStatuses.map<DropdownMenuItem<String>>(
-                                    (Map<String, String> status) {
-                                      return DropdownMenuItem<String>(
-                                        value: status['address_status_id']!,
-                                        child: Text(status['address_status_name']!),
-                                      );
-                                    },
-                                  ).toList(),
-                                ),
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                    hintText: 'Masukkan kemampuan bahasa'
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Membaca',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                SizedBox(height: 2.sp,),
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                    hintText: 'Masukkan kemampuan bahasa'
+                                  ),
+                                )
                               ],
                             ),
                           ),
@@ -617,53 +336,124 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Provinsi',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                Text('Menulis',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                DropdownButtonFormField<String>(
-                                  hint: const Text("Pilih provinsi"),
-                                  value: selectedProvinceAfter,
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      selectedProvinceAfter = newValue!;
-                                      // fetchCityList(selectedIdentityProvince, false);
-                                    });
-                                  },
-                                  items: provinceList.map<DropdownMenuItem<String>>(
-                                    (Map<String, String> province) {
-                                      return DropdownMenuItem<String>(
-                                        value: province['id']!,
-                                        child: Text(province['name']!),
-                                      );
-                                    },
-                                  ).toList(),
-                                ),
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                    hintText: 'Masukkan kemampuan bahasa'
+                                  ),
+                                )
                               ],
                             ),
                           ),
                           SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                            child: Column(
+                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
+                            child: const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Kota/Kab',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
                               ],
                             ),
                           ),
                           SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
+                            child: const Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 130.w) / 3,
+                            child: const Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 7.sp,),
+                      const Divider(),
+                      SizedBox(height: 7.sp,),
+                      Text('Kemampuan Bahasa Ketiga',style: TextStyle(fontSize: 5.sp,fontWeight: FontWeight.w700,)),
+                      SizedBox(height: 5.sp,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 130.w) / 3,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Kecamatan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                Text('Bahasa',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                    hintText: 'Masukkan kemampuan bahasa'
+                                  ),
+                                )
                               ],
                             ),
-                          )
+                          ),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Mendengar',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                SizedBox(height: 2.sp,),
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                    hintText: 'Masukkan kemampuan bahasa'
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Berbicara',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                SizedBox(height: 2.sp,),
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                    hintText: 'Masukkan kemampuan bahasa'
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Membaca',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                SizedBox(height: 2.sp,),
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                    hintText: 'Masukkan kemampuan bahasa'
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(height: 7.sp,),
@@ -671,17 +461,24 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Kelurahan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                Text('Menulis',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                    hintText: 'Masukkan kemampuan bahasa'
+                                  ),
+                                )
                               ],
                             ),
                           ),
                           SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
                             child: const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -689,13 +486,146 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                             ),
                           ),
                           SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
                             child: const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                               ],
                             ),
-                          )
+                          ),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 130.w) / 3,
+                            child: const Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 7.sp,),
+                      const Divider(),
+                      SizedBox(height: 7.sp,),
+                      Text('Kemampuan Bahasa Keempat',style: TextStyle(fontSize: 5.sp,fontWeight: FontWeight.w700,)),
+                      SizedBox(height: 5.sp,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 130.w) / 3,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Bahasa',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                SizedBox(height: 2.sp,),
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                    hintText: 'Masukkan kemampuan bahasa'
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Mendengar',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                SizedBox(height: 2.sp,),
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                    hintText: 'Masukkan kemampuan bahasa'
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Berbicara',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                SizedBox(height: 2.sp,),
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                    hintText: 'Masukkan kemampuan bahasa'
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Membaca',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                SizedBox(height: 2.sp,),
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                    hintText: 'Masukkan kemampuan bahasa'
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 7.sp,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Menulis',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                SizedBox(height: 2.sp,),
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                    hintText: 'Masukkan kemampuan bahasa'
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
+                            child: const Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
+                            child: const Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 130.w) / 3,
+                            child: const Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(height: 7.sp,),
@@ -741,7 +671,7 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                               SizedBox(width: 10.w,),
                               ElevatedButton(
                                 onPressed: (){
-                                  Get.to(EmployeeDetailThree(employeeID: widget.employeeID));
+                                  Get.to(EmployeeDetailSix(employeeID: widget.employeeID));
                                 }, 
                                 style: ElevatedButton.styleFrom(
                                   minimumSize: Size(50.w, 55.h),
@@ -757,7 +687,7 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 17.sp,)
+                      SizedBox(height: 7.sp,),
                     ]
                   )
                 )

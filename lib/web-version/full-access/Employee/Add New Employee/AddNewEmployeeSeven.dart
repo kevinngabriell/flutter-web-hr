@@ -5,26 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:hr_systems_web/web-version/full-access/Event/event.dart';
-import 'package:hr_systems_web/web-version/full-access/Performance/performance.dart';
-import 'package:hr_systems_web/web-version/full-access/Report/report.dart';
-import 'package:hr_systems_web/web-version/full-access/Salary/salary.dart';
-import 'package:hr_systems_web/web-version/full-access/Settings/setting.dart';
-import 'package:hr_systems_web/web-version/full-access/Structure/structure.dart';
-import 'package:hr_systems_web/web-version/full-access/Training/traning.dart';
+import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart'; 
-import '../../../login.dart';
-import '../../employee.dart';
-import '../../index.dart';
 import 'AddNewEmployeeEight.dart';
-import 'AddNewEmployeeFirst.dart';
-import 'AddNewEmployeeFive.dart';
-import 'AddNewEmployeeFour.dart';
-import 'AddNewEmployeeSix.dart';
-import 'AddNewEmployeeThree.dart';
-import 'AddNewEmployeeTwo.dart';
 
 class AddNewEmployeeSeven extends StatefulWidget {
   const AddNewEmployeeSeven({super.key});
@@ -320,6 +305,7 @@ String trimmedCompanyAddress = '';
     // Retrieve the stored employee_id
     var employeeId = storage.read('employee_id');
     var photo = storage.read('photo');
+    var positionId = storage.read('position_id');
 
     return MaterialApp(
       title: "Tambah Karyawan - Informasi Pribadi",
@@ -338,388 +324,51 @@ String trimmedCompanyAddress = '';
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 15.sp,),
-                      //company logo and name
-                      ListTile(
-                        contentPadding: const EdgeInsets.only(left: 0, right: 0),
-                        dense: true,
-                        horizontalTitleGap: 0.0, // Adjust this value as needed
-                        leading: Container(
-                          margin: const EdgeInsets.only(right: 2.0), // Add margin to the right of the image
-                          child: Image.asset(
-                            'images/kinglab.png',
-                            width: MediaQuery.of(context).size.width * 0.08,
-                          ),
-                        ),
-                        title: Text(
-                          "$companyName",
-                          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
-                        ),
-                        subtitle: Text(
-                          '$trimmedCompanyAddress',
-                          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
-                        ),
-                      ),
-                      SizedBox(height: 30.sp,),
-                      //halaman utama title
-                      Padding(
-                        padding: EdgeInsets.only(left: 5.w),
-                        child: Text("Halaman utama", 
-                          style: TextStyle( fontSize: 20.sp, fontWeight: FontWeight.w600,)
-                        ),
-                      ),
+                      NamaPerusahaanMenu(companyName: companyName, companyAddress: trimmedCompanyAddress),
                       SizedBox(height: 10.sp,),
-                      //beranda button
-                      Padding(
-                        padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                        child: ElevatedButton(
-                          onPressed: () {Get.to(FullIndexWeb(employeeId));},
-                          style: ElevatedButton.styleFrom(
-                            elevation: 0,
-                            alignment: Alignment.centerLeft,
-                            minimumSize: Size(60.w, 55.h),
-                            foregroundColor: const Color(0xDDDDDDDD),
-                            backgroundColor: const Color(0xFFFFFFFF),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: Image.asset('images/home-inactive.png')
-                              ),
-                              SizedBox(width: 2.w),
-                              Text('Beranda',
-                                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                              )
-                            ],
-                          )
-                        ),
-                          ),
+                      const HalamanUtamaMenu(),
+                      SizedBox(height: 5.sp,),
+                      BerandaNonActive(employeeId: employeeId.toString()),
+                      SizedBox(height: 5.sp,),
+                      KaryawanActive(employeeId: employeeId.toString()),
+                      SizedBox(height: 5.sp,),
+                      const GajiNonActive(),
+                      SizedBox(height: 5.sp,),
+                      const PerformaNonActive(),
+                      SizedBox(height: 5.sp,),
+                      const PelatihanNonActive(),
+                      SizedBox(height: 5.sp,),
+                      const AcaraNonActive(),
+                      SizedBox(height: 5.sp,),
+                      LaporanNonActive(positionId: positionId),
                       SizedBox(height: 10.sp,),
-                      //karyawan button
-                          Padding(
-                            padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                            child: ElevatedButton(
-                              onPressed: () {Get.to(EmployeePage(employee_id: employeeId,));},
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                alignment: Alignment.centerLeft,
-                                minimumSize: Size(60.w, 55.h),
-                                foregroundColor: const Color(0xFFFFFFFF),
-                                backgroundColor: const Color(0xff4ec3fc),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Image.asset('images/employee-active.png')
-                                  ),
-                                  SizedBox(width: 2.w),
-                                  Text('Karyawan',
-                                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                  )
-                                ],
-                              )
-                            ),
-                          ),
-                          SizedBox(height: 10.sp,),
-                          //gaji button
-                          Padding(
-                            padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Get.to(const SalaryIndex());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                alignment: Alignment.centerLeft,
-                                minimumSize: Size(60.w, 55.h),
-                                foregroundColor: const Color(0xDDDDDDDD),
-                                backgroundColor: const Color(0xFFFFFFFF),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Image.asset('images/gaji-inactive.png')
-                                  ),
-                                  SizedBox(width: 2.w),
-                                  Text('Gaji',
-                                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                  )
-                                ],
-                              )
-                            ),
-                          ),
-                          SizedBox(height: 10.sp,),
-                          //performa button
-                          Padding(
-                            padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Get.to(const PerformanceIndex());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                alignment: Alignment.centerLeft,
-                                minimumSize: Size(60.w, 55.h),
-                                foregroundColor: const Color(0xDDDDDDDD),
-                                backgroundColor: const Color(0xFFFFFFFF),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Image.asset('images/performa-inactive.png')
-                                  ),
-                                  SizedBox(width: 2.w),
-                                  Text('Performa',
-                                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                  )
-                                ],
-                              )
-                            ),
-                          ),
-                          SizedBox(height: 10.sp,),
-                          //pelatihan button
-                          Padding(
-                            padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Get.to(const TrainingIndex());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                alignment: Alignment.centerLeft,
-                                minimumSize: Size(60.w, 55.h),
-                                foregroundColor: const Color(0xDDDDDDDD),
-                                backgroundColor: const Color(0xFFFFFFFF),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Image.asset('images/pelatihan-inactive.png')
-                                  ),
-                                  SizedBox(width: 2.w),
-                                  Text('Pelatihan',
-                                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                  )
-                                ],
-                              )
-                            ),
-                          ),
-                          SizedBox(height: 10.sp,),
-                          //acara button
-                          Padding(
-                            padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Get.to(const EventIndex());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                alignment: Alignment.centerLeft,
-                                minimumSize: Size(60.w, 55.h),
-                                foregroundColor: const Color(0xDDDDDDDD),
-                                backgroundColor: const Color(0xFFFFFFFF),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Image.asset('images/acara-inactive.png')
-                                  ),
-                                  SizedBox(width: 2.w),
-                                  Text('Acara',
-                                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                  )
-                                ],
-                              )
-                            ),
-                          ),
-                          SizedBox(height: 10.sp,),
-                          //laporan button
-                          Padding(
-                              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Get.to(const ReportIndex());
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(60.w, 55.h),
-                                  foregroundColor: const Color(0xDDDDDDDD),
-                                  backgroundColor: const Color(0xFFFFFFFF),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset('images/laporan-inactive.png')
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    Text('Laporan',
-                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                    )
-                                  ],
-                                )
-                              ),
-                            ),
-                          SizedBox(height: 30.sp,),
-                          //pengaturan title
-                          Padding(
-                              padding: EdgeInsets.only(left: 5.w),
-                              child: Text("Pengaturan", 
-                                style: TextStyle( fontSize: 20.sp, fontWeight: FontWeight.w600,)
-                              ),
-                          ),
-                          SizedBox(height: 10.sp,),
-                          //pengaturan button
-                          Padding(
-                            padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Get.to(const SettingIndex());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                alignment: Alignment.centerLeft,
-                                minimumSize: Size(60.w, 55.h),
-                                foregroundColor: const Color(0xDDDDDDDD),
-                                backgroundColor: const Color(0xFFFFFFFF),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Image.asset('images/pengaturan-inactive.png')
-                                  ),
-                                  SizedBox(width: 2.w),
-                                  Text('Pengaturan',
-                                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                  )
-                                ],
-                              )
-                            ),
-                          ),
-                          SizedBox(height: 10.sp,),
-                          //struktur button
-                          Padding(
-                            padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Get.to(const StructureIndex());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                alignment: Alignment.centerLeft,
-                                minimumSize: Size(60.w, 55.h),
-                                foregroundColor: const Color(0xDDDDDDDD),
-                                backgroundColor: const Color(0xFFFFFFFF),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Image.asset('images/struktur-inactive.png')
-                                  ),
-                                  SizedBox(width: 2.w),
-                                  Text('Struktur',
-                                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                  )
-                                ],
-                              )
-                            ),
-                          ),
-                          SizedBox(height: 10.sp,),
-                          //keluar button
-                          Padding(
-                            padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                //show dialog sure to exit ?
-                                showDialog(
-                                  context: context, 
-                                  builder: (_) {
-                                    return AlertDialog(
-                                      title: const Text("Keluar"),
-                                      content: const Text('Apakah anda yakin akan keluar ?'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {Get.back();},
-                                          child: const Text('Cancel'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {Get.off(const LoginPageDesktop());},
-                                          child: const Text('OK',),
-                                        ),
-                                      ],
-                                    );
-                                  }
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                alignment: Alignment.centerLeft,
-                                minimumSize: Size(60.w, 55.h),
-                                foregroundColor: const Color(0xDDDDDDDD),
-                                backgroundColor: const Color(0xFFFFFFFF),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Image.asset('images/logout.png')
-                                  ),
-                                  SizedBox(width: 2.w),
-                                  Text('Keluar',
-                                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, color: Colors.red)
-                                  )
-                                ],
-                              )
-                            ),
-                          ),
-                          SizedBox(height: 30.sp,),
+                      const PengaturanMenu(),
+                      SizedBox(height: 5.sp,),
+                      const PengaturanNonActive(),
+                      SizedBox(height: 5.sp,),
+                      const StrukturNonActive(),
+                      SizedBox(height: 5.sp,),
+                      const Logout(),
                     ],
                   ),
                 ),
               ),
               //content menu
               Expanded(
-                flex: 6,
+                flex: 8,
                 child: Padding(
-                  padding: EdgeInsets.only(left: 7.w),
+                  padding: EdgeInsets.only(left: 7.w, right: 7.w),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 100.sp,),
+                      SizedBox(height: 5.sp,),
+                      NotificationnProfile(employeeName: employeeName, employeeAddress: employeeEmail, photo: photo),
+                      SizedBox(height: 7.sp,),
                       //statistik card
                       Text("Dari mana anda mengetahui tentang lowongan ini ?",
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 4.sp,
                           fontWeight: FontWeight.w600,
                         )
                       ),
@@ -763,7 +412,7 @@ String trimmedCompanyAddress = '';
                       SizedBox(height: 30.h,),
                       Text("Bolehkah kami menghubungi perusahaan sebelumnya tempat Anda bekerja?",
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 4.sp,
                           fontWeight: FontWeight.w600,
                         )
                       ),
@@ -787,7 +436,7 @@ String trimmedCompanyAddress = '';
                                 ),
                                 Text("Yes",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -811,7 +460,7 @@ String trimmedCompanyAddress = '';
                                 ),
                                 Text("No",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -823,7 +472,7 @@ String trimmedCompanyAddress = '';
                       SizedBox(height: 30.h,),
                       Text("Posisi apa yang anda lamar?",
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 4.sp,
                           fontWeight: FontWeight.w600,
                         )
                       ),
@@ -843,7 +492,7 @@ String trimmedCompanyAddress = '';
                       SizedBox(height: 30.h,),
                       Text("Apa posisi alternatif yang anda inginkan?",
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 4.sp,
                           fontWeight: FontWeight.w600,
                         )
                       ),
@@ -863,7 +512,7 @@ String trimmedCompanyAddress = '';
                       SizedBox(height: 30.h,),
                       Text("Berapa gaji yang anda harapkan?",
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 4.sp,
                           fontWeight: FontWeight.w600,
                         )
                       ),
@@ -883,7 +532,7 @@ String trimmedCompanyAddress = '';
                       SizedBox(height: 30.h,),
                       Text("Apa hubungan kerja yang anda inginkan?",
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 4.sp,
                           fontWeight: FontWeight.w600,
                         )
                       ),
@@ -911,7 +560,7 @@ String trimmedCompanyAddress = '';
                        //is prestasi 
                       Text("Apakah anda pernah mendapatkan prestasi?",
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 4.sp,
                           fontWeight: FontWeight.w600,
                         )
                       ),
@@ -936,7 +585,7 @@ String trimmedCompanyAddress = '';
                                 ),
                                 Text("Yes",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -960,7 +609,7 @@ String trimmedCompanyAddress = '';
                                 ),
                                 Text("No",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -986,7 +635,7 @@ String trimmedCompanyAddress = '';
                        //is prestasi 
                       Text("Apa hobby, olahraga atau minat anda?",
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 4.sp,
                           fontWeight: FontWeight.w600,
                         )
                       ),
@@ -1007,7 +656,7 @@ String trimmedCompanyAddress = '';
                        //is prestasi 
                       Text("Apakah anda pernah menjadi bagian dari sebuah organisasi?",
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 4.sp,
                           fontWeight: FontWeight.w600,
                         )
                       ),
@@ -1032,7 +681,7 @@ String trimmedCompanyAddress = '';
                                 ),
                                 Text("Yes",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -1056,7 +705,7 @@ String trimmedCompanyAddress = '';
                                 ),
                                 Text("No",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -1082,7 +731,7 @@ String trimmedCompanyAddress = '';
                        //is prestasi 
                       Text("Apakah ada hari tertentu anda tidak dapat bekerja?",
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 4.sp,
                           fontWeight: FontWeight.w600,
                         )
                       ),
@@ -1107,7 +756,7 @@ String trimmedCompanyAddress = '';
                                 ),
                                 Text("Yes",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -1131,7 +780,7 @@ String trimmedCompanyAddress = '';
                                 ),
                                 Text("No",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -1157,7 +806,7 @@ String trimmedCompanyAddress = '';
                       //is SIM 
                       Text("Apakah anda memiliki SIM?",
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 4.sp,
                           fontWeight: FontWeight.w600,
                         )
                       ),
@@ -1181,7 +830,7 @@ String trimmedCompanyAddress = '';
                                 ),
                                 Text("Yes",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -1205,7 +854,7 @@ String trimmedCompanyAddress = '';
                                 ),
                                 Text("No",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -1227,7 +876,7 @@ String trimmedCompanyAddress = '';
                                 children: [
                                   Text("Masa akhir SIM A",
                                     style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                     )
                                   ),
@@ -1257,7 +906,7 @@ String trimmedCompanyAddress = '';
                                 children: [
                                   Text("Masa akhir SIM C",
                                     style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                     )
                                   ),
@@ -1284,7 +933,7 @@ String trimmedCompanyAddress = '';
                        //is prestasi 
                       Text("Apakah anda diberhentikan dari perusahaan sebelumnya?",
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 4.sp,
                           fontWeight: FontWeight.w600,
                         )
                       ),
@@ -1309,7 +958,7 @@ String trimmedCompanyAddress = '';
                                 ),
                                 Text("Yes",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -1333,7 +982,7 @@ String trimmedCompanyAddress = '';
                                 ),
                                 Text("No",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -1358,7 +1007,7 @@ String trimmedCompanyAddress = '';
                       SizedBox(height: 30.h,),
                       Text("Apakah anda pernah dihukum?",
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 4.sp,
                           fontWeight: FontWeight.w600,
                         )
                       ),
@@ -1383,7 +1032,7 @@ String trimmedCompanyAddress = '';
                                 ),
                                 Text("Yes",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -1407,7 +1056,7 @@ String trimmedCompanyAddress = '';
                                 ),
                                 Text("No",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -1432,7 +1081,7 @@ String trimmedCompanyAddress = '';
                       SizedBox(height: 30.h,),
                       Text("Apakah anda mempunyai penyakit/cacat yang dapat menganggu aktivitas?",
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 4.sp,
                           fontWeight: FontWeight.w600,
                         )
                       ),
@@ -1457,7 +1106,7 @@ String trimmedCompanyAddress = '';
                                 ),
                                 Text("Yes",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -1481,7 +1130,7 @@ String trimmedCompanyAddress = '';
                                 ),
                                 Text("No",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -1507,7 +1156,7 @@ String trimmedCompanyAddress = '';
                        //is prestasi 
                       Text("Apakah anda merokok?",
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 4.sp,
                           fontWeight: FontWeight.w600,
                         )
                       ),
@@ -1532,7 +1181,7 @@ String trimmedCompanyAddress = '';
                                 ),
                                 Text("Yes",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -1556,7 +1205,7 @@ String trimmedCompanyAddress = '';
                                 ),
                                 Text("No",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -1565,16 +1214,16 @@ String trimmedCompanyAddress = '';
                           ),
                         ],
                       ),
-                      SizedBox(height: 30.h,),
+                      SizedBox(height: 10.h,),
                       const Divider(),
-                      SizedBox(height: 30.h,),
+                      SizedBox(height: 10.h,),
                       Text("Kontak Darurat",
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 6.sp,
                           fontWeight: FontWeight.w600,
                         )
                       ),
-                      SizedBox(height: 30.h,),
+                      SizedBox(height: 7.h,),
                       Row(
                         children: [
                           SizedBox(
@@ -1584,7 +1233,7 @@ String trimmedCompanyAddress = '';
                               children: [
                                 Text("Nama Lengkap",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -1609,7 +1258,7 @@ String trimmedCompanyAddress = '';
                               children: [
                                 Text("Hubungan",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -1634,7 +1283,7 @@ String trimmedCompanyAddress = '';
                               children: [
                                 Text("Nomor Telepon",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -1661,7 +1310,7 @@ String trimmedCompanyAddress = '';
                           children: [
                             Text("Alamat",
                               style: TextStyle(
-                                fontSize: 14.sp,
+                                fontSize: 4.sp,
                                 fontWeight: FontWeight.w600,
                               )
                             ),
@@ -1689,7 +1338,7 @@ String trimmedCompanyAddress = '';
                               children: [
                                 Text("Nama Lengkap",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -1714,7 +1363,7 @@ String trimmedCompanyAddress = '';
                               children: [
                                 Text("Hubungan",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -1739,7 +1388,7 @@ String trimmedCompanyAddress = '';
                               children: [
                                 Text("Nomor Telepon",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )
                                 ),
@@ -1766,7 +1415,7 @@ String trimmedCompanyAddress = '';
                           children: [
                             Text("Alamat",
                               style: TextStyle(
-                                fontSize: 14.sp,
+                                fontSize: 4.sp,
                                 fontWeight: FontWeight.w600,
                               )
                             ),
@@ -1845,44 +1494,10 @@ String trimmedCompanyAddress = '';
                           }
 
                           insertEmployee();
-                          // print('Sumber Lowongan : ' + selectedJobSource.toString() + '\n');
-                          // print('Sumber Lowongan Text : ' + txtSumberLowongan.text + '\n');
-                          // print('Hubungi perusaaan : ' + bolehMenghubungi.toString() + '\n');
-                          // print('Posisi yang dilamar : ' + txtPosisiLamar.text + '\n');
-                          // print('Posisi alternatif : ' + txtPosisiAlternatif.text + '\n');
-                          // print('Gaji : ' + txtGaji.text + '\n');
-                          // print('Hubungan kerja : ' + selectedHubunganKerja.toString() + '\n');
-                          // print('Prestasi : ' + anyPrestasi.toString() + '\n');
-                          // print('Prestasi Text : ' + txtPrestasi.text + '\n');
-                          // print('Hobby : ' + txtHobby.text + '\n');
-                          // print('Organisasi : ' + anyOrganization.toString() + '\n');
-                          // print('Organisasi Text : ' + txtOrganisasi.text + '\n');
-                          // print('Hari Kerja : ' + anyDay.toString() + '\n');
-                          // print('Hari Kerja Text : ' + txtHari.text + '\n');
-                          // print('SIM : ' + anySim.toString() + '\n');
-                          // print('SIM A : ' + DateTimeSIMA.toString() + '\n');
-                          // print('SIM C : ' + DateTimeSIMC.toString() + '\n');
-                          // print('Fired : ' + anyFired.toString() + '\n');
-                          // print('Fired Text : ' + txtFired.text + '\n');
-                          // print('Jailed : ' + anyJailed.toString() + '\n');
-                          // print('Jailed Text : ' + txtJailed.text + '\n');
-                          // print('Penyakit : ' + anyCacat.toString() + '\n');
-                          // print('Penyakit Text : ' + txtDisable.text + '\n');
-                          // print('Smoke : ' + anySmoke.toString() + '\n');
-
-                          // print('Emergency Name 1 : ' + txtEmergencyName1.text + '\n');
-                          // print('Emergency Hubungan 1 : ' + txtEmergencyHubungan1.text + '\n');
-                          // print('Emergency Nomor 1 : ' + txtEmergencyNomor1.text + '\n');
-                          // print('Emergency Alamat 1 : ' + txtEmergencyAlamat1.text + '\n');
-
-                          // print('Emergency Name 2 : ' + txtEmergencyName2.text + '\n');
-                          // print('Emergency Hubungan 2 : ' + txtEmergencyHubungan2.text + '\n');
-                          // print('Emergency Nomor 2 : ' + txtEmergencyNomor2.text + '\n');
-                          // print('Emergency Alamat 2 : ' + txtEmergencyAlamat2.text + '\n');
-
+                          
                         }, 
                         style: ElevatedButton.styleFrom(
-                          minimumSize: Size(0.sp, 45.sp),
+                          minimumSize: Size(50.w, 55.h),
                           foregroundColor: const Color(0xFFFFFFFF),
                           backgroundColor: const Color(0xff4ec3fc),
                           shape: RoundedRectangleBorder(
@@ -1897,177 +1512,6 @@ String trimmedCompanyAddress = '';
                     ],
                   ),
                 )
-              ),
-              //right profile
-              Expanded(
-                  flex: 2,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 15.sp,),
-                      //photo profile and name
-                      ListTile(
-                        contentPadding: const EdgeInsets.only(left: 0, right: 0),
-                                dense: true,
-                                horizontalTitleGap: 20.0,
-                        leading: Container(
-                              margin: const EdgeInsets.only(right: 2.0),
-                              child: Image.memory(
-                                base64Decode(photo),
-                              ),
-                            ),
-                        title: Text("$employeeName",
-                          style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
-                        ),
-                        subtitle: Text('$employeeEmail',
-                          style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
-                        ),
-                      ),
-                      SizedBox(height: 30.sp,),
-                      SizedBox(
-                        child: Card(
-                          shape: const RoundedRectangleBorder( 
-                            borderRadius: BorderRadius.all(Radius.circular(12))
-                          ),
-                          color: Colors.white,
-                          shadowColor: Colors.black,
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.495 / 2,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 17.sp, top: 5.sp, bottom: 15.sp,right: 7.sp),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding:  EdgeInsets.only(top: 15.sp, bottom: 15.sp),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Get.to(const AddNewEmployeeOne());
-                                      },
-                                      child: Text("Informasi pribadi", 
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w400,
-                                          //color: const Color.fromRGBO(78, 195, 252, 1)
-                                        ),
-                                      )
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:  EdgeInsets.only(top: 15.sp, bottom: 15.sp),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Get.to(const AddNewEmployeeTwo());
-                                      },
-                                      child: Text("Data alamat", 
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w400,
-                                          //color: const Color.fromRGBO(78, 195, 252, 1)
-                                        ),
-                                      )
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:  EdgeInsets.only(top: 15.sp, bottom: 15.sp),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Get.to(const AddNewEmployeeThree());
-                                      },
-                                      child: Text("Riwayat kerja", 
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w400,
-                                          //color: const Color.fromRGBO(78, 195, 252, 1)
-                                        ),
-                                      )
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:  EdgeInsets.only(top: 15.sp, bottom: 15.sp),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Get.to(const AddNewEmployeeFour());
-                                      },
-                                      child: Text("Pendidikan", 
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w400,
-                                          //color: const Color.fromRGBO(78, 195, 252, 1)
-                                        ),
-                                      )
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:  EdgeInsets.only(top: 15.sp, bottom: 15.sp),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Get.to(const AddNewEmployeeFive());
-                                      },
-                                      child: Text("Kemampuan bahasa", 
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w400,
-                                          //color: const Color.fromRGBO(78, 195, 252, 1)
-                                        ),
-                                      )
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:  EdgeInsets.only(top: 15.sp, bottom: 15.sp),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Get.to(const AddNewEmployeeSix());
-                                      },
-                                      child: Text("Data keluarga", 
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w400,
-                                          //color: const Color.fromRGBO(78, 195, 252, 1)
-                                        ),
-                                      )
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:  EdgeInsets.only(top: 15.sp, bottom: 15.sp),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Get.to(const AddNewEmployeeSeven());
-                                      },
-                                      child: Text("Pertanyaan", 
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: const Color.fromRGBO(78, 195, 252, 1)
-                                        ),
-                                      )
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:  EdgeInsets.only(top: 15.sp, bottom: 15.sp),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Get.to(const AddNewEmployeeEight());
-                                      },
-                                      child: Text("Pernyataan", 
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w400,
-                                          //color: const Color.fromRGBO(78, 195, 252, 1)
-                                        ),
-                                      )
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
               ),
             ],
           )

@@ -67,7 +67,7 @@ class _ForgotPassWebState extends State<ForgotPassWeb> {
                 Text(
                   'Ubah Password',
                   style: TextStyle(
-                    fontSize: 48.sp,
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -77,11 +77,11 @@ class _ForgotPassWebState extends State<ForgotPassWeb> {
                 Text('Silahkan masukkan password baru anda',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 15.sp,
+                      fontSize: 5.sp,
                       fontWeight: FontWeight.w300,
                     )),
                 SizedBox(
-                  height: 35.sp,
+                  height: 10.sp,
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,7 +91,7 @@ class _ForgotPassWebState extends State<ForgotPassWeb> {
                       child: Text(
                         'Password Baru',
                         style: TextStyle(
-                          fontSize: 16.sp,
+                          fontSize: 5.sp,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -116,7 +116,7 @@ class _ForgotPassWebState extends State<ForgotPassWeb> {
                   ),
                 ),
                 SizedBox(
-                  height: 20.sp,
+                  height: 8.sp,
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,7 +126,7 @@ class _ForgotPassWebState extends State<ForgotPassWeb> {
                       child: Text(
                         'Konfirmasi Password Baru',
                         style: TextStyle(
-                          fontSize: 16.sp,
+                          fontSize: 5.sp,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -151,12 +151,12 @@ class _ForgotPassWebState extends State<ForgotPassWeb> {
                   ),
                 ),
                 SizedBox(
-                  height: 55.sp,
+                  height: 15.sp,
                 ),
                 ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(const Color(0xff4ec3fc)),
+                    backgroundColor: MaterialStateProperty.all(const Color(0xff4ec3fc)),
+                    foregroundColor: MaterialStateProperty.all(const Color(0xFFFFFFFF)),
                   ),
                   child: Container(
                     width: MediaQuery.of(context).size.width / 2.8,
@@ -169,7 +169,7 @@ class _ForgotPassWebState extends State<ForgotPassWeb> {
                       'Reset Akun',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontSize: 20.sp, fontWeight: FontWeight.w700),
+                          fontSize: 5.sp, fontWeight: FontWeight.w700),
                     ),
                   ),
                   onPressed: () => {

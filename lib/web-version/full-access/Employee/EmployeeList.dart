@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:hr_systems_web/web-version/full-access/Employee/Add%20New%20Employee/AddNewEmployeeFirst.dart';
-import 'package:hr_systems_web/web-version/full-access/Employee/EmployeeOverview.dart';
+import 'package:hr_systems_web/web-version/full-access/Employee/Add%20New%20Employee/AddNewEmployeeOne.dart';
+import 'package:hr_systems_web/web-version/full-access/Employee/Overview/EmployeeOverview.dart';
 import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -234,7 +234,7 @@ class _EmployeeListPageState extends State<EmployeeListPage> {
                               if(positionId == 'POS-HR-002' || positionId == 'POS-HR-008')
                                 ElevatedButton(
                                   onPressed: () {
-                                    Get.to(const AddNewEmployeeOne());
+                                    Get.to(const AddNewEmployeeFirst());
                                   },
                                   style: ElevatedButton.styleFrom(
                                     elevation: 0,
@@ -244,13 +244,11 @@ class _EmployeeListPageState extends State<EmployeeListPage> {
                                     backgroundColor: const Color(0xff4ec3fc),
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                   ),
-                                  child: Row(
+                                  child: const Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      Text('Karyawan Baru',
-                                        style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w600,)
-                                      ),
+                                      Text('Tambah Karyawan Baru',),
                                     ],
                                   )
                                 ),
