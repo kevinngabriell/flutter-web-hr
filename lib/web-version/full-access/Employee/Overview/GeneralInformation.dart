@@ -1,4 +1,5 @@
 // ignore_for_file: file_names, non_constant_identifier_names, use_build_context_synchronously
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -6,6 +7,7 @@ import 'package:hr_systems_web/web-version/full-access/Employee/Employee%20Detai
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:dio/dio.dart' as dio;
 
 class GeneralInformation extends StatefulWidget {
   final String employeeId;
@@ -233,7 +235,7 @@ class _GeneralInformationState extends State<GeneralInformation> {
         pob = jsonData['Data'][0]['employee_pob'];
         dob = jsonData['Data'][0]['employee_dob'];
         gender = jsonData['Data'][0]['gender_name'];
-        username  = jsonData['Data'][0]['username'];
+        username = jsonData['Data'][0]['username'] ?? '-';
         employeeNIK = jsonData['Data'][0]['employee_identity'];
         spvID = jsonData['Data'][0]['employee_spv'];
 
@@ -255,13 +257,74 @@ class _GeneralInformationState extends State<GeneralInformation> {
         throw Exception('Failed to load employee data');
       }
     } catch (e){
-      isLoading = false;
       print('error : $e');
     } finally {
       isLoading = false;
     }
   }
   
+  Future<void> selectFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'bmp'],
+    );
+
+    if (result != null) {
+      String selectedFileName = result.files.first.name;
+      List<int> imageBytes = result.files.first.bytes!;
+
+      // Convert the image bytes to base64
+      String base64Image = base64Encode(imageBytes);
+
+      try{
+        setState(() {
+          isLoading = true;
+        });
+
+        String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/uploademployeephoto.php';
+
+        var data = {
+          'employee_id' : widget.employeeId,
+          'photo': base64Image
+        };
+
+        // Send the request using dio for multipart/form-data
+        var dioClient = dio.Dio();
+        dio.Response response = await dioClient.post(apiUrl, data: dio.FormData.fromMap(data));
+        if (response.statusCode == 200) {
+
+          showDialog(
+            context: context, // Make sure to have access to the context
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Sukses'),
+                content: const Text('Upload foto karyawan telah berhasil dilakukan'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    child: const Text('Oke'),
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          Get.snackbar("Error", "Error: ${response.statusCode}, ${response.data}");
+        }
+      } catch(e){
+        Get.snackbar("Error", "Error: $e");
+      } finally{
+        setState(() {
+          isLoading = false;
+        });
+      }
+
+    } else {
+      // User canceled the file picking
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -552,6 +615,19 @@ class _GeneralInformationState extends State<GeneralInformation> {
                       ),
                     ),
                     child: const Text('Set Lokasi Absen')
+                  ),
+                  SizedBox(height: 3.sp,),
+                  ElevatedButton(
+                    onPressed: (){selectFile();}, 
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(80.w, 45.h),
+                      foregroundColor: const Color(0xFFFFFFFF),
+                      backgroundColor: const Color(0xff4ec3fc),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text('Upload Foto Profil Karyawan')
                   )
                 ],
               ),

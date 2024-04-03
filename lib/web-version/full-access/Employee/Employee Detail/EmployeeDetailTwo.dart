@@ -24,123 +24,30 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
   final storage = GetStorage();
   bool isLoading = false;
 
-  TextEditingController txtAlamatBefore = TextEditingController();
-  TextEditingController txtRtBefore = TextEditingController();
-  TextEditingController txtRwBefore = TextEditingController();
-  String selectedStatusBefore = '';
-
-  TextEditingController txtAlamatAfter = TextEditingController();
-  TextEditingController txtRtAfter = TextEditingController();
-  TextEditingController txtRwAfter = TextEditingController();
-  String selectedStatusAfter = '';
-
-  List<Map<String, String>> addressStatuses = [];
-
-  String selectedProvinceBefore = '';
-  String selectedProvinceAfter = '';
-  List<Map<String, String>> provinceList = [];
-
-  String selectedCityBefore = '';
-  String selectedCityAfter = '';
-  List<Map<String, String>> cityList = [];
-
-  List<Map<String, String>> identityCityList = [];
-
+  String alamatKTP = '';
+  String statusKTP = '';
+  String rtKTP = '';
+  String rwKTP = '';
+  String provinsiKTP = '';
+  String kotaKTP = '';
+  String kecKTP = '';
+  String kelKTP = '';
+  String alamatDomisili = '';
+  String statusDomisili = '';
+  String rtDomisili = '';
+  String rwDomisili = '';
+  String provinsiDomisili = '';
+  String kotaDomisili = '';
+  String kecDomisili = '';
+  String kelDomisili = '';
+  String alamatEmail = '';
+  String nomorHandphone = '';
+  
   @override
   void initState() {
     super.initState();
     fetchData();
     fetchDetailData();
-    fetchAddressStatuses();
-    fetchProvinceList();
-  }
-
-  Future<void> fetchCityList(String? provinceId) async {
-    if (provinceId != null) {
-      final response = await http.get(
-          Uri.parse('https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/masterdata/getkotakab.php?provinsi=$provinceId'));
-      
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        if (data['StatusCode'] == 200) {
-          final cities = (data['Data'] as List).map((city) => Map<String, String>.from({'id': city['id'],'name': city['name'],})).toList();
-          selectedCityBefore = cities[0]['id']!;
-          // setState(() {
-          //   if (isDomicile) {
-          //     domicileCityList = cities;
-          //     selectedDomicileCity = domicileCityList.isNotEmpty ? domicileCityList[0]['id'] : null;
-          //   } else {
-          //     identityCityList = cities;
-          //     selectedIdentityCity = identityCityList.isNotEmpty ? identityCityList[0]['id'] : null;
-          //   }
-          // });
-        } else {
-          print('Failed to fetch city list');
-        }
-      } else {
-        print('Failed to fetch data');
-      }
-    }
-  }
-
-  Future<void> fetchProvinceList() async {
-    final response = await http.get(
-        Uri.parse('https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/masterdata/getprovince.php'));
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      if (data['StatusCode'] == 200) {
-        final provinces = (data['Data'] as List)
-            .map((province) => Map<String, String>.from({
-                  'id': province['id'],
-                  'name': province['name'],
-                }))
-            .toList();
-
-        setState(() {
-          provinceList = provinces;
-          if (provinceList.isNotEmpty) {
-            selectedProvinceAfter = provinceList[0]['id']!;
-          }
-        });
-      } else {
-        // Handle API error
-        print('Failed to fetch province list');
-      }
-    } else {
-      // Handle HTTP error
-      print('Failed to fetch data');
-    }
-  }
-
-  Future<void> fetchAddressStatuses() async {
-    final response = await http.get(
-        Uri.parse('https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/masterdata/getaddressstatus.php'));
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      if (data['StatusCode'] == 200) {
-        final addressStatusList = (data['Data'] as List)
-            .map((addressStatus) => Map<String, String>.from({
-                  'address_status_id': addressStatus['address_status_id'],
-                  'address_status_name': addressStatus['address_status_name'],
-                }))
-            .toList();
-
-        setState(() {
-          addressStatuses = addressStatusList;
-          if (addressStatuses.isNotEmpty) {
-            selectedStatusAfter = addressStatuses[0]['address_status_id']!;
-          }
-        });
-      } else {
-        // Handle API error
-        print('Failed to fetch address statuses');
-      }
-    } else {
-      // Handle HTTP error
-      print('Failed to fetch data');
-    }
   }
 
   Future<void> fetchDetailData() async {
@@ -155,61 +62,39 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
         Map<String, dynamic> data = (responseData['Data'] as List).first;
 
         setState(() {
-          txtAlamatBefore.text = data['employee_address_ktp'];
-          txtRtBefore.text = data['employee_rt_ktp'];
-          txtRwBefore.text = data['employee_rw_ktp'];
-          selectedStatusBefore = data['employee_address_status_ktp'];
-          selectedProvinceBefore = data['employee_provinsi_ktp'];
-          fetchCityList(selectedProvinceBefore);
-          selectedCityBefore = data['employee_kota_kab_ktp'];
-          
-          if(selectedStatusBefore == ''){
-            selectedStatusBefore = 'AS-HR-001';
-          }
-
-          if(selectedProvinceBefore == ''){
-            selectedProvinceBefore = '31';
-          }
-
-          if(selectedCityBefore == ''){
-            selectedCityBefore = '3173';
-          }
+          alamatKTP = data['employee_address_ktp'] ?? '-';
+          statusKTP = data['statusKTP'] ?? '-';
+          provinsiKTP = data['provinsi_ktp'] ?? '-';
+          kotaKTP = data['kota_ktp'] ?? '-';
+          rtKTP = data['employee_rt_ktp'] ?? '-';
+          rwKTP = data['employee_rw_ktp'] ?? '-';
+          kecKTP = data['kecamatan_ktp'] ?? '-';
+          kelKTP = data['kelurahan_ktp'] ?? '-';
+          alamatDomisili = data['employee_address_now'] ?? '-';
+          statusDomisili = data['statusDomisili'] ?? '-';
+          provinsiDomisili = data['provinsi_domisili'] ?? '-';
+          kotaDomisili = data['kota_domisili'] ?? '-';
+          kecDomisili = data['kec_domisili'] ?? '-';
+          kelDomisili = data['kel_domisili'] ?? '-';
+          rtDomisili = data['employee_rt_now'] ?? '-';
+          rwDomisili = data['employee_rw_now'] ?? '-';
+          alamatEmail = data['employee_email'] ?? '-';
+          nomorHandphone = data['employee_phone_number'] ?? '-';
+          // if (cityList.any((city) => city['id'] == selectedCityBefore)) {
+          //   selectedCityBefore = selectedCityBefore;
+          // } else if (cityList.isNotEmpty) {
+          //   selectedCityBefore = cityList.first['id']!;
+          // }
         });
 
       } else {
-        txtAlamatBefore.text = '';
-        txtRtBefore.text = '';
-        txtRwBefore.text = '';
-        if(selectedStatusBefore == ''){
-            selectedStatusBefore = 'AS-HR-001';
-          }
 
-          if(selectedProvinceBefore == ''){
-            selectedProvinceBefore = '31';
-          }
-
-          if(selectedCityBefore == ''){
-            selectedCityBefore = '3173';
-          }
         print('Failed to load data: ${response.statusCode}');
       }
 
     } catch (e){
       print('Error at fetching detail one data : $e');
-      txtAlamatBefore.text = '';
-      txtRtBefore.text = '';
-      txtRwBefore.text = '';
-      if(selectedStatusBefore == ''){
-        selectedStatusBefore = 'AS-HR-001';
-      }
-
-      if(selectedProvinceBefore == ''){
-        selectedProvinceBefore = '31';
-      }
-
-      if(selectedCityBefore == ''){
-        selectedCityBefore = '3173';
-      }
+      
     } finally {
       isLoading = false;
     }
@@ -257,7 +142,6 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
     var positionId = storage.read('position_id');
     var photo = storage.read('photo');
     int storedEmployeeIdNumber = int.parse(widget.employeeID);
-    
     return MaterialApp(
       title: "Data Karyawan",
       home: Scaffold(
@@ -316,8 +200,6 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                       SizedBox(height: 5.sp,),
                       NotificationnProfile(employeeName: employeeName, employeeAddress: employeeEmail, photo: photo),
                       SizedBox(height: 7.sp,),
-                      Center(child: Text('Data Saat Ini',style: TextStyle(fontSize: 5.sp,fontWeight: FontWeight.w700,))),
-                      SizedBox(height: 7.sp,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -328,16 +210,7 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                               children: [
                                 Text('Alamat sesuai KTP',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  maxLines: 4,
-                                  controller: txtAlamatBefore,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan alamat sesuai KTP'
-                                  ),
-                                  readOnly: true,
-                                )
+                                Text(alamatKTP)
                               ],
                             ),
                           ),
@@ -348,66 +221,46 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
+                            width: (MediaQuery.of(context).size.width - 100.w) / 8,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text('RT',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  controller: txtRtBefore,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan alamat sesuai KTP'
-                                  ),
-                                  readOnly: true,
-                                )
+                                Text(rtKTP)
                               ],
                             ),
                           ),
                           SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
+                            width: (MediaQuery.of(context).size.width - 100.w) / 8,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text('RW',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  controller: txtRwBefore,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan alamat sesuai KTP'
-                                  ),
-                                  readOnly: true,
-                                )
+                                Text(rwKTP)
                               ],
                             ),
                           ),
                           SizedBox(
-                            width: (MediaQuery.of(context).size.width - 50.w) / 3,
+                            width: (MediaQuery.of(context).size.width - 245.w) / 2,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text('Status',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                DropdownButtonFormField<String>(
-                                  value: selectedStatusBefore,
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      selectedStatusBefore = newValue!;
-                                    });
-                                  },
-                                  items: addressStatuses.map<DropdownMenuItem<String>>(
-                                    (Map<String, String> status) {
-                                      return DropdownMenuItem<String>(
-                                        value: status['address_status_id']!,
-                                        child: Text(status['address_status_name']!),
-                                      );
-                                    },
-                                  ).toList(),
-                                ),
+                                Text(statusKTP)
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 210.w) / 2,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Provinsi',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                SizedBox(height: 2.sp,),
+                                Text(provinsiKTP)
                               ],
                             ),
                           ),
@@ -417,34 +270,6 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Provinsi',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                DropdownButtonFormField<String>(
-                                  hint: const Text("Pilih provinsi"),
-                                  value: selectedProvinceBefore,
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      selectedProvinceBefore = newValue!;
-                                      // fetchCityList(selectedIdentityProvince, false);
-                                    });
-                                  },
-                                  items: provinceList.map<DropdownMenuItem<String>>(
-                                    (Map<String, String> province) {
-                                      return DropdownMenuItem<String>(
-                                        value: province['id']!,
-                                        child: Text(province['name']!),
-                                      );
-                                    },
-                                  ).toList(),
-                                ),
-                              ],
-                            ),
-                          ),
                           SizedBox(
                             width: (MediaQuery.of(context).size.width - 100.w) / 3,
                             child: Column(
@@ -452,24 +277,7 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                               children: [
                                 Text('Kota/Kab',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                DropdownButtonFormField<String>(
-                                  hint: const Text("Pilih kota/kabupaten KTP"),
-                                  value: selectedCityBefore,
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      selectedCityBefore = newValue!;
-                                      // fetchRegencyList(selectedIdentityCity, false);
-                                    });
-                                  },
-                                  items: identityCityList.map<DropdownMenuItem<String>>(
-                                    (Map<String, String> city) {
-                                      return DropdownMenuItem<String>(
-                                        value: city['id']!,
-                                        child: Text(city['name']!),
-                                      );
-                                    },
-                                  ).toList(),
-                                ),
+                                Text(kotaKTP)
                               ],
                             ),
                           ),
@@ -480,15 +288,10 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                               children: [
                                 Text('Kecamatan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
+                                Text(kecKTP)
                               ],
                             ),
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 7.sp,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                          ),
                           SizedBox(
                             width: (MediaQuery.of(context).size.width - 100.w) / 3,
                             child: Column(
@@ -496,29 +299,12 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                               children: [
                                 Text('Kelurahan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
+                                Text(kelKTP)
                               ],
                             ),
                           ),
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                            child: const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                            child: const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                              ],
-                            ),
-                          )
                         ],
                       ),
-                      SizedBox(height: 7.sp,),
-                      Center(child: Text('Data Saat Baru',style: TextStyle(fontSize: 5.sp,fontWeight: FontWeight.w700,))),
                       SizedBox(height: 7.sp,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -528,17 +314,9 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Alamat sesuai KTP',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                Text('Alamat domisili',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  maxLines: 4,
-                                  // controller: alamatKTP,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan alamat sesuai KTP'
-                                  ),
-                                )
+                                Text(alamatDomisili)
                               ],
                             ),
                           ),
@@ -549,64 +327,46 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
+                            width: (MediaQuery.of(context).size.width - 100.w) / 8,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text('RT',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  // controller: alamatKTP,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan alamat sesuai KTP'
-                                  ),
-                                )
+                                Text(rtDomisili)
                               ],
                             ),
                           ),
                           SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 5,
+                            width: (MediaQuery.of(context).size.width - 100.w) / 8,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text('RW',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  // controller: alamatKTP,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan alamat sesuai KTP'
-                                  ),
-                                )
+                                Text(rwDomisili)
                               ],
                             ),
                           ),
                           SizedBox(
-                            width: (MediaQuery.of(context).size.width - 50.w) / 3,
+                            width: (MediaQuery.of(context).size.width - 245.w) / 2,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text('Status',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                DropdownButtonFormField<String>(
-                                  value: selectedStatusAfter,
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      selectedStatusAfter = newValue!;
-                                    });
-                                  },
-                                  items: addressStatuses.map<DropdownMenuItem<String>>(
-                                    (Map<String, String> status) {
-                                      return DropdownMenuItem<String>(
-                                        value: status['address_status_id']!,
-                                        child: Text(status['address_status_name']!),
-                                      );
-                                    },
-                                  ).toList(),
-                                ),
+                                Text(statusDomisili)
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 210.w) / 2,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Provinsi',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
+                                SizedBox(height: 2.sp,),
+                                Text(provinsiDomisili)
                               ],
                             ),
                           ),
@@ -616,34 +376,6 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Provinsi',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                DropdownButtonFormField<String>(
-                                  hint: const Text("Pilih provinsi"),
-                                  value: selectedProvinceAfter,
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      selectedProvinceAfter = newValue!;
-                                      // fetchCityList(selectedIdentityProvince, false);
-                                    });
-                                  },
-                                  items: provinceList.map<DropdownMenuItem<String>>(
-                                    (Map<String, String> province) {
-                                      return DropdownMenuItem<String>(
-                                        value: province['id']!,
-                                        child: Text(province['name']!),
-                                      );
-                                    },
-                                  ).toList(),
-                                ),
-                              ],
-                            ),
-                          ),
                           SizedBox(
                             width: (MediaQuery.of(context).size.width - 100.w) / 3,
                             child: Column(
@@ -651,6 +383,7 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                               children: [
                                 Text('Kota/Kab',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
+                                Text(kotaDomisili)
                               ],
                             ),
                           ),
@@ -661,15 +394,10 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                               children: [
                                 Text('Kecamatan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
+                                Text(kecDomisili)
                               ],
                             ),
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 7.sp,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                          ),
                           SizedBox(
                             width: (MediaQuery.of(context).size.width - 100.w) / 3,
                             child: Column(
@@ -677,25 +405,50 @@ class _EmployeeDetailTwoState extends State<EmployeeDetailTwo> {
                               children: [
                                 Text('Kelurahan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
+                                Text(kelDomisili)
                               ],
                             ),
                           ),
+                        ],
+                      ),
+                      SizedBox(height: 7.sp,),
+                      Row(
+                        children: [
                           SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                            child: const Column(
+                            width: (MediaQuery.of(context).size.width- 100.w) / 2,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Text("Alamat Email",
+                                  style: TextStyle(
+                                    fontSize: 4.sp,
+                                    fontWeight: FontWeight.w600,
+                                  )
+                                ),
+                                SizedBox(height: 7.h,),
+                                Text(alamatEmail)
                               ],
                             ),
                           ),
+                          SizedBox(width: 5.w,),
                           SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                            child: const Column(
+                            width: (MediaQuery.of(context).size.width- 100.w) / 2,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Text("Nomor Handphone",
+                                  style: TextStyle(
+                                    fontSize: 4.sp,
+                                    fontWeight: FontWeight.w600,
+                                  )
+                                ),
+                                SizedBox(height: 7.h,),
+                                Text(nomorHandphone)
                               ],
                             ),
-                          )
+                          ),
                         ],
                       ),
                       SizedBox(height: 7.sp,),

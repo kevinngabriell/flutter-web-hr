@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print, file_names, unnecessary_string_interpolations, prefer_const_constructors_in_immutables, use_key_in_widget_constructors, unnecessary_null_comparison, use_build_context_synchronously, non_constant_identifier_names, empty_catches
 
 import 'dart:typed_data';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -20,13 +19,13 @@ import 'package:hr_systems_web/web-version/full-access/Employee/Overview/Perjala
 import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart' as dio;
 
 
 class EmployeeOverviewPage extends StatefulWidget {
   final String employeeId;
+  final String employeeName;
 
-  EmployeeOverviewPage(this.employeeId);
+  EmployeeOverviewPage(this.employeeId, this.employeeName);
 
   @override
   State<EmployeeOverviewPage> createState() => _EmployeeOverviewPageState();
@@ -45,7 +44,6 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
   String trimmedCompanyAddress = '';
   List<dynamic> profileData = [];
   List<Map<String, String>> spvs = [];
-  List<Map<String, String>> spvName = [];
   String? selectedSPV;
   String? namaSPV;
   String namaKaryawan = '';
@@ -59,6 +57,7 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
     tabController = TabController(length: 6, vsync: this);
     fetchData();
     fetchSPVdata();
+    namaKaryawan = widget.employeeName;
   }
 
   final storage = GetStorage();
@@ -198,58 +197,6 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
 
     }
 
-  }
-  
-  Future<void> _selectFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'bmp'],
-    );
-
-    if (result != null) {
-      String selectedFileName = result.files.first.name;
-      List<int> imageBytes = result.files.first.bytes!;
-
-      // Convert the image bytes to base64
-      String base64Image = base64Encode(imageBytes);
-
-      String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/uploademployeephoto.php';
-
-      var data = {
-        'employee_id' : widget.employeeId,
-        'photo': base64Image
-      };
-
-      // Send the request using dio for multipart/form-data
-      var dioClient = dio.Dio();
-      dio.Response response = await dioClient.post(apiUrl, data: dio.FormData.fromMap(data));
-      print('Success: ${response.data}');
-      if (response.statusCode == 200) {
-
-        showDialog(
-          context: context, // Make sure to have access to the context
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Sukses'),
-              content: const Text('Upload foto karyawan telah berhasil dilakukan'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Get.back();
-                  },
-                  child: const Text('Oke'),
-                ),
-              ],
-            );
-          },
-        );
-      } else {
-        Get.snackbar("Error", "Error: ${response.statusCode}, ${response.data}");
-      }
-
-    } else {
-      // User canceled the file picking
-    }
   }
   
   @override

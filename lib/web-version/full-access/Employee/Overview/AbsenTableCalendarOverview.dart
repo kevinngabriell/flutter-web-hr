@@ -103,7 +103,7 @@ class _AbsenTableCalendarOverviewState extends State<AbsenTableCalendarOverview>
 
     if (response.statusCode == 200) {
       Get.back();
-      Get.to(EmployeeOverviewPage(employeeID));
+      Get.to(EmployeeOverviewPage(employeeID, widget.namaKaryawan));
       absenceData = fetchAbsenceData(widget.employeeId);
     } else {
       Get.snackbar("Error", "Error: ${response.statusCode}, ${response.data}");

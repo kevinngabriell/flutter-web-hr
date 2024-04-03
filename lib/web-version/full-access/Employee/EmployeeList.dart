@@ -285,7 +285,7 @@ class _EmployeeListPageState extends State<EmployeeListPage> {
                                     ],
                                     onSelectChanged: (selected) {
                                       if (selected!) {
-                                        Get.to(EmployeeOverviewPage(employee['id']));
+                                        Get.to(EmployeeOverviewPage(employee['id'], employee['employee_name']));
                                       }
                                     },
                                   );

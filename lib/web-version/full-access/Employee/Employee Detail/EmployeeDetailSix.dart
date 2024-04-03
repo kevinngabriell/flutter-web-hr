@@ -24,10 +24,172 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
   final storage = GetStorage();
   bool isLoading = false;
 
+  String familyTypeFifteen = '-';
+  String familyNameFifteen = '-';
+  String familyAddressFifteen = '-';
+  String familyPobFifteen = '-';
+  String familyDobFifteen = '-';
+  String familyJobFifteen = '-';
+  String educationNameFifteen = '-';
+
+  String familyTypeSixteen = '-';
+  String familyNameSixteen = '-';
+  String familyAddressSixteen = '-';
+  String familyPobSixteen = '-';
+  String familyDobSixteen = '-';
+  String familyJobSixteen = '-';
+  String educationNameSixteen = '-';
+
+  String familyTypeSeventeen = '-';
+  String familyNameSeventeen = '-';
+  String familyAddressSeventeen = '-';
+  String familyPobSeventeen = '-';
+  String familyDobSeventeen = '-';
+  String familyJobSeventeen = '-';
+  String educationNameSeventeen = '-';
+
+  String familyTypeEighteen = '-';
+  String familyNameEighteen = '-';
+  String familyAddressEighteen = '-';
+  String familyPobEighteen = '-';
+  String familyDobEighteen = '-';
+  String familyJobEighteen = '-';
+  String educationNameEighteen = '-';
+
+  String familyTypeNineteen = '-';
+  String familyNameNineteen = '-';
+  String familyAddressNineteen = '-';
+  String familyPobNineteen = '-';
+  String familyDobNineteen = '-';
+  String familyJobNineteen = '-';
+  String educationNameNineteen = '-';
+
+  String familyTypeTwenty = '-';
+  String familyNameTwenty = '-';
+  String familyAddressTwenty = '-';
+  String familyPobTwenty = '-';
+  String familyDobTwenty = '-';
+  String familyJobTwenty = '-';
+  String educationNameTwenty = '-';
+
+
+
   @override
   void initState() {
     super.initState();
     fetchData();
+  }
+
+  Future<void> fetchDetailData() async {
+    try{
+      isLoading = true;
+
+      String apiUrlSix = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getdetailemployee.php?action=15&employee_id=${widget.employeeID}';
+      var responseSix = await http.get(Uri.parse(apiUrlSix));
+
+      if (responseSix.statusCode == 200) {
+        Map<String, dynamic> responseDataSix = json.decode(responseSix.body);
+        List<dynamic> dataSix = responseDataSix['Data'];
+
+        setState(() {
+          familyTypeFifteen = dataSix.first['type'] ?? '-';
+          familyNameFifteen = dataSix.first['family_name'] ?? '-';
+          familyAddressFifteen = dataSix.first['family_address'] ?? '-';
+          familyPobFifteen = dataSix.first['family_pob'] ?? '-';
+          familyDobFifteen = dataSix.first['family_dob'] != '0000-00-00' ? dataSix.first['family_dob'] : '-';
+          familyJobFifteen = dataSix.first['family_job'] ?? '-';
+          educationNameFifteen = dataSix.first['education_name'] ?? '-';
+        });
+      } else {
+        print('Failed to load data: ${responseSix.statusCode}');
+      }
+
+      String apiUrlSeven = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getdetailemployee.php?action=16&employee_id=${widget.employeeID}';
+      var responseSeven = await http.get(Uri.parse(apiUrlSeven));
+
+      if (responseSeven.statusCode == 200) {
+        Map<String, dynamic> responseDataSeven = json.decode(responseSeven.body);
+        List<dynamic> dataSeven = responseDataSeven['Data'];
+
+        setState(() {
+          familyTypeSixteen = dataSeven.first['type'] ?? '-';
+          familyNameSixteen = dataSeven.first['family_name'] ?? '-';
+          familyAddressSixteen = dataSeven.first['family_address'] ?? '-';
+          familyPobSixteen = dataSeven.first['family_pob'] ?? '-';
+          familyDobSixteen = dataSeven.first['family_dob'] != '0000-00-00' ? dataSeven.first['family_dob'] : '-';
+          familyJobSixteen = dataSeven.first['family_job'] ?? '-';
+          educationNameSixteen = dataSeven.first['education_name'] ?? '-';
+        });
+      } else {
+        print('Failed to load data: ${responseSeven.statusCode}');
+      }
+
+      String apiUrlEight = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getdetailemployee.php?action=17&employee_id=${widget.employeeID}';
+      var responseEight = await http.get(Uri.parse(apiUrlEight));
+
+      if (responseEight.statusCode == 200) {
+        Map<String, dynamic> responseDataEight = json.decode(responseEight.body);
+        List<dynamic> dataEight = responseDataEight['Data'];
+
+        setState(() {
+          familyTypeSeventeen = dataEight.first['type'] ?? '-';
+          familyNameSeventeen = dataEight.first['family_name'] ?? '-';
+          familyAddressSeventeen = dataEight.first['family_address'] ?? '-';
+          familyPobSeventeen = dataEight.first['family_pob'] ?? '-';
+          familyDobSeventeen = dataEight.first['family_dob'] != '0000-00-00' ? dataEight.first['family_dob'] : '-';
+          familyJobSeventeen = dataEight.first['family_job'] ?? '-';
+          educationNameSeventeen = dataEight.first['education_name'] ?? '-';
+        });
+      } else {
+        print('Failed to load data: ${responseEight.statusCode}');
+      }
+
+      String apiUrlNine = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getdetailemployee.php?action=18&employee_id=${widget.employeeID}';
+      var responseNine = await http.get(Uri.parse(apiUrlNine));
+
+      if (responseNine.statusCode == 200) {
+        Map<String, dynamic> responseDataNine = json.decode(responseNine.body);
+        List<dynamic> dataNine = responseDataNine['Data'];
+
+        setState(() {
+          familyTypeEighteen = dataNine.first['type'] ?? '-';
+          familyNameEighteen = dataNine.first['family_name'] ?? '-';
+          familyAddressEighteen = dataNine.first['family_address'] ?? '-';
+          familyPobEighteen = dataNine.first['family_pob'] ?? '-';
+          familyDobEighteen = dataNine.first['family_dob'] != '0000-00-00' ? dataNine.first['family_dob'] : '-';
+          familyJobEighteen = dataNine.first['family_job'] ?? '-';
+          educationNameEighteen = dataNine.first['education_name'] ?? '-';
+        });
+      } else {
+        print('Failed to load data: ${responseNine.statusCode}');
+      }
+
+      String apiUrlTen = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getdetailemployee.php?action=19&employee_id=${widget.employeeID}';
+      var responseTen = await http.get(Uri.parse(apiUrlTen));
+
+      if (responseTen.statusCode == 200) {
+        Map<String, dynamic> responseDataTen = json.decode(responseTen.body);
+        List<dynamic> dataTen = responseDataTen['Data'];
+
+        setState(() {
+          familyTypeNineteen = dataTen.first['type'] ?? '-';
+          familyNameNineteen = dataTen.first['family_name'] ?? '-';
+          familyAddressNineteen = dataTen.first['family_address'] ?? '-';
+          familyPobNineteen = dataTen.first['family_pob'] ?? '-';
+          familyDobNineteen = dataTen.first['family_dob'] != '0000-00-00' ? dataTen.first['family_dob'] : '-';
+          familyJobNineteen = dataTen.first['family_job'] ?? '-';
+          educationNameNineteen = dataTen.first['education_name'] ?? '-';
+        });
+      } else {
+        print('Failed to load data: ${responseTen.statusCode}');
+      }
+
+    } catch (e){
+      print('Error at fetching detail one data : $e');
+      
+    } finally {
+      isLoading = false;
+    }
   }
 
   Future<void> fetchData() async {
@@ -143,13 +305,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Hubungan Keluarga',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyTypeFifteen)
                               ],
                             ),
                           ),
@@ -160,13 +316,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Nama Lengkap',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyNameFifteen)
                               ],
                             ),
                           ),
@@ -177,13 +327,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Pekerjaan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyJobFifteen)
                               ],
                             ),
                           ),
@@ -200,15 +344,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Alamat',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  maxLines: 4,
-                                  // controller: alamatKTP,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan deskripsi pendidikan'
-                                  ),
-                                )
+                                Text(familyAddressFifteen)
                               ],
                             ),
                           ),
@@ -225,13 +361,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Tempat Lahir',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyPobFifteen)
                               ],
                             ),
                           ),
@@ -242,13 +372,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Tanggal Lahir',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyDobFifteen)
                               ],
                             ),
                           ),
@@ -259,13 +383,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Pendidikan Terakhir',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(educationNameFifteen)
                               ],
                             ),
                           ),
@@ -286,13 +404,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Hubungan Keluarga',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyTypeSixteen)
                               ],
                             ),
                           ),
@@ -303,13 +415,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Nama Lengkap',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyNameSixteen)
                               ],
                             ),
                           ),
@@ -320,13 +426,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Pekerjaan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyJobSixteen)
                               ],
                             ),
                           ),
@@ -343,15 +443,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Alamat',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  maxLines: 4,
-                                  // controller: alamatKTP,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan deskripsi pendidikan'
-                                  ),
-                                )
+                                Text(familyAddressSixteen)
                               ],
                             ),
                           ),
@@ -368,13 +460,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Tempat Lahir',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyPobSixteen)
                               ],
                             ),
                           ),
@@ -385,13 +471,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Tanggal Lahir',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyDobSixteen)
                               ],
                             ),
                           ),
@@ -402,13 +482,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Pendidikan Terakhir',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(educationNameSixteen)
                               ],
                             ),
                           ),
@@ -429,13 +503,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Hubungan Keluarga',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyTypeSeventeen)
                               ],
                             ),
                           ),
@@ -446,13 +514,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Nama Lengkap',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyNameSeventeen)
                               ],
                             ),
                           ),
@@ -463,13 +525,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Pekerjaan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyJobSeventeen)
                               ],
                             ),
                           ),
@@ -486,15 +542,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Alamat',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  maxLines: 4,
-                                  // controller: alamatKTP,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan deskripsi pendidikan'
-                                  ),
-                                )
+                                Text(familyAddressSeventeen)
                               ],
                             ),
                           ),
@@ -511,13 +559,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Tempat Lahir',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyPobSeventeen)
                               ],
                             ),
                           ),
@@ -528,13 +570,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Tanggal Lahir',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyDobSeventeen)
                               ],
                             ),
                           ),
@@ -545,13 +581,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Pendidikan Terakhir',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(educationNameSeventeen)
                               ],
                             ),
                           ),
@@ -572,13 +602,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Hubungan Keluarga',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyTypeEighteen)
                               ],
                             ),
                           ),
@@ -589,13 +613,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Nama Lengkap',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyNameEighteen)
                               ],
                             ),
                           ),
@@ -606,13 +624,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Pekerjaan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyJobEighteen)
                               ],
                             ),
                           ),
@@ -629,15 +641,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Alamat',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  maxLines: 4,
-                                  // controller: alamatKTP,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan deskripsi pendidikan'
-                                  ),
-                                )
+                                Text(familyAddressEighteen)
                               ],
                             ),
                           ),
@@ -654,13 +658,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Tempat Lahir',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyPobEighteen)
                               ],
                             ),
                           ),
@@ -671,13 +669,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Tanggal Lahir',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyDobEighteen)
                               ],
                             ),
                           ),
@@ -688,13 +680,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Pendidikan Terakhir',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(educationNameEighteen)
                               ],
                             ),
                           ),
@@ -715,13 +701,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Hubungan Keluarga',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyTypeNineteen)
                               ],
                             ),
                           ),
@@ -732,13 +712,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Nama Lengkap',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyNameNineteen)
                               ],
                             ),
                           ),
@@ -749,13 +723,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Pekerjaan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyJobNineteen)
                               ],
                             ),
                           ),
@@ -772,15 +740,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Alamat',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  maxLines: 4,
-                                  // controller: alamatKTP,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan deskripsi pendidikan'
-                                  ),
-                                )
+                                Text(familyAddressNineteen)
                               ],
                             ),
                           ),
@@ -797,13 +757,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Tempat Lahir',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyPobNineteen)
                               ],
                             ),
                           ),
@@ -814,13 +768,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Tanggal Lahir',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(familyDobNineteen)
                               ],
                             ),
                           ),
@@ -831,13 +779,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                               children: [
                                 Text('Pendidikan Terakhir',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan kemampuan bahasa'
-                                  ),
-                                )
+                                Text(educationNameNineteen)
                               ],
                             ),
                           ),

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hr_systems_web/web-version/full-access/Employee/Employee%20Detail/EmployeeDetailFour.dart';
@@ -25,10 +24,54 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
   final storage = GetStorage();
   bool isLoading = false;
 
+  String companyNameOne = '';
+  String companyNameTwo = '';
+  String companyNameThree = '';
+
+  String companyTypeOne = '';
+  String companyTypeTwo = '';
+  String companyTypeThree = '';
+
+  String positionOne = '';
+  String positionTwo = '';
+  String positionThree = '';
+
+  String addressOne = '';
+  String addressTwo = '';
+  String addressThree = '';
+
+  String startOne = '';
+  String startTwo = '';
+  String startThree = '';
+
+  String endOne = '';
+  String endTwo = '';
+  String endThree = '';
+
+  String managerOne = '';
+  String managerTwo = '';
+  String managerThree = '';
+
+  String salaryOne = '';
+  String salaryTwo = '';
+  String salaryThree = '';
+
+  String companyAddressOne = '';
+  String companyAddressTwo = '';
+  String companyAddressThree = '';
+  String jobDescOne = '';
+  String jobDescTwo = '';
+  String jobDescThree = '';
+
+  String leaveOne = '';
+  String leaveTwo = '';
+  String leaveThree = '';
+
   @override
   void initState() {
     super.initState();
     fetchData();
+    fetchDetailData();
   }
 
   Future<void> fetchData() async {
@@ -61,6 +104,107 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
       }
     } catch (e) {
       print('Exception during API call: $e');
+    } finally {
+      isLoading = false;
+    }
+  }
+
+  Future<void> fetchDetailData() async {
+    try{
+      isLoading = true;
+
+      String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getdetailemployee.php?action=3&employee_id=${widget.employeeID}';
+      var response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = json.decode(response.body);
+        Map<String, dynamic> data = (responseData['Data'] as List).first;
+
+        setState(() {
+          companyNameOne = data['company_name'] ?? '-';
+          companyTypeOne = data['company_type'] ?? '-';
+          positionOne = data['company_position'] ?? '-';
+          companyAddressOne = data['company_address'] ?? '-';
+          startOne = data['company_start'] ?? '-';
+          if(startOne == '0000-00-00'){
+            startOne = '-';
+          }
+          endOne = data['company_end'] ?? '-';
+          if(endOne == '0000-00-00'){
+            endOne = '-';
+          }
+          managerOne = data['company_leader'] ?? '-';
+          salaryOne = data['company_salary'] ?? '-';
+          leaveOne = data['company_leave'] ?? '-';
+          jobDescOne = data['company_jobdesc'] ?? '-';
+        });
+
+      } else {
+
+        print('Failed to load data: ${response.statusCode}');
+      }
+
+      String apiUrlFour = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getdetailemployee.php?action=4&employee_id=${widget.employeeID}';
+      var responseFour = await http.get(Uri.parse(apiUrlFour));
+
+      if (responseFour.statusCode == 200) {
+        Map<String, dynamic> responseDataFour = json.decode(responseFour.body);
+        Map<String, dynamic> dataFour = (responseDataFour['Data'] as List).first;
+
+        setState(() {
+          companyNameTwo = dataFour['company_name'] ?? '-';
+          companyTypeTwo = dataFour['company_type'] ?? '-';
+          positionTwo = dataFour['company_position'] ?? '-';
+          companyAddressTwo = dataFour['company_address'] ?? '-';
+          startTwo = dataFour['company_start'] ?? '-';
+          if(startTwo == '0000-00-00'){
+            startTwo = '-';
+          }
+          endTwo = dataFour['company_end'] ?? '-';
+          if(endTwo == '0000-00-00'){
+            endTwo = '-';
+          }
+          managerTwo = dataFour['company_leader'] ?? '-';
+          salaryTwo = dataFour['company_salary'] ?? '-';
+          leaveTwo = dataFour['company_leave'] ?? '-';
+          jobDescTwo = dataFour['company_jobdesc'] ?? '-';
+        });
+      } else {
+        print('Failed to load data: ${responseFour.statusCode}');
+      }
+
+      String apiUrlFive = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getdetailemployee.php?action=5&employee_id=${widget.employeeID}';
+      var responseFive = await http.get(Uri.parse(apiUrlFive));
+
+      if (responseFive.statusCode == 200) {
+        Map<String, dynamic> responseDataFive = json.decode(responseFive.body);
+        Map<String, dynamic> dataFive = (responseDataFive['Data'] as List).first;
+
+        setState(() {
+          companyAddressThree = dataFive['company_name'] ?? '-';
+          companyTypeThree = dataFive['company_type'] ?? '-';
+          positionThree = dataFive['company_position'] ?? '-';
+          companyAddressThree = dataFive['company_address'] ?? '-';
+          startThree = dataFive['company_start'] ?? '-';
+          if(startThree == '0000-00-00'){
+            startThree = '-';
+          }
+          endThree = dataFive['company_end'] ?? '-';
+          if(endThree == '0000-00-00'){
+            endThree = '-';
+          }
+          managerThree = dataFive['company_leader'] ?? '-';
+          salaryThree = dataFive['company_salary'] ?? '-';
+          leaveThree = dataFive['company_leave'] ?? '-';
+          jobDescThree = dataFive['company_jobdesc'] ?? '-';
+        });
+      } else {
+        print('Failed to load data: ${responseFive.statusCode}');
+      }
+
+    } catch (e){
+      print('Error at fetching detail one data : $e');
+      
     } finally {
       isLoading = false;
     }
@@ -144,13 +288,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Nama Perusahaan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan nama perusahaan'
-                                  ),
-                                )
+                                Text(companyNameOne)
                               ],
                             ),
                           ),
@@ -161,13 +299,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Jenis Usaha',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan jenis usaha'
-                                  ),
-                                )
+                                Text(companyTypeOne)
                               ],
                             ),
                           ),
@@ -178,13 +310,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Posisi',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan posisi'
-                                  ),
-                                )
+                                Text(positionOne)
                               ],
                             ),
                           ),
@@ -201,14 +327,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Alamat',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  maxLines: 3,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan alamat perusahaan'
-                                  ),
-                                )
+                                Text(companyAddressOne)
                               ],
                             ),
                           ),
@@ -225,18 +344,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Dari',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                DateTimePicker(
-                                  type: DateTimePickerType.date,
-                                  dateMask: 'd MMMM yyyy',
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(1900),
-                                  lastDate: DateTime(2100),
-                                  onChanged: (val) {
-                                    setState(() {
-                                      // employeeDob = DateFormat("yyyy-MM-dd").parse(val);
-                                    });
-                                  },
-                                )
+                                Text(startOne)
                               ],
                             ),
                           ),
@@ -247,18 +355,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Sampai',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                DateTimePicker(
-                                  type: DateTimePickerType.date,
-                                  dateMask: 'd MMMM yyyy',
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(1900),
-                                  lastDate: DateTime(2100),
-                                  onChanged: (val) {
-                                    setState(() {
-                                      // employeeDob = DateFormat("yyyy-MM-dd").parse(val);
-                                    });
-                                  },
-                                )
+                                Text(endOne)
                               ],
                             ),
                           ),
@@ -269,13 +366,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Atasan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan nama atasan'
-                                  ),
-                                )
+                                Text(managerOne)
                               ],
                             ),
                           ),
@@ -286,13 +377,47 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Gaji',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan gaji'
-                                  ),
-                                )
+                                Text(salaryOne)
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 7.sp,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width- 100.w) / 2,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Dekripsi Pekerjaan",
+                                  style: TextStyle(
+                                    fontSize: 4.sp,
+                                    fontWeight: FontWeight.w600,
+                                  )
+                                ),
+                                SizedBox(height: 7.h,),
+                                Text(jobDescOne)
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width- 100.w) / 2,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Alasan Keluar",
+                                  style: TextStyle(
+                                    fontSize: 4.sp,
+                                    fontWeight: FontWeight.w600,
+                                  )
+                                ),
+                                SizedBox(height: 7.h,),
+                                Text(leaveOne)
                               ],
                             ),
                           ),
@@ -313,13 +438,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Nama Perusahaan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan nama perusahaan'
-                                  ),
-                                )
+                                Text(companyNameTwo)
                               ],
                             ),
                           ),
@@ -330,13 +449,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Jenis Usaha',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan jenis usaha'
-                                  ),
-                                )
+                                Text(companyTypeTwo)
                               ],
                             ),
                           ),
@@ -347,13 +460,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Posisi',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan posisi'
-                                  ),
-                                )
+                                Text(positionTwo)
                               ],
                             ),
                           ),
@@ -370,14 +477,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Alamat',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  maxLines: 3,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan alamat perusahaan'
-                                  ),
-                                )
+                                Text(companyAddressTwo)
                               ],
                             ),
                           ),
@@ -394,18 +494,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Dari',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                DateTimePicker(
-                                  type: DateTimePickerType.date,
-                                  dateMask: 'd MMMM yyyy',
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(1900),
-                                  lastDate: DateTime(2100),
-                                  onChanged: (val) {
-                                    setState(() {
-                                      // employeeDob = DateFormat("yyyy-MM-dd").parse(val);
-                                    });
-                                  },
-                                )
+                                Text(startTwo)
                               ],
                             ),
                           ),
@@ -416,18 +505,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Sampai',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                DateTimePicker(
-                                  type: DateTimePickerType.date,
-                                  dateMask: 'd MMMM yyyy',
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(1900),
-                                  lastDate: DateTime(2100),
-                                  onChanged: (val) {
-                                    setState(() {
-                                      // employeeDob = DateFormat("yyyy-MM-dd").parse(val);
-                                    });
-                                  },
-                                )
+                                Text(endTwo)
                               ],
                             ),
                           ),
@@ -438,13 +516,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Atasan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan nama atasan'
-                                  ),
-                                )
+                                Text(managerTwo)
                               ],
                             ),
                           ),
@@ -455,13 +527,47 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Gaji',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan gaji'
-                                  ),
-                                )
+                                Text(salaryTwo)
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 7.sp,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width- 100.w) / 2,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Dekripsi Pekerjaan",
+                                  style: TextStyle(
+                                    fontSize: 4.sp,
+                                    fontWeight: FontWeight.w600,
+                                  )
+                                ),
+                                SizedBox(height: 7.h,),
+                                Text(jobDescTwo)
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width- 100.w) / 2,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Alasan Keluar",
+                                  style: TextStyle(
+                                    fontSize: 4.sp,
+                                    fontWeight: FontWeight.w600,
+                                  )
+                                ),
+                                SizedBox(height: 7.h,),
+                                Text(leaveTwo)
                               ],
                             ),
                           ),
@@ -482,13 +588,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Nama Perusahaan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan nama perusahaan'
-                                  ),
-                                )
+                                Text(companyNameThree)
                               ],
                             ),
                           ),
@@ -499,13 +599,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Jenis Usaha',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan jenis usaha'
-                                  ),
-                                )
+                                Text(companyTypeThree)
                               ],
                             ),
                           ),
@@ -516,13 +610,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Posisi',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan posisi'
-                                  ),
-                                )
+                                Text(positionThree)
                               ],
                             ),
                           ),
@@ -539,14 +627,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Alamat',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  maxLines: 3,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan alamat perusahaan'
-                                  ),
-                                )
+                                Text(companyAddressThree)
                               ],
                             ),
                           ),
@@ -563,18 +644,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Dari',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                DateTimePicker(
-                                  type: DateTimePickerType.date,
-                                  dateMask: 'd MMMM yyyy',
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(1900),
-                                  lastDate: DateTime(2100),
-                                  onChanged: (val) {
-                                    setState(() {
-                                      // employeeDob = DateFormat("yyyy-MM-dd").parse(val);
-                                    });
-                                  },
-                                )
+                                Text(startThree)
                               ],
                             ),
                           ),
@@ -585,18 +655,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Sampai',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                DateTimePicker(
-                                  type: DateTimePickerType.date,
-                                  dateMask: 'd MMMM yyyy',
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(1900),
-                                  lastDate: DateTime(2100),
-                                  onChanged: (val) {
-                                    setState(() {
-                                      // employeeDob = DateFormat("yyyy-MM-dd").parse(val);
-                                    });
-                                  },
-                                )
+                                Text(endThree)
                               ],
                             ),
                           ),
@@ -607,13 +666,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Atasan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan nama atasan'
-                                  ),
-                                )
+                                Text(managerThree)
                               ],
                             ),
                           ),
@@ -624,74 +677,7 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                               children: [
                                 Text('Gaji',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
                                 SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan gaji'
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 7.sp,),
-                      const Divider(),
-                      SizedBox(height: 7.sp,),
-                      Text('Perusahaan Keempat',style: TextStyle(fontSize: 5.sp,fontWeight: FontWeight.w700,)),
-                      SizedBox(height: 7.sp,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Nama Perusahaan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan nama perusahaan'
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Jenis Usaha',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan jenis usaha'
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Posisi',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan posisi'
-                                  ),
-                                )
+                                Text(salaryThree)
                               ],
                             ),
                           ),
@@ -702,273 +688,36 @@ class _EmployeeDetailThreeState extends State<EmployeeDetailThree> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                            width: (MediaQuery.of(context).size.width - 88.w),
+                            width: (MediaQuery.of(context).size.width- 100.w) / 2,
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Alamat',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  maxLines: 3,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan alamat perusahaan'
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 7.sp,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 4,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Dari',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                DateTimePicker(
-                                  type: DateTimePickerType.date,
-                                  dateMask: 'd MMMM yyyy',
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(1900),
-                                  lastDate: DateTime(2100),
-                                  onChanged: (val) {
-                                    setState(() {
-                                      // employeeDob = DateFormat("yyyy-MM-dd").parse(val);
-                                    });
-                                  },
-                                )
+                                Text("Dekripsi Pekerjaan",
+                                  style: TextStyle(
+                                    fontSize: 4.sp,
+                                    fontWeight: FontWeight.w600,
+                                  )
+                                ),
+                                SizedBox(height: 7.h,),
+                                Text(jobDescThree)
                               ],
                             ),
                           ),
                           SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 4,
+                            width: (MediaQuery.of(context).size.width- 100.w) / 2,
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Sampai',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                DateTimePicker(
-                                  type: DateTimePickerType.date,
-                                  dateMask: 'd MMMM yyyy',
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(1900),
-                                  lastDate: DateTime(2100),
-                                  onChanged: (val) {
-                                    setState(() {
-                                      // employeeDob = DateFormat("yyyy-MM-dd").parse(val);
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 4,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Atasan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan nama atasan'
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 4,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Gaji',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan gaji'
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 7.sp,),
-                      const Divider(),
-                      SizedBox(height: 7.sp,),
-                      Text('Perusahaan Kelima',style: TextStyle(fontSize: 5.sp,fontWeight: FontWeight.w700,)),
-                      SizedBox(height: 7.sp,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Nama Perusahaan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan nama perusahaan'
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Jenis Usaha',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan jenis usaha'
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Posisi',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan posisi'
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 7.sp,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 88.w),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Alamat',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  maxLines: 3,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan alamat perusahaan'
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 7.sp,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 4,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Dari',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                DateTimePicker(
-                                  type: DateTimePickerType.date,
-                                  dateMask: 'd MMMM yyyy',
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(1900),
-                                  lastDate: DateTime(2100),
-                                  onChanged: (val) {
-                                    setState(() {
-                                      // employeeDob = DateFormat("yyyy-MM-dd").parse(val);
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 4,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Sampai',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                DateTimePicker(
-                                  type: DateTimePickerType.date,
-                                  dateMask: 'd MMMM yyyy',
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(1900),
-                                  lastDate: DateTime(2100),
-                                  onChanged: (val) {
-                                    setState(() {
-                                      // employeeDob = DateFormat("yyyy-MM-dd").parse(val);
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 4,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Atasan',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan nama atasan'
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 100.w) / 4,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Gaji',style: TextStyle(fontSize: 4.sp,fontWeight: FontWeight.w600,)),
-                                SizedBox(height: 2.sp,),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan gaji'
-                                  ),
-                                )
+                                Text("Alasan Keluar",
+                                  style: TextStyle(
+                                    fontSize: 4.sp,
+                                    fontWeight: FontWeight.w600,
+                                  )
+                                ),
+                                SizedBox(height: 7.h,),
+                                Text(leaveThree)
                               ],
                             ),
                           ),

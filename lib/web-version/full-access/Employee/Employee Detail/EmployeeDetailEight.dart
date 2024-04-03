@@ -9,6 +9,7 @@ import 'package:get_storage/get_storage.dart';
 
 class EmployeeDetailEight extends StatefulWidget {
   final String employeeID;
+
   const EmployeeDetailEight({super.key, required this.employeeID});
 
   @override
@@ -23,6 +24,7 @@ class _EmployeeDetailEightState extends State<EmployeeDetailEight> {
   String trimmedCompanyAddress = '';
   final storage = GetStorage();
   bool isLoading = false;
+  String namaKaryawan = '';
 
   @override
   void initState() {
@@ -152,7 +154,7 @@ class _EmployeeDetailEightState extends State<EmployeeDetailEight> {
                           SizedBox(width: 10.w,),
                           ElevatedButton(
                             onPressed: (){
-                              Get.to(EmployeeOverviewPage(widget.employeeID));
+                              Get.to(EmployeeOverviewPage(widget.employeeID, namaKaryawan));
                             }, 
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(50.w, 55.h),
