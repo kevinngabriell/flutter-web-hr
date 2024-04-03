@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hr_systems_web/web-version/full-access/Employee/Employee%20Detail/EmployeeDetailSeven.dart';
+import 'package:hr_systems_web/web-version/full-access/Employee/UpdateData/UpdateDataSix.dart';
 import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -78,6 +79,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
   void initState() {
     super.initState();
     fetchData();
+    fetchDetailData();
   }
 
   Future<void> fetchDetailData() async {
@@ -813,7 +815,7 @@ class _EmployeeDetailSixState extends State<EmployeeDetailSix> {
                             children: [
                               ElevatedButton(
                                 onPressed: (){
-                          
+                                    Get.to(UpdateDataSix(employeeID: widget.employeeID));
                                 }, 
                                 style: ElevatedButton.styleFrom(
                                   minimumSize: Size(50.w, 55.h),

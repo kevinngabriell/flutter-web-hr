@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, avoid_print, non_constant_identifier_names
 
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +10,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
 import 'package:hr_systems_web/web-version/full-access/index.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class VerifyAbsence extends StatefulWidget {
   const VerifyAbsence({super.key});
@@ -92,6 +94,41 @@ class _VerifyAbsenceState extends State<VerifyAbsence> {
 
       try {
         String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/absent/verifyabsent.php';
+
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          body: {
+            "absence_id": absence_id
+          }
+        );
+
+        if(response.statusCode == 200){
+         
+          // Access the GetStorage instance
+          final storage = GetStorage();
+
+          // Retrieve the stored employee_id
+          var employeeId = storage.read('employee_id');
+          isLoading = false;
+          Get.to(FullIndexWeb(employeeId));
+        } else {
+          Get.snackbar('Gagal', response.body);
+          print('Failed to insert employee. Status code: ${response.statusCode}');
+          print('Response body: ${response.body}');
+        }
+
+      } catch (e){
+        Get.snackbar('Gagal', '$e');
+        print('Exception during API call: $e');
+      }    
+  }
+
+  Future<void> delete(absence_id) async {
+
+      isLoading = true;
+
+      try {
+        String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/absent/deleteabsence.php';
 
         final response = await http.post(
           Uri.parse(apiUrl),
@@ -236,7 +273,7 @@ class _VerifyAbsenceState extends State<VerifyAbsence> {
                                       DataCell(
                                         SizedBox(
                                           width: 26.w,
-                                          child: Text(employee['date'])
+                                          child: Text(formatDate(employee['date']))
                                         )
                                       ),
                                       DataCell(
@@ -256,6 +293,8 @@ class _VerifyAbsenceState extends State<VerifyAbsence> {
                                             showDialog(
                                               context: context, 
                                               builder: (_) {
+                                                String base64String = employee['photo'];
+                                                Uint8List bytes = base64.decode(base64String);
                                                 return AlertDialog(
                                                   title: Text(
                                                     'Detail Absen', 
@@ -274,14 +313,14 @@ class _VerifyAbsenceState extends State<VerifyAbsence> {
                                                           mainAxisAlignment: MainAxisAlignment.center,
                                                           crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
-                                                            Text(employee['absence_id']),
+                                                            Image.memory(bytes),
                                                             const SizedBox(width: 30),
                                                             Column(
                                                               crossAxisAlignment: CrossAxisAlignment.start,
                                                               mainAxisAlignment: MainAxisAlignment.center,
                                                               children: [
                                                                 buildDetailField('Tipe Absen', employee['presence_type_name']),
-                                                                buildDetailField('Tanggal Absen', employee['date']),
+                                                                buildDetailField('Tanggal Absen', formatDate(employee['date'])),
                                                                 buildDetailField('Jam Absen', employee['time']),
                                                                 buildDetailField('Lokasi', employee['location'], maxLines: 3),
                                                               ],
@@ -293,42 +332,34 @@ class _VerifyAbsenceState extends State<VerifyAbsence> {
                                                   ),
                                                   actions: [
                                                     TextButton(
+                                                      onPressed: (){
+                                                        delete(employee['absence_id']);
+                                                      },
+                                                      child: const Text('Hapus Data'),
+                                                    ),
+                                                    TextButton(
                                                       onPressed: () async {await updateVerify(employee['absence_id']);},
                                                       child: const Text('Verifikasi Absen')
                                                     ),
                                                     TextButton(
-                                                      onPressed: () => Navigator.of(context).pop(),
+                                                      onPressed: (){
+                                                        Get.back();
+                                                      },
                                                       child: const Text('Kembali'),
                                                     ),
                                                   ],
                                                 );
                                               }
                                             );
-                                              // showDialog(
-                                              //   context: context,
-                                              //   builder: (_) {
-                                              //     return const AlertDialog(
-                                              //       content: Row(
-                                              //         children: [
-                                              //           CircularProgressIndicator(),
-                                              //           SizedBox(width: 20),
-                                              //           Text('Loading ...'),
-                                              //         ],
-                                              //       ),
-                                              //     );
-                                              //   },
-                                              // );
-
-                                              // try {
-                                              //   await updateVerify(employee['absence_id']);
-                                              //   // await pickFile(); // Wait for pickFile to complete
-                                              //   // Handle the file data as needed after picking is complete
-                                              // } finally {
-                                              //   isLoading = false;
-                                              //   Get.snackbar('Sukses', 'Absen telah berhasil diverifikasi');
-                                              //   Get.to(FullIndexWeb(employeeId));
-                                              // }
                                           }, 
+                                          style: ElevatedButton.styleFrom(
+                                            minimumSize: Size(20.w, 35.h),
+                                            foregroundColor: const Color(0xFFFFFFFF),
+                                            backgroundColor: const Color(0xff4ec3fc),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                          ),
                                           child: const Text('Verifikasi')
                                         )
                                       ),
@@ -390,5 +421,13 @@ class _VerifyAbsenceState extends State<VerifyAbsence> {
         const SizedBox(height: 20),
       ],
     );
+  }
+
+  String formatDate(String date) {
+    // Parse the date string
+    DateTime parsedDate = DateFormat("yyyy-MM-dd").parse(date);
+
+    // Format the date as "dd MMMM yyyy"
+    return DateFormat("d MMMM yyyy", 'id').format(parsedDate);
   }
 }

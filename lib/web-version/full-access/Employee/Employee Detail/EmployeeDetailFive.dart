@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hr_systems_web/web-version/full-access/Employee/Employee%20Detail/EmployeeDetailSix.dart';
+import 'package:hr_systems_web/web-version/full-access/Employee/UpdateData/UpdateDataFive.dart';
 import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -203,7 +204,7 @@ class _EmployeeDetailFiveState extends State<EmployeeDetailFive> {
                         SizedBox(height: 5.sp,),
                         BerandaNonActive(employeeId: employeeId.toString()),
                         SizedBox(height: 5.sp,),
-                        KaryawanNonActive(employeeId: employeeId.toString()),
+                        KaryawanActive(employeeId: employeeId.toString()),
                         SizedBox(height: 5.sp,),
                         const GajiNonActive(),
                         SizedBox(height: 5.sp,),
@@ -213,7 +214,7 @@ class _EmployeeDetailFiveState extends State<EmployeeDetailFive> {
                         SizedBox(height: 5.sp,),
                         const AcaraNonActive(),
                         SizedBox(height: 5.sp,),
-                        const LaporanActive(),
+                        LaporanNonActive(positionId: positionId),
                         SizedBox(height: 10.sp,),
                         const PengaturanMenu(),
                         SizedBox(height: 5.sp,),
@@ -643,7 +644,7 @@ class _EmployeeDetailFiveState extends State<EmployeeDetailFive> {
                             children: [
                               ElevatedButton(
                                 onPressed: (){
-                          
+                                  Get.to(UpdateDataFive(employeeId: widget.employeeID));
                                 }, 
                                 style: ElevatedButton.styleFrom(
                                   minimumSize: Size(50.w, 55.h),

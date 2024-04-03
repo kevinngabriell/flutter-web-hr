@@ -1,25 +1,24 @@
-// ignore_for_file: file_names, avoid_print, prefer_interpolation_to_compose_strings, unnecessary_string_interpolations
-
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:hr_systems_web/web-version/full-access/Employee/Add%20New%20Employee/AddNewEmployeeFour.dart';
 import 'package:hr_systems_web/web-version/full-access/Employee/EmployeeList.dart';
+import 'package:hr_systems_web/web-version/full-access/Employee/UpdateData/UpdateDataFour.dart';
 import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
-import 'package:intl/intl.dart'; 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
-class AddNewEmployeeThree extends StatefulWidget {
-  const AddNewEmployeeThree({super.key});
+class UpdateDataThree extends StatefulWidget {
+  final String employeeId;
+  const UpdateDataThree({super.key, required this.employeeId});
 
   @override
-  State<AddNewEmployeeThree> createState() => _AddNewEmployeeThreeState();
+  State<UpdateDataThree> createState() => _UpdateDataThreeState();
 }
 
-class _AddNewEmployeeThreeState extends State<AddNewEmployeeThree> {
+class _UpdateDataThreeState extends State<UpdateDataThree> {
   DateTime? dateTimeDari1;
   DateTime? dateTimeDari2;
   DateTime? dateTimeDari3;
@@ -51,7 +50,6 @@ class _AddNewEmployeeThreeState extends State<AddNewEmployeeThree> {
   TextEditingController txtGaji3 = TextEditingController();
   TextEditingController txtDeskripsi3 = TextEditingController();
   TextEditingController txtAlasan3 = TextEditingController();
-  String id = '';
 
   String companyName = '';
   String companyAddress = '';
@@ -59,14 +57,21 @@ class _AddNewEmployeeThreeState extends State<AddNewEmployeeThree> {
   String employeeEmail = '';
   String trimmedCompanyAddress = '';
   List<dynamic> profileData = [];
+  final storage = GetStorage();
+
+  String dateOne = '';
+  String dateTwo = '';
+  String dateThree = '';
+  String dateFour = '';
+  String dateFive = '';
+  String dateSix = '';
+
   @override
   void initState() {
     super.initState();
-    fetchLastID();
     fetchData();
+    fetchDetailData();
   }
-
-  final storage = GetStorage();
 
   Future<void> fetchData() async {
     String employeeId = storage.read('employee_id').toString();
@@ -106,42 +111,89 @@ class _AddNewEmployeeThreeState extends State<AddNewEmployeeThree> {
     }
   }
 
-  Future<void> fetchLastID() async {
-  const apiUrl =
-      'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getlastidforinput.php';
+  Future<void> fetchDetailData() async {
+    try{
+      isLoading = true;
 
-  try {
-    isLoading = true;
-    // Making GET request
-    final response = await http.get(Uri.parse(apiUrl));
+      String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getdetailemployee.php?action=3&employee_id=${widget.employeeId}';
+      var response = await http.get(Uri.parse(apiUrl));
 
-    // Checking if the request was successful (status code 200)
-    if (response.statusCode == 200) {
-      // Parsing the response body
-      final Map<String, dynamic> responseBody = json.decode(response.body);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = json.decode(response.body);
+        Map<String, dynamic> data = (responseData['Data'] as List).first;
 
-      // Extracting the 'Data' array from the response
-      final List<dynamic> data = responseBody['Data'];
+        setState(() {
+          txtNamaPerusahaan1.text = data['company_name'] ?? '-';
+          txtJenisUsaha1.text = data['company_type'] ?? '-';
+          txtPosisi1.text = data['company_position'] ?? '-';
+          txtAlamat1.text = data['company_address'] ?? '-';
+          dateOne = data['company_start'];
+          dateTwo = data['company_end'];
+          txtAtasan1.text = data['company_leader'] ?? '-';
+          txtGaji1.text = data['company_salary'] ?? '-';
+          txtAlasan1.text = data['company_leave'] ?? '-';
+          txtDeskripsi1.text = data['company_jobdesc'] ?? '-';
+        });
 
-      // Accessing the first object in the 'Data' array
-      final Map<String, dynamic> firstDataObject = data.isNotEmpty ? data[0] : {};
+      } else {
 
-      // Extracting the 'id' value from the first object
-      id = firstDataObject['id'];
+        print('Failed to load data: ${response.statusCode}');
+      }
 
-      // Now you can use the 'id' variable as needed
-      print('Last ID: $id');
-    } else {
-      print('Failed to load data. Status code: ${response.statusCode}');
+      String apiUrlFour = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getdetailemployee.php?action=4&employee_id=${widget.employeeId}';
+      var responseFour = await http.get(Uri.parse(apiUrlFour));
+
+      if (responseFour.statusCode == 200) {
+        Map<String, dynamic> responseDataFour = json.decode(responseFour.body);
+        Map<String, dynamic> dataFour = (responseDataFour['Data'] as List).first;
+
+        setState(() {
+          txtNamaPerusahaan2.text = dataFour['company_name'] ?? '-';
+          txtJenisUsaha2.text = dataFour['company_type'] ?? '-';
+          txtPosisi2.text = dataFour['company_position'] ?? '-';
+          txtAlamat2.text = dataFour['company_address'] ?? '-';
+          dateThree = dataFour['company_start'];
+          dateFour = dataFour['company_end'];
+          txtAtasan2.text = dataFour['company_leader'] ?? '-';
+          txtGaji2.text = dataFour['company_salary'] ?? '-';
+          txtAlasan2.text = dataFour['company_leave'] ?? '-';
+          txtDeskripsi2.text = dataFour['company_jobdesc'] ?? '-';
+        });
+      } else {
+        print('Failed to load data: ${responseFour.statusCode}');
+      }
+
+      String apiUrlFive = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getdetailemployee.php?action=5&employee_id=${widget.employeeId}';
+      var responseFive = await http.get(Uri.parse(apiUrlFive));
+
+      if (responseFive.statusCode == 200) {
+        Map<String, dynamic> responseDataFive = json.decode(responseFive.body);
+        Map<String, dynamic> dataFive = (responseDataFive['Data'] as List).first;
+
+        setState(() {
+          txtNamaPerusahaan3.text = dataFive['company_name'] ?? '-';
+          txtJenisUsaha3.text = dataFive['company_type'] ?? '-';
+          txtPosisi3.text = dataFive['company_position'] ?? '-';
+          txtAlamat3.text = dataFive['company_address'] ?? '-';
+          dateFive = dataFive['company_start'];
+          dateSix = dataFive['company_end'];
+          txtAtasan3.text = dataFive['company_leader'] ?? '-';
+          txtGaji3.text = dataFive['company_salary'] ?? '-';
+          txtAlasan3.text = dataFive['company_leave'] ?? '-';
+          txtDeskripsi3.text = dataFive['company_jobdesc'] ?? '-';
+        });
+      } else {
+        print('Failed to load data: ${responseFive.statusCode}');
+      }
+
+    } catch (e){
+      print('Error at fetching detail one data : $e');
+      
+    } finally {
+      isLoading = false;
     }
-  } catch (e) {
-    isLoading = false;
-    print('Error: $e');
-  } finally {
-    isLoading = false;
   }
-}
-  
+
   Future<void> insertEmployee() async {
     try{
       isLoading = true;
@@ -150,7 +202,7 @@ class _AddNewEmployeeThreeState extends State<AddNewEmployeeThree> {
       final response = await http.post(
         Uri.parse(apiUrl),
         body: {
-          "id": id,
+          "id": widget.employeeId,
           "company_name_1" : txtNamaPerusahaan1.text,
           "company_position_1" : txtPosisi1.text,
           "company_address_1" : txtAlamat1.text,
@@ -187,8 +239,7 @@ class _AddNewEmployeeThreeState extends State<AddNewEmployeeThree> {
       );
 
       if (response.statusCode == 200) {
-        Get.to(const AddNewEmployeeFour());
-        // Add any additional logic or UI updates after successful insertion
+        Get.to(UpdateDataFour(employeeId: widget.employeeId,));
       } else {
         showDialog(
           context: context, 
@@ -233,7 +284,7 @@ class _AddNewEmployeeThreeState extends State<AddNewEmployeeThree> {
       isLoading = false;
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     // Access the GetStorage instance
@@ -262,30 +313,30 @@ class _AddNewEmployeeThreeState extends State<AddNewEmployeeThree> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       NamaPerusahaanMenu(companyName: companyName, companyAddress: trimmedCompanyAddress),
-                      SizedBox(height: 10.sp,),
-                      const HalamanUtamaMenu(),
-                      SizedBox(height: 5.sp,),
-                      BerandaNonActive(employeeId: employeeId.toString()),
-                      SizedBox(height: 5.sp,),
-                      KaryawanActive(employeeId: employeeId.toString()),
-                      SizedBox(height: 5.sp,),
-                      const GajiNonActive(),
-                      SizedBox(height: 5.sp,),
-                      const PerformaNonActive(),
-                      SizedBox(height: 5.sp,),
-                      const PelatihanNonActive(),
-                      SizedBox(height: 5.sp,),
-                      const AcaraNonActive(),
-                      SizedBox(height: 5.sp,),
-                      LaporanNonActive(positionId: positionId),
-                      SizedBox(height: 10.sp,),
-                      const PengaturanMenu(),
-                      SizedBox(height: 5.sp,),
-                      const PengaturanNonActive(),
-                      SizedBox(height: 5.sp,),
-                      const StrukturNonActive(),
-                      SizedBox(height: 5.sp,),
-                      const Logout(),
+                        SizedBox(height: 10.sp,),
+                        const HalamanUtamaMenu(),
+                        SizedBox(height: 5.sp,),
+                        BerandaNonActive(employeeId: employeeId.toString()),
+                        SizedBox(height: 5.sp,),
+                        KaryawanActive(employeeId: employeeId.toString()),
+                        SizedBox(height: 5.sp,),
+                        const GajiNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const PerformaNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const PelatihanNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const AcaraNonActive(),
+                        SizedBox(height: 5.sp,),
+                        LaporanNonActive(positionId: widget.employeeId,),
+                        SizedBox(height: 10.sp,),
+                        const PengaturanMenu(),
+                        SizedBox(height: 5.sp,),
+                        const PengaturanNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const StrukturNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const Logout(),
                     ],
                   ),
                 ),
@@ -1015,6 +1066,7 @@ class _AddNewEmployeeThreeState extends State<AddNewEmployeeThree> {
                                     lastDate: DateTime(2100),
                                     initialDate: DateTime.now(),
                                     dateMask: 'd MMM yyyy',
+                                    initialValue: dateFive,
                                     onChanged: (value) {
                                       setState(() {
                                         dateTimeDari3 = DateFormat('yyyy-MM-dd').parse(value);
@@ -1044,6 +1096,7 @@ class _AddNewEmployeeThreeState extends State<AddNewEmployeeThree> {
                                     lastDate: DateTime(2100),
                                     initialDate: DateTime.now(),
                                     dateMask: 'd MMM yyyy',
+                                    initialValue: dateSix,
                                     onChanged: (value) {
                                       setState(() {
                                         dateTimeSampai3 = DateFormat('yyyy-MM-dd').parse(value);
@@ -1167,25 +1220,49 @@ class _AddNewEmployeeThreeState extends State<AddNewEmployeeThree> {
                       ),
                       SizedBox(height: 10.sp,),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
-                        onPressed: () {
-                          insertEmployee();
-                          // Get.to(const AddNewEmployeeFour());
-                        }, 
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(60.w, 55.h),
-                          foregroundColor: const Color(0xFFFFFFFF),
-                          backgroundColor: const Color(0xff4ec3fc),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: (){
+                                    Get.back();
+                                  }, 
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    alignment: Alignment.center,
+                                    minimumSize: Size(60.w, 55.h),
+                                    foregroundColor: const Color(0xFFFFFFFF),
+                                    backgroundColor: Colors.red,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  ),
+                                  child: const Text('Kembali')
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: (){
+                                    insertEmployee();
+                                  }, 
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    alignment: Alignment.center,
+                                    minimumSize: Size(60.w, 55.h),
+                                    foregroundColor: const Color(0xFFFFFFFF),
+                                    backgroundColor: const Color(0xff4ec3fc),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  ),
+                                  child: const Text('Update & Berikutnya')
+                                )
+                              ],
+                            ),
+                          ],
                         ),
-                        child: const Text('Berikutnya')
-                      ),
-                        ],
-                      ),
+                        SizedBox(height: 10.sp,),
                       SizedBox(height: 40.sp,),
                     ],
                   ),

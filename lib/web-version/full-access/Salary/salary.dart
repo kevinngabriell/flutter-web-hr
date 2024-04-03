@@ -1669,7 +1669,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                             child: Text(
                               'Overview', 
                               style: TextStyle(
-                                fontSize: 15.sp, 
+                                fontSize: 4.sp, 
                                 fontWeight: FontWeight.w400,
                                 //color: tabController.index == 0 ? Color.fromRGBO(78, 195, 252, 1) : Colors.black
                               ),
@@ -1679,7 +1679,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                             child: Text(
                               'Gaji Saya', 
                               style: TextStyle(
-                                fontSize: 15.sp, 
+                                fontSize: 4.sp, 
                                 fontWeight: FontWeight.w400,
                                 //color: tabController.index == 0 ? Color.fromRGBO(78, 195, 252, 1) : Colors.black
                               ),
@@ -1690,7 +1690,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                               child: Text(
                                 'Gaji Karyawan', 
                                 style: TextStyle(
-                                  fontSize: 15.sp, 
+                                  fontSize: 4.sp, 
                                   fontWeight: FontWeight.w400,
                                   //color: tabController.index == 0 ? Color.fromRGBO(78, 195, 252, 1) : Colors.black
                                 ),
@@ -1718,7 +1718,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                             width: MediaQuery.of(context).size.width - 180.w,
                                             child: Card(
                                               child: Padding(
-                                                padding: EdgeInsets.only(left: 15.sp, top: 13.sp, right: 15.sp, bottom: 13.sp),
+                                                padding: EdgeInsets.only(left: 4.sp, top: 13.sp, right: 4.sp, bottom: 13.sp),
                                                 child: Row(
                                                   children: [
                                                     SizedBox(
@@ -1728,13 +1728,13 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                         children: [
                                                           Text('Pendataan Gaji $previousMonth - $currentNextMonth $year',
                                                             style: TextStyle(
-                                                              fontSize: 20.sp, fontWeight: FontWeight.w700,
+                                                              fontSize: 7.sp, fontWeight: FontWeight.w700,
                                                             )
                                                           ),
                                                           SizedBox(height: 5.h,),
                                                           Text( 'Proses pendataan gaji karyawan untuk bulan $previousMonth - $currentNextMonth $year',
                                                             style: TextStyle(
-                                                              fontSize: 12.sp, fontWeight: FontWeight.w300,
+                                                              fontSize: 4.sp, fontWeight: FontWeight.w300,
                                                             )
                                                           ),
                                                           SizedBox(height: 20.h,),
@@ -1771,12 +1771,12 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                             width: MediaQuery.of(context).size.width - 270.w,
                                             child: Card(
                                               child: Padding(
-                                                padding: EdgeInsets.only(left: 15.sp, top: 13.sp, right: 15.sp, bottom: 13.sp),
+                                                padding: EdgeInsets.only(left: 4.sp, top: 13.sp, right: 4.sp, bottom: 13.sp),
                                                 child: Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    Text('$angkaAbsen', style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.w700,)),
-                                                    Text('Total absen yang belum diverifikasi',style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400))
+                                                    Text('$angkaAbsen', style: TextStyle(fontSize: 7.sp, fontWeight: FontWeight.w700,)),
+                                                    Text('Total absen yang belum diverifikasi',style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w400))
                                                   ],
                                                 ),
                                               ),
@@ -1799,7 +1799,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                     children: [
                                       Text('Periode',
                                         style: TextStyle(
-                                          fontSize: 14.sp,
+                                          fontSize: 4.sp,
                                           fontWeight: FontWeight.w600,
                                         )
                                       ),
@@ -2414,18 +2414,18 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                         children: [
                                           Text('Pendapatan',
                                             style: TextStyle(
-                                              fontSize: 16.sp,
+                                              fontSize: 6.sp,
                                               fontWeight: FontWeight.w600,
                                             )
                                           ),
-                                          SizedBox(height: 25.h,),
+                                          SizedBox(height: 15.h,),
                                           Row(
                                             children: [
                                               SizedBox(
                                                 width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                 child: Text('Gaji pokok',
                                                   style: TextStyle(
-                                                    fontSize: 14.sp,
+                                                    fontSize: 4.sp,
                                                     fontWeight: FontWeight.w600,
                                                   )
                                                 ),
@@ -2443,7 +2443,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                 width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                 child: Text('Tunjangan jabatan',
                                                   style: TextStyle(
-                                                    fontSize: 14.sp,
+                                                    fontSize: 4.sp,
                                                     fontWeight: FontWeight.w600,
                                                   )
                                                 ),
@@ -2461,7 +2461,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                 width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                 child: Text('BPJS Ketenagakerjaan + JP',
                                                   style: TextStyle(
-                                                    fontSize: 14.sp,
+                                                    fontSize: 4.sp,
                                                     fontWeight: FontWeight.w600,
                                                   )
                                                 ),
@@ -2479,7 +2479,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                 width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                 child: Text('BPJS Kesehatan',
                                                   style: TextStyle(
-                                                    fontSize: 14.sp,
+                                                    fontSize: 4.sp,
                                                     fontWeight: FontWeight.w600,
                                                   )
                                                 ),
@@ -2497,7 +2497,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                 width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                 child: Text('Lembur',
                                                   style: TextStyle(
-                                                    fontSize: 14.sp,
+                                                    fontSize: 4.sp,
                                                     fontWeight: FontWeight.w600,
                                                   )
                                                 ),
@@ -2515,7 +2515,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                 width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                 child: Text('Transport',
                                                   style: TextStyle(
-                                                    fontSize: 14.sp,
+                                                    fontSize: 4.sp,
                                                     fontWeight: FontWeight.w600,
                                                   )
                                                 ),
@@ -2533,7 +2533,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                 width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                 child: Text('Lainnya',
                                                   style: TextStyle(
-                                                    fontSize: 14.sp,
+                                                    fontSize: 4.sp,
                                                     fontWeight: FontWeight.w600,
                                                   )
                                                 ),
@@ -2555,18 +2555,18 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                         children: [
                                           Text('Pemotongan',
                                             style: TextStyle(
-                                              fontSize: 16.sp,
+                                              fontSize: 6.sp,
                                               fontWeight: FontWeight.w600,
                                             )
                                           ),
-                                          SizedBox(height: 25.h,),
+                                          SizedBox(height: 15.h,),
                                           Row(
                                             children: [
                                               SizedBox(
                                                 width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                 child: Text('Pinjaman',
                                                   style: TextStyle(
-                                                    fontSize: 14.sp,
+                                                    fontSize: 4.sp,
                                                     fontWeight: FontWeight.w600,
                                                   )
                                                 ),
@@ -2584,7 +2584,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                 width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                 child: Text('Pajak (PPH 21)',
                                                   style: TextStyle(
-                                                    fontSize: 14.sp,
+                                                    fontSize: 4.sp,
                                                     fontWeight: FontWeight.w600,
                                                   )
                                                 ),
@@ -2602,7 +2602,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                 width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                 child: Text('BPJS Ketenag',
                                                   style: TextStyle(
-                                                    fontSize: 14.sp,
+                                                    fontSize: 4.sp,
                                                     fontWeight: FontWeight.w600,
                                                   )
                                                 ),
@@ -2620,7 +2620,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                 width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                 child: Text('BPJS Kesehatan',
                                                   style: TextStyle(
-                                                    fontSize: 14.sp,
+                                                    fontSize: 4.sp,
                                                     fontWeight: FontWeight.w600,
                                                   )
                                                 ),
@@ -2638,7 +2638,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                 width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                 child: Text('BPJS Ketenag',
                                                   style: TextStyle(
-                                                    fontSize: 14.sp,
+                                                    fontSize: 4.sp,
                                                     fontWeight: FontWeight.w600,
                                                   )
                                                 ),
@@ -2656,7 +2656,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                 width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                 child: Text('BPJS Kesehatan',
                                                   style: TextStyle(
-                                                    fontSize: 14.sp,
+                                                    fontSize: 4.sp,
                                                     fontWeight: FontWeight.w600,
                                                   )
                                                 ),
@@ -2674,7 +2674,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                 width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                 child: Text('PPH atas bonus/komisi',
                                                   style: TextStyle(
-                                                    fontSize: 14.sp,
+                                                    fontSize: 4.sp,
                                                     fontWeight: FontWeight.w600,
                                                   )
                                                 ),
@@ -2692,7 +2692,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                 width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                 child: Text('Lainnya',
                                                   style: TextStyle(
-                                                    fontSize: 14.sp,
+                                                    fontSize: 4.sp,
                                                     fontWeight: FontWeight.w600,
                                                   )
                                                 ),
@@ -2716,23 +2716,23 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                       width: (MediaQuery.of(context).size.width  + 10.w) / 2,
                                       child: Text('Total Pendapatan', 
                                         style: TextStyle(
-                                          fontSize: 16.sp,
+                                          fontSize: 4.sp,
                                           fontWeight: FontWeight.w600,
                                         )
                                       )
                                     ),
-                                    SizedBox(width: 10.w,),
+                                    SizedBox(width: 20.w,),
                                      SizedBox(
                                       width: (MediaQuery.of(context).size.width  - 250.w) / 2,
                                       child: Text(formatCurrency(mytotalEarnings),
                                               style: TextStyle(
-                                                  fontSize: 16.sp,
+                                                  fontSize: 4.sp,
                                               )
                                             )
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 10.h,),
+                                SizedBox(height: 5.h,),
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -2740,23 +2740,23 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                       width: (MediaQuery.of(context).size.width  + 10.w) / 2,
                                       child: Text('Total Pemotongan', 
                                         style: TextStyle(
-                                          fontSize: 16.sp,
+                                          fontSize: 4.sp,
                                           fontWeight: FontWeight.w600,
                                         )
                                       )
                                     ),
-                                    SizedBox(width: 10.w,),
+                                    SizedBox(width: 20.w,),
                                      SizedBox(
                                       width: (MediaQuery.of(context).size.width  - 250.w) / 2,
                                       child: Text(formatCurrency(mytotalDeductions),
                                               style: TextStyle(
-                                                  fontSize: 16.sp,
+                                                  fontSize: 4.sp,
                                               )
                                             )
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 10.h,),
+                                SizedBox(height: 5.h,),
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -2764,17 +2764,17 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                       width: (MediaQuery.of(context).size.width  + 10.w) / 2,
                                       child: Text('Pendapatan Bersih', 
                                         style: TextStyle(
-                                          fontSize: 16.sp,
+                                          fontSize: 4.sp,
                                           fontWeight: FontWeight.w600,
                                         )
                                       )
                                     ),
-                                    SizedBox(width: 10.w,),
+                                    SizedBox(width: 20.w,),
                                     SizedBox(
                                       width: (MediaQuery.of(context).size.width  - 250.w) / 2,
                                       child: Text(formatCurrency(mytakeHomePay),
                                               style: TextStyle(
-                                                  fontSize: 16.sp,
+                                                  fontSize: 4.sp,
                                               )
                                             )
                                     ),
@@ -2816,7 +2816,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                           children: [
                                             Text('Karyawan',
                                               style: TextStyle(
-                                                fontSize: 14.sp,
+                                                fontSize: 4.sp,
                                                 fontWeight: FontWeight.w600,
                                               )
                                             ),
@@ -2857,7 +2857,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                           children: [
                                             Text('Periode',
                                               style: TextStyle(
-                                                fontSize: 14.sp,
+                                                fontSize: 4.sp,
                                                 fontWeight: FontWeight.w600,
                                               )
                                             ),
@@ -3422,7 +3422,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                   width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                   child: Text('Nama karyawan',
                                                     style: TextStyle(
-                                                      fontSize: 14.sp,
+                                                      fontSize: 4.sp,
                                                       fontWeight: FontWeight.w600,
                                                     )
                                                   ),
@@ -3440,7 +3440,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                   width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                   child: Text('Divisi',
                                                     style: TextStyle(
-                                                      fontSize: 14.sp,
+                                                      fontSize: 4.sp,
                                                       fontWeight: FontWeight.w600,
                                                     )
                                                   ),
@@ -3458,7 +3458,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                   width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                   child: Text('NIK',
                                                     style: TextStyle(
-                                                      fontSize: 14.sp,
+                                                      fontSize: 4.sp,
                                                       fontWeight: FontWeight.w600,
                                                     )
                                                   ),
@@ -3483,7 +3483,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                   width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                   child: Text('Jabatan',
                                                     style: TextStyle(
-                                                      fontSize: 14.sp,
+                                                      fontSize: 4.sp,
                                                       fontWeight: FontWeight.w600,
                                                     )
                                                   ),
@@ -3501,7 +3501,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                   width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                   child: Text('Periode',
                                                     style: TextStyle(
-                                                      fontSize: 14.sp,
+                                                      fontSize: 4.sp,
                                                       fontWeight: FontWeight.w600,
                                                     )
                                                   ),
@@ -3528,7 +3528,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                           children: [
                                             Text('Pendapatan',
                                               style: TextStyle(
-                                                fontSize: 16.sp,
+                                                fontSize: 6.sp,
                                                 fontWeight: FontWeight.w600,
                                               )
                                             ),
@@ -3539,7 +3539,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                   width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                   child: Text('Gaji pokok',
                                                     style: TextStyle(
-                                                      fontSize: 14.sp,
+                                                      fontSize: 4.sp,
                                                       fontWeight: FontWeight.w600,
                                                     )
                                                   ),
@@ -3557,7 +3557,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                   width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                   child: Text('Tunjangan jabatan',
                                                     style: TextStyle(
-                                                      fontSize: 14.sp,
+                                                      fontSize: 4.sp,
                                                       fontWeight: FontWeight.w600,
                                                     )
                                                   ),
@@ -3575,7 +3575,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                   width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                   child: Text('BPJS Ketenagakerjaan + JP',
                                                     style: TextStyle(
-                                                      fontSize: 14.sp,
+                                                      fontSize: 4.sp,
                                                       fontWeight: FontWeight.w600,
                                                     )
                                                   ),
@@ -3593,7 +3593,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                   width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                   child: Text('BPJS Kesehatan',
                                                     style: TextStyle(
-                                                      fontSize: 14.sp,
+                                                      fontSize: 4.sp,
                                                       fontWeight: FontWeight.w600,
                                                     )
                                                   ),
@@ -3611,7 +3611,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                   width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                   child: Text('Lembur',
                                                     style: TextStyle(
-                                                      fontSize: 14.sp,
+                                                      fontSize: 4.sp,
                                                       fontWeight: FontWeight.w600,
                                                     )
                                                   ),
@@ -3629,7 +3629,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                   width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                   child: Text('Transport',
                                                     style: TextStyle(
-                                                      fontSize: 14.sp,
+                                                      fontSize: 4.sp,
                                                       fontWeight: FontWeight.w600,
                                                     )
                                                   ),
@@ -3647,7 +3647,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                   width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                   child: Text('Lainnya',
                                                     style: TextStyle(
-                                                      fontSize: 14.sp,
+                                                      fontSize: 4.sp,
                                                       fontWeight: FontWeight.w600,
                                                     )
                                                   ),
@@ -3669,7 +3669,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                           children: [
                                             Text('Pemotongan',
                                               style: TextStyle(
-                                                fontSize: 16.sp,
+                                                fontSize: 6.sp,
                                                 fontWeight: FontWeight.w600,
                                               )
                                             ),
@@ -3680,7 +3680,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                   width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                   child: Text('Pinjaman',
                                                     style: TextStyle(
-                                                      fontSize: 14.sp,  
+                                                      fontSize: 4.sp,  
                                                       fontWeight: FontWeight.w600,
                                                     )
                                                   ),
@@ -3698,7 +3698,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                   width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                   child: Text('Pajak (PPH 21)',
                                                     style: TextStyle(
-                                                      fontSize: 14.sp,
+                                                      fontSize: 4.sp,
                                                       fontWeight: FontWeight.w600,
                                                     )
                                                   ),
@@ -3716,7 +3716,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                   width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                   child: Text('BPJS Ketenag',
                                                     style: TextStyle(
-                                                      fontSize: 14.sp,
+                                                      fontSize: 4.sp,
                                                       fontWeight: FontWeight.w600,
                                                     )
                                                   ),
@@ -3734,7 +3734,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                   width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                   child: Text('BPJS Kesehatan',
                                                     style: TextStyle(
-                                                      fontSize: 14.sp,
+                                                      fontSize: 4.sp,
                                                       fontWeight: FontWeight.w600,
                                                     )
                                                   ),
@@ -3752,7 +3752,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                   width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                   child: Text('BPJS Ketenag',
                                                     style: TextStyle(
-                                                      fontSize: 14.sp,
+                                                      fontSize: 4.sp,
                                                       fontWeight: FontWeight.w600,
                                                     )
                                                   ),
@@ -3770,7 +3770,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                   width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                   child: Text('BPJS Kesehatan',
                                                     style: TextStyle(
-                                                      fontSize: 14.sp,
+                                                      fontSize: 4.sp,
                                                       fontWeight: FontWeight.w600,
                                                     )
                                                   ),
@@ -3788,7 +3788,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                   width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                   child: Text('PPH atas bonus/komisi',
                                                     style: TextStyle(
-                                                      fontSize: 14.sp,
+                                                      fontSize: 4.sp,
                                                       fontWeight: FontWeight.w600,
                                                     )
                                                   ),
@@ -3806,7 +3806,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                                   width: ((MediaQuery.of(context).size.width  - 100.w) / 2) / 2,
                                                   child: Text('Lainnya',
                                                     style: TextStyle(
-                                                      fontSize: 14.sp,
+                                                      fontSize: 4.sp,
                                                       fontWeight: FontWeight.w600,
                                                     )
                                                   ),
@@ -3830,7 +3830,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                         width: (MediaQuery.of(context).size.width  + 10.w) / 2,
                                         child: Text('Total Pendapatan', 
                                           style: TextStyle(
-                                            fontSize: 16.sp,
+                                            fontSize: 6.sp,
                                             fontWeight: FontWeight.w600,
                                           )
                                         )
@@ -3840,7 +3840,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                         width: (MediaQuery.of(context).size.width  - 250.w) / 2,
                                         child: Text(formatCurrency(totalEarnings),
                                                 style: TextStyle(
-                                                    fontSize: 16.sp,
+                                                    fontSize: 6.sp,
                                                 )
                                               )
                                       ),
@@ -3854,7 +3854,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                         width: (MediaQuery.of(context).size.width  + 10.w) / 2,
                                         child: Text('Total Pemotongan', 
                                           style: TextStyle(
-                                            fontSize: 16.sp,
+                                            fontSize: 6.sp,
                                             fontWeight: FontWeight.w600,
                                           )
                                         )
@@ -3864,7 +3864,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                         width: (MediaQuery.of(context).size.width  - 250.w) / 2,
                                         child: Text(formatCurrency(totalDeductions),
                                                 style: TextStyle(
-                                                    fontSize: 16.sp,
+                                                    fontSize: 6.sp,
                                                 )
                                               )
                                       ),
@@ -3878,7 +3878,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                         width: (MediaQuery.of(context).size.width  + 10.w) / 2,
                                         child: Text('Pendapatan Bersih', 
                                           style: TextStyle(
-                                            fontSize: 16.sp,
+                                            fontSize: 6.sp,
                                             fontWeight: FontWeight.w600,
                                           )
                                         )
@@ -3888,7 +3888,7 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
                                         width: (MediaQuery.of(context).size.width  - 250.w) / 2,
                                         child: Text(formatCurrency(takeHomePay),
                                                 style: TextStyle(
-                                                    fontSize: 16.sp,
+                                                    fontSize: 6.sp,
                                                 )
                                               )
                                       ),

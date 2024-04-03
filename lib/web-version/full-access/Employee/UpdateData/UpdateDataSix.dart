@@ -1,25 +1,23 @@
-// ignore_for_file: avoid_print, file_names, unnecessary_string_interpolations
-
+import 'dart:convert';
 import 'package:date_time_picker/date_time_picker.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:hr_systems_web/web-version/full-access/Employee/EmployeeList.dart';
 import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
-import 'dart:convert';
-import 'package:intl/intl.dart'; 
 import 'package:http/http.dart' as http;
-import 'AddNewEmployeeSeven.dart';
+import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 
-class AddNewEmployeeSix extends StatefulWidget {
-  const AddNewEmployeeSix({super.key});
+class UpdateDataSix extends StatefulWidget {
+  final String employeeID;
+  const UpdateDataSix({super.key, required this.employeeID});
 
   @override
-  State<AddNewEmployeeSix> createState() => _AddNewEmployeeSixState();
+  State<UpdateDataSix> createState() => _UpdateDataSixState();
 }
 
-class _AddNewEmployeeSixState extends State<AddNewEmployeeSix> {
+class _UpdateDataSixState extends State<UpdateDataSix> {
   bool isLoading = false;
   String? selectedFamily;
   String? selectedEducation;
@@ -64,25 +62,119 @@ class _AddNewEmployeeSixState extends State<AddNewEmployeeSix> {
   List<Map<String, String>> familyList = [];
   List<Map<String, String>> educationList = [];
 
-  String id = '';
-
   String companyName = '';
   String companyAddress = '';
   String employeeName = '';
   String employeeEmail = '';
   String trimmedCompanyAddress = '';
   List<dynamic> profileData = [];
+  final storage = GetStorage();
 
   @override
   void initState() {
     super.initState();
     fetchFamilyList();
     fetchEducationList();
-    fetchLastID();
     fetchData();
+    fetchDetailData();
   }
 
-  final storage = GetStorage();
+  Future<void> fetchDetailData() async {
+    try{
+      isLoading = true;
+
+      String apiUrlSix = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getdetailemployee.php?action=15&employee_id=${widget.employeeID}';
+      var responseSix = await http.get(Uri.parse(apiUrlSix));
+
+      if (responseSix.statusCode == 200) {
+        Map<String, dynamic> responseDataSix = json.decode(responseSix.body);
+        List<dynamic> dataSix = responseDataSix['Data'];
+
+        setState(() {
+          txtNamaKeluarga1.text = dataSix.first['family_name'] ?? '-';
+          txtAlamatKeluarga1.text = dataSix.first['family_address'] ?? '-';
+          txtTempatLahir1.text = dataSix.first['family_pob'] ?? '-';
+          txtPekerjaanKeluarga1.text = dataSix.first['family_job'] ?? '-';
+        });
+      } else {
+        print('Failed to load data: ${responseSix.statusCode}');
+      }
+
+      String apiUrlSeven = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getdetailemployee.php?action=16&employee_id=${widget.employeeID}';
+      var responseSeven = await http.get(Uri.parse(apiUrlSeven));
+
+      if (responseSeven.statusCode == 200) {
+        Map<String, dynamic> responseDataSeven = json.decode(responseSeven.body);
+        List<dynamic> dataSeven = responseDataSeven['Data'];
+
+        setState(() {
+          txtNamaKeluarga2.text = dataSeven.first['family_name'] ?? '-';
+          txtAlamatKeluarga2.text = dataSeven.first['family_address'] ?? '-';
+          txtTempatLahir2.text  = dataSeven.first['family_pob'] ?? '-';
+          txtPekerjaanKeluarga2.text = dataSeven.first['family_job'] ?? '-';
+        });
+      } else {
+        print('Failed to load data: ${responseSeven.statusCode}');
+      }
+
+      String apiUrlEight = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getdetailemployee.php?action=17&employee_id=${widget.employeeID}';
+      var responseEight = await http.get(Uri.parse(apiUrlEight));
+
+      if (responseEight.statusCode == 200) {
+        Map<String, dynamic> responseDataEight = json.decode(responseEight.body);
+        List<dynamic> dataEight = responseDataEight['Data'];
+
+        setState(() {
+          txtNamaKeluarga3.text  = dataEight.first['family_name'] ?? '-';
+          txtAlamatKeluarga3.text = dataEight.first['family_address'] ?? '-';
+          txtTempatLahir3.text = dataEight.first['family_pob'] ?? '-';
+          txtPekerjaanKeluarga3.text = dataEight.first['family_job'] ?? '-';
+        });
+      } else {
+        print('Failed to load data: ${responseEight.statusCode}');
+      }
+
+      String apiUrlNine = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getdetailemployee.php?action=18&employee_id=${widget.employeeID}';
+      var responseNine = await http.get(Uri.parse(apiUrlNine));
+
+      if (responseNine.statusCode == 200) {
+        Map<String, dynamic> responseDataNine = json.decode(responseNine.body);
+        List<dynamic> dataNine = responseDataNine['Data'];
+
+        setState(() {
+          txtNamaKeluarga4.text = dataNine.first['family_name'] ?? '-';
+          txtAlamatKeluarga4.text = dataNine.first['family_address'] ?? '-';
+          txtTempatLahir4.text = dataNine.first['family_pob'] ?? '-';
+          txtPekerjaanKeluarga4.text = dataNine.first['family_job'] ?? '-';
+        });
+      } else {
+        print('Failed to load data: ${responseNine.statusCode}');
+      }
+
+      String apiUrlTen = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getdetailemployee.php?action=19&employee_id=${widget.employeeID}';
+      var responseTen = await http.get(Uri.parse(apiUrlTen));
+
+      if (responseTen.statusCode == 200) {
+        Map<String, dynamic> responseDataTen = json.decode(responseTen.body);
+        List<dynamic> dataTen = responseDataTen['Data'];
+
+        setState(() {
+          txtNamaKeluarga5.text = dataTen.first['family_name'] ?? '-';
+          txtAlamatKeluarga5.text = dataTen.first['family_address'] ?? '-';
+          txtTempatLahir5.text = dataTen.first['family_pob'] ?? '-';
+          txtPekerjaanKeluarga5.text = dataTen.first['family_job'] ?? '-';
+        });
+      } else {
+        print('Failed to load data: ${responseTen.statusCode}');
+      }
+
+    } catch (e){
+      print('Error at fetching detail one data : $e');
+      
+    } finally {
+      isLoading = false;
+    }
+  }
 
   Future<void> fetchData() async {
     String employeeId = storage.read('employee_id').toString();
@@ -90,10 +182,6 @@ class _AddNewEmployeeSixState extends State<AddNewEmployeeSix> {
     try {
       isLoading = true;
       String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/account/getprofileforallpage.php';
-
-      //String employeeId = storage.read('employee_id'); // replace with your logic to get employee ID
-
-      // Create a Map for the request body
       Map<String, dynamic> requestBody = {'employee_id': employeeId};
 
       // Convert the Map to a JSON string
@@ -197,51 +285,15 @@ class _AddNewEmployeeSixState extends State<AddNewEmployeeSix> {
     }
   }
 
-  Future<void> fetchLastID() async {
-  const apiUrl =
-      'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getlastidforinput.php';
-
-  try {
-    isLoading = true;
-    // Making GET request
-    final response = await http.get(Uri.parse(apiUrl));
-
-    // Checking if the request was successful (status code 200)
-    if (response.statusCode == 200) {
-      // Parsing the response body
-      final Map<String, dynamic> responseBody = json.decode(response.body);
-
-      // Extracting the 'Data' array from the response
-      final List<dynamic> data = responseBody['Data'];
-
-      // Accessing the first object in the 'Data' array
-      final Map<String, dynamic> firstDataObject = data.isNotEmpty ? data[0] : {};
-
-      // Extracting the 'id' value from the first object
-      id = firstDataObject['id'];
-
-      // Now you can use the 'id' variable as needed
-      print('Last ID: $id');
-    } else {
-      print('Failed to load data. Status code: ${response.statusCode}');
-    }
-  } catch (e) {
-    isLoading = false;
-    print('Error: $e');
-  } finally {
-    isLoading = false;
-  }
-}
-
   Future<void> insertEmployee() async {
     try{
       isLoading = true;
-      String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/insertemployee/insertsix.php';
+      String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/updateemployee/updatesix.php';
 
       final response = await http.post(
         Uri.parse(apiUrl),
         body: {
-          "id" : id,
+          "id" : widget.employeeID,
           "family_1" : selectedFamily,
           "family_name_1" : txtNamaKeluarga1.text,
           "family_address_1" : txtAlamatKeluarga1.text,
@@ -281,9 +333,7 @@ class _AddNewEmployeeSixState extends State<AddNewEmployeeSix> {
       );
 
       if (response.statusCode == 200) {
-        print('Employee inserted successfully');
-        Get.to(const AddNewEmployeeSeven());
-        // Add any additional logic or UI updates after successful insertion
+        Get.to(EmployeeListPage());
       } else {
         showDialog(
           context: context, 
@@ -1468,26 +1518,49 @@ class _AddNewEmployeeSixState extends State<AddNewEmployeeSix> {
                       ),
                       SizedBox(height: 10.sp,),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
-                        onPressed: () {
-                        //  Get.to(AddNewEmployeeSeven());
-                        insertEmployee();
-                        }, 
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(50.w, 55.h),
-                          foregroundColor: const Color(0xFFFFFFFF),
-                          backgroundColor: const Color(0xff4ec3fc),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: (){
+                                    Get.back();
+                                  }, 
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    alignment: Alignment.center,
+                                    minimumSize: Size(60.w, 55.h),
+                                    foregroundColor: const Color(0xFFFFFFFF),
+                                    backgroundColor: Colors.red,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  ),
+                                  child: const Text('Kembali')
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: (){
+                                    insertEmployee();
+                                  }, 
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    alignment: Alignment.center,
+                                    minimumSize: Size(60.w, 55.h),
+                                    foregroundColor: const Color(0xFFFFFFFF),
+                                    backgroundColor: const Color(0xff4ec3fc),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  ),
+                                  child: const Text('Update')
+                                )
+                              ],
+                            ),
+                          ],
                         ),
-                        child: const Text('Berikutnya')
-                      ),
-                        ],
-                      ),
-                      SizedBox(height: 10.sp,),
+                        SizedBox(height: 10.sp,),
                     ],
                   ),
                 )

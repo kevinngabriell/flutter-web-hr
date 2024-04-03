@@ -354,21 +354,6 @@ class _EmployeeDetailSevenState extends State<EmployeeDetailSeven> {
                             children: [
                               ElevatedButton(
                                 onPressed: (){
-                          
-                                }, 
-                                style: ElevatedButton.styleFrom(
-                                  minimumSize: Size(50.w, 55.h),
-                                  foregroundColor: const Color(0xFFFFFFFF),
-                                  backgroundColor: Colors.green,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                child: const Text('Update')
-                              ),
-                              SizedBox(width: 10.w,),
-                              ElevatedButton(
-                                onPressed: (){
                                   Get.to(const EmployeeListPage());
                                 }, 
                                 style: ElevatedButton.styleFrom(

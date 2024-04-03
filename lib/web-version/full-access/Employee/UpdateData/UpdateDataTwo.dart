@@ -1,24 +1,24 @@
-// ignore_for_file: non_constant_identifier_names, file_names, avoid_print, prefer_interpolation_to_compose_strings, unnecessary_string_interpolations
+// ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hr_systems_web/web-version/full-access/Employee/EmployeeList.dart';
+import 'package:hr_systems_web/web-version/full-access/Employee/UpdateData/UpdateDataThree.dart';
 import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:hr_systems_web/web-version/full-access/Employee/Add%20New%20Employee/AddNewEmployeeThree.dart';
 
-
-class AddNewEmployeeTwo extends StatefulWidget {
-  const AddNewEmployeeTwo({super.key});
+class UpdateDataTwo extends StatefulWidget {
+  final String employeeId;
+  const UpdateDataTwo({super.key, required this.employeeId});
 
   @override
-  State<AddNewEmployeeTwo> createState() => _AddNewEmployeeTwoState();
+  State<UpdateDataTwo> createState() => _UpdateDataTwoState();
 }
 
-class _AddNewEmployeeTwoState extends State<AddNewEmployeeTwo> {
+class _UpdateDataTwoState extends State<UpdateDataTwo> {
   bool KTPDomisili = true;
 
   TextEditingController alamatKTP = TextEditingController();
@@ -72,8 +72,43 @@ class _AddNewEmployeeTwoState extends State<AddNewEmployeeTwo> {
     fetchProvinceList();
     fetchAddressStatuses();
     fetchAddressStatuses2();
-    fetchLastID();
     fetchData();
+    fetchDetailData();
+  }
+
+  Future<void> fetchDetailData() async {
+    try{
+      isLoading = true;
+
+      String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getdetailemployee.php?action=2&employee_id=${widget.employeeId}';
+      var response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = json.decode(response.body);
+        Map<String, dynamic> data = (responseData['Data'] as List).first;
+
+        setState(() {
+          alamatKTP.text = data['employee_address_ktp'] ?? '-';
+          rtKTP.text = data['employee_rt_ktp'] ?? '-';
+          rwKTP.text = data['employee_rw_ktp'] ?? '-';
+          alamatDomisili.text = data['employee_address_now'] ?? '-';
+          rtDomisili.text = data['employee_rt_now'] ?? '-';
+          rwDomisili.text = data['employee_rw_now'] ?? '-';
+          alamatEmail.text = data['employee_email'] ?? '-';
+          nomorHandphone.text = data['employee_phone_number'] ?? '-';
+        });
+
+      } else {
+
+        print('Failed to load data: ${response.statusCode}');
+      }
+
+    } catch (e){
+      print('Error at fetching detail one data : $e');
+      
+    } finally {
+      isLoading = false;
+    }
   }
 
   final storage = GetStorage();
@@ -83,16 +118,9 @@ class _AddNewEmployeeTwoState extends State<AddNewEmployeeTwo> {
 
     try {
       String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/account/getprofileforallpage.php';
-
-      //String employeeId = storage.read('employee_id'); // replace with your logic to get employee ID
-
-      // Create a Map for the request body
       Map<String, dynamic> requestBody = {'employee_id': employeeId};
-
-      // Convert the Map to a JSON string
       String requestBodyJson = json.encode(requestBody);
 
-      // Make the API call with a POST request
       final response = await http.post(
         Uri.parse(apiUrl),
         body: {
@@ -309,42 +337,6 @@ class _AddNewEmployeeTwoState extends State<AddNewEmployeeTwo> {
     }
   }
 
-  Future<void> fetchLastID() async {
-  const apiUrl =
-      'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/getlastidforinput.php';
-
-  try {
-    isLoading = true;
-    // Making GET request
-    final response = await http.get(Uri.parse(apiUrl));
-
-    // Checking if the request was successful (status code 200)
-    if (response.statusCode == 200) {
-      // Parsing the response body
-      final Map<String, dynamic> responseBody = json.decode(response.body);
-
-      // Extracting the 'Data' array from the response
-      final List<dynamic> data = responseBody['Data'];
-
-      // Accessing the first object in the 'Data' array
-      final Map<String, dynamic> firstDataObject = data.isNotEmpty ? data[0] : {};
-
-      // Extracting the 'id' value from the first object
-      id = firstDataObject['id'];
-
-      // Now you can use the 'id' variable as needed
-      print('Last ID: $id');
-    } else {
-      print('Failed to load data. Status code: ${response.statusCode}');
-    }
-  } catch (e) {
-    isLoading = false;
-    print('Error: $e');
-  } finally {
-    isLoading = false;
-  }
-}
-
   Future<void> insertEmployee() async {
     try{
       isLoading = true;
@@ -371,14 +363,12 @@ class _AddNewEmployeeTwoState extends State<AddNewEmployeeTwo> {
           "employee_kel_now": selectedDomicileDistrict,
           "employee_email": alamatEmailText,
           "employee_phone_number": nomorHandphoneText,
-          "id": id,
+          "id": widget.employeeId,
         }
       );
 
       if (response.statusCode == 200) {
-        print('Employee inserted successfully');
-        Get.to(const AddNewEmployeeThree());
-        // Add any additional logic or UI updates after successful insertion
+        Get.to(UpdateDataThree(employeeId: widget.employeeId,));
       } else {
         showDialog(
           context: context, 
@@ -397,7 +387,6 @@ class _AddNewEmployeeTwoState extends State<AddNewEmployeeTwo> {
             );
           }
         );
-        // Handle the error or show an error message to the user
       }
 
     } catch (e){
@@ -419,7 +408,6 @@ class _AddNewEmployeeTwoState extends State<AddNewEmployeeTwo> {
             );
           }
         );
-      // Handle exceptions or show an error message to the user
     } finally {
       isLoading = false;
     }
@@ -1093,37 +1081,50 @@ class _AddNewEmployeeTwoState extends State<AddNewEmployeeTwo> {
                       ),
                       SizedBox(height: 10.sp,),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              if (KTPDomisili == true) {
-                                alamatDomisili.text = alamatKTP.text;
-                                rtDomisili.text = rtKTP.text;
-                                rwDomisili.text = rwKTP.text;
-                                selectedDomicileProvince = selectedIdentityProvince;
-                                selectedDomicileCity = selectedIdentityCity;
-                                selectedDomicileRegency = selectedIdentityRegency;
-                                selectedDomicileDistrict = selectedIdentityDistrict;
-                              }
-
-                              nomorHandphoneText = nomorHandphone.text;
-                              alamatEmailText = alamatEmail.text;
-                            
-                              insertEmployee();
-                            }, 
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(60.w, 55.h),
-                          foregroundColor: const Color(0xFFFFFFFF),
-                          backgroundColor: const Color(0xff4ec3fc),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: (){
+                                    Get.back();
+                                  }, 
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    alignment: Alignment.center,
+                                    minimumSize: Size(60.w, 55.h),
+                                    foregroundColor: const Color(0xFFFFFFFF),
+                                    backgroundColor: Colors.red,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  ),
+                                  child: const Text('Kembali')
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: (){
+                                    insertEmployee();
+                                  }, 
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    alignment: Alignment.center,
+                                    minimumSize: Size(60.w, 55.h),
+                                    foregroundColor: const Color(0xFFFFFFFF),
+                                    backgroundColor: const Color(0xff4ec3fc),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  ),
+                                  child: const Text('Update & Berikutnya')
+                                )
+                              ],
+                            ),
+                          ],
                         ),
-                        child: const Text('Berikutnya')
-                      ),
-                        ],
-                      )
+                        SizedBox(height: 10.sp,),
+                      SizedBox(height: 7.sp,)
                     ],
                   ),
                 )

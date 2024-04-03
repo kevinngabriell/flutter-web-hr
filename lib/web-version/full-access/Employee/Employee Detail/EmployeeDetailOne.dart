@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hr_systems_web/web-version/full-access/Employee/Employee%20Detail/EmployeeDetailTwo.dart';
+import 'package:hr_systems_web/web-version/full-access/Employee/UpdateData/UpdateDataOne.dart';
 import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -388,7 +389,7 @@ class _EmployeeDetailOneState extends State<EmployeeDetailOne> {
                             children: [
                               ElevatedButton(
                                 onPressed: (){
-                          
+                                  Get.to(UpdateDataOne(employeeId: widget.employeeID));
                                 }, 
                                 style: ElevatedButton.styleFrom(
                                   minimumSize: Size(50.w, 55.h),

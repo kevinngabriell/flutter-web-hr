@@ -70,7 +70,7 @@ class _AddNewEmployeeFourState extends State<AddNewEmployeeFour> {
   String companyAddress = '';
   String employeeName = '';
   String employeeEmail = '';
-String trimmedCompanyAddress = '';
+  String trimmedCompanyAddress = '';
   List<dynamic> profileData = [];
 
   @override

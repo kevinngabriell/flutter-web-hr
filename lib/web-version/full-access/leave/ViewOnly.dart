@@ -5,13 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hr_systems_web/web-version/full-access/Event/event.dart';
-import 'package:hr_systems_web/web-version/full-access/Performance/performance.dart';
-import 'package:hr_systems_web/web-version/full-access/Report/report.dart';
-import 'package:hr_systems_web/web-version/full-access/Salary/salary.dart';
-import 'package:hr_systems_web/web-version/full-access/Settings/setting.dart';
-import 'package:hr_systems_web/web-version/full-access/Structure/structure.dart';
-import 'package:hr_systems_web/web-version/full-access/Training/traning.dart';
+import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:get_storage/get_storage.dart';
@@ -19,8 +13,6 @@ import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'dart:html' as html;
-import '../../login.dart';
-import '../employee.dart';
 import '../index.dart';
 
 class ViewOnlyPermission extends StatefulWidget {
@@ -60,7 +52,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
   String imageUrl = '';
   String trimmedCompanyAddress = '';
   late Future<Map<String, dynamic>> permissionData;
-  late Future<List<Map<String, dynamic>>> logPermissionData;
+  List<Map<String, dynamic>> historyList = [];
   late http.Response fileResponse;
 
   String tanggalLembur = '';
@@ -75,7 +67,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
     super.initState();
     fetchData();
     permissionData = fetchDetailPermission();
-    logPermissionData = fetchLogPermissionData();
+    fetchLogPermissionData();
     getSuratDokter();
   }
 
@@ -161,7 +153,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
     }
   }
 
-  Future<List<Map<String, dynamic>>> fetchLogPermissionData() async {
+  Future<void> fetchLogPermissionData() async {
     var id = '${widget.permission_id}';
 
     final response = await http.get(
@@ -169,12 +161,11 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
     );
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-      if (data['StatusCode'] == 200) {
-        return List<Map<String, dynamic>>.from(data['Data']);
-      } else {
-        throw Exception('Failed to load data');
-      }
+      var data = json.decode(response.body);
+
+      setState(() {
+        historyList = List<Map<String, dynamic>>.from(data['Data']);
+      });
     } else {
       throw Exception('Failed to load data');
     }
@@ -216,10 +207,8 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                     crossAxisAlignment: pw.CrossAxisAlignment.center,
                     mainAxisAlignment: pw.MainAxisAlignment.center,
                     children: [
-                      // Image.asset(
-                      //       'images/kinglab.png',
                       pw.Image(image),
-                      pw.SizedBox(width: 30.sp),
+                      pw.SizedBox(width: 20),
                       pw.Column(
                         children: [
                           pw.Text(companyName, style: 
@@ -229,9 +218,9 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                               color: PdfColor.fromHex('#333333'), // Replace with your desired color
                             ),
                           ),
-                          pw.SizedBox(height: 5.sp),
+                          pw.SizedBox(height: 5),
                           pw.Text(companyAddress, style: pw.TextStyle(fontSize: 12.0,color: PdfColor.fromHex('#555555'),),),
-                          pw.SizedBox(height: 8.sp),
+                          pw.SizedBox(height: 8),
                         ]
                       )
                     ]
@@ -240,7 +229,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                 ]
               ),
               pw.Divider(thickness: 1.0, color: PdfColor.fromHex('#333333')),
-              pw.SizedBox(height: 8.sp),
+              pw.SizedBox(height: 18),
               pw.Expanded(
                 child: pw.Padding(
                 padding: const pw.EdgeInsets.only(),
@@ -252,13 +241,13 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                         'SURAT PERMOHONAN IZIN / PEMBERITAHUAN',
                         style: pw.TextStyle(
                           fontWeight: pw.FontWeight.bold,
-                          fontSize: 18.0,
+                          fontSize: 16.0,
                           color: PdfColor.fromHex('#333333'), // Replace with your desired color
                         ),
                         textAlign: pw.TextAlign.center,
                       ),
                     ),
-                    pw.SizedBox(height: 10.sp),
+                    pw.SizedBox(height: 7),
                     pw.Center(
                       child: pw.Text(
                         '($jenisIzin)',
@@ -269,7 +258,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                         textAlign: pw.TextAlign.center,
                       ),
                     ),
-                    pw.SizedBox(height: 50.h), // Adjust the height as needed
+                    pw.SizedBox(height: 30), // Adjust the height as needed
                     pw.Container(
                       margin: const pw.EdgeInsets.only(left: 20.0),
                       child: pw.Column(
@@ -284,7 +273,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                             ),
                             textAlign: pw.TextAlign.left,
                           ),
-                          pw.SizedBox(height: 12.h),
+                          pw.SizedBox(height: 25),
                           pw.Text(
                             '       Nama              : $NamaYangMengajukanIzin',
                             style: pw.TextStyle(
@@ -293,7 +282,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                             ),
                             textAlign: pw.TextAlign.left,
                           ),
-                          pw.SizedBox(height: 8.h),
+                          pw.SizedBox(height: 10),
                           pw.Text(
                             '       NIK                  : $NIKYangMengajukanIzin',
                             style: pw.TextStyle(
@@ -302,7 +291,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                             ),
                             textAlign: pw.TextAlign.left,
                           ),
-                          pw.SizedBox(height: 8.h),
+                          pw.SizedBox(height: 10),
                           pw.Text(
                             '       Departemen    : $DeptYangMengajukanIzin',
                             style: pw.TextStyle(
@@ -311,7 +300,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                             ),
                             textAlign: pw.TextAlign.left,
                           ),
-                          pw.SizedBox(height: 8.h),
+                          pw.SizedBox(height: 10),
                           pw.Text(
                             '       Jabatan           : $JabatanYangMengajukanIzin',
                             style: pw.TextStyle(
@@ -323,27 +312,27 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                         ],
                       ),
                     ),
-                    pw.SizedBox(height: 30.h),
+                    pw.SizedBox(height: 35),
                     pw.Container(
                       margin: const pw.EdgeInsets.only(left: 20.0),
                       child: pw.Text('Dengan ini menerangkan bahwa pada hari $tanggalIzin', style: pw.TextStyle(fontSize: 12.0,color: PdfColor.fromHex('#555555'),),),
                     ),
-                    pw.SizedBox(height: 12.h),
+                    pw.SizedBox(height: 15),
                     pw.Container(
                       margin: const pw.EdgeInsets.only(left: 20.0),
                       child: pw.Text('$bodyIzin ', style: pw.TextStyle(fontWeight: pw.FontWeight.bold ,fontSize: 12.0,color: PdfColor.fromHex('#555555'),),),
                     ),
-                    pw.SizedBox(height: 12.h),
+                    pw.SizedBox(height: 15),
                     pw.Container(
                       margin: const pw.EdgeInsets.only(left: 20.0),
                       child: pw.Text('1. Datang Terlambat karena keperluan $alasanIzin', style: pw.TextStyle(fontSize: 12.0,color: PdfColor.fromHex('#555555'),)),
                     ),
-                    pw.SizedBox(height: 12.h),
+                    pw.SizedBox(height: 15),
                     pw.Container(
                       margin: const pw.EdgeInsets.only(left: 20.0),
                       child: pw.Text('2. Absen masuk pada Jam $jamIzin WIB', style: pw.TextStyle(fontSize: 12.0,color: PdfColor.fromHex('#555555'),)),
                     ),
-                    pw.SizedBox(height: 25.h),
+                    pw.SizedBox(height: 35),
                   ],
                 ),
               ),
@@ -352,12 +341,12 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                 margin: const pw.EdgeInsets.only(left: 20.0),
                 child: pw.Text('Dibuat oleh     : $createdBy ($createdDt)', style: pw.TextStyle(fontSize: 12.0,color: PdfColor.fromHex('#555555'),)),
               ),
-              pw.SizedBox(height: 12.h),
+              pw.SizedBox(height: 10),
               pw.Container(
                 margin: const pw.EdgeInsets.only(left: 20.0),
                 child:  pw.Text('Disetujui oleh : $updatedBy ($updatedDt)', style: pw.TextStyle(fontSize: 12.0,color: PdfColor.fromHex('#555555'),)),
               ),
-              pw.SizedBox(height: 20.h),
+              pw.SizedBox(height: 10),
               pw.Divider(thickness: 1.0, color: PdfColor.fromHex('#333333')),
               pw.Footer(
                 title: pw.Text('Dokumen ini dibuat secara otomatis oleh sistem dan tidak membutuhkan tanda tangan', style: pw.TextStyle(fontSize: 8.0,color: PdfColor.fromHex('#555555'),)),
@@ -380,10 +369,8 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                     crossAxisAlignment: pw.CrossAxisAlignment.center,
                     mainAxisAlignment: pw.MainAxisAlignment.center,
                     children: [
-                      // Image.asset(
-                      //       'images/kinglab.png',
                       pw.Image(image),
-                      pw.SizedBox(width: 30.sp),
+                      pw.SizedBox(width: 20),
                       pw.Column(
                         children: [
                           pw.Text(companyName, style: 
@@ -393,9 +380,9 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                               color: PdfColor.fromHex('#333333'), // Replace with your desired color
                             ),
                           ),
-                          pw.SizedBox(height: 5.sp),
+                          pw.SizedBox(height: 5),
                           pw.Text(companyAddress, style: pw.TextStyle(fontSize: 12.0,color: PdfColor.fromHex('#555555'),),),
-                          pw.SizedBox(height: 8.sp),
+                          pw.SizedBox(height: 8),
                         ]
                       )
                     ]
@@ -404,7 +391,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                 ]
               ),
               pw.Divider(thickness: 1.0, color: PdfColor.fromHex('#333333')),
-              pw.SizedBox(height: 8.sp),
+              pw.SizedBox(height: 18),
               pw.Expanded(
                 child: pw.Padding(
                 padding: const pw.EdgeInsets.only(),
@@ -416,18 +403,23 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                         'FORMULIR PERMOHONAN CUTI KARYAWAN',
                         style: pw.TextStyle(
                           fontWeight: pw.FontWeight.bold,
-                          fontSize: 18.0,
+                          fontSize: 16.0,
                           color: PdfColor.fromHex('#333333'), // Replace with your desired color
                         ),
                         textAlign: pw.TextAlign.center,
                       ),
                     ),
-                    pw.SizedBox(height: 30.sp),
+                    pw.SizedBox(height: 25),
                     pw.Container(
                       margin: const pw.EdgeInsets.only(left: 20.0),
-                      child: pw.Text('DATA KARYAWAN')
+                      child: pw.Text('DATA KARYAWAN',
+                      style: pw.TextStyle(
+                        fontWeight: pw.FontWeight.bold,
+                        fontSize: 13.0,
+                        color: PdfColor.fromHex('#333333'), // Replace with your desired color
+                      ),)
                     ),
-                    pw.SizedBox(height: 12.h), 
+                    pw.SizedBox(height: 15), 
                     pw.Text(
                       '       Nama Lengkap             : $NamaYangMengajukanIzin',
                       style: pw.TextStyle(
@@ -436,7 +428,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                       ),
                       textAlign: pw.TextAlign.left,
                     ),
-                    pw.SizedBox(height: 12.h),
+                    pw.SizedBox(height: 15),
                     pw.Text(
                       '       Divisi / Jabatan             : $DeptYangMengajukanIzin / $JabatanYangMengajukanIzin',
                       style: pw.TextStyle(
@@ -445,12 +437,16 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                       ),
                       textAlign: pw.TextAlign.left,
                     ),
-                    pw.SizedBox(height: 30.h),
+                    pw.SizedBox(height: 25),
                     pw.Container(
                       margin: const pw.EdgeInsets.only(left: 20.0),
-                      child: pw.Text('KETERANGAN CUTI')
+                      child: pw.Text('KETERANGAN CUTI',style: pw.TextStyle(
+                        fontWeight: pw.FontWeight.bold,
+                        fontSize: 13.0,
+                        color: PdfColor.fromHex('#333333'), // Replace with your desired color
+                      ))
                     ),
-                    pw.SizedBox(height: 12.h),
+                    pw.SizedBox(height: 15),
                     pw.Text(
                       '       Lama cuti                      : $startCuti s/d $endCuti',
                       style: pw.TextStyle(
@@ -459,7 +455,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                       ),
                       textAlign: pw.TextAlign.left,
                     ),
-                    pw.SizedBox(height: 12.h),
+                    pw.SizedBox(height: 15),
                     pw.Text(
                       '       No telepon                    : $cutiPhone',
                       style: pw.TextStyle(
@@ -468,7 +464,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                       ),
                       textAlign: pw.TextAlign.left,
                     ),
-                    pw.SizedBox(height: 12.h),
+                    pw.SizedBox(height: 15),
                     pw.Text(
                       '       Keterangan/Alasan      : $alasanIzin',
                       style: pw.TextStyle(
@@ -477,12 +473,16 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                       ),
                       textAlign: pw.TextAlign.left,
                     ),
-                    pw.SizedBox(height: 30.h),
+                    pw.SizedBox(height: 25),
                     pw.Container(
                       margin: const pw.EdgeInsets.only(left: 20.0),
-                      child: pw.Text('SELAMA CUTI DIGANTIKAN OLEH')
+                      child: pw.Text('SELAMA CUTI DIGANTIKAN OLEH',style: pw.TextStyle(
+                        fontWeight: pw.FontWeight.bold,
+                        fontSize: 13.0,
+                        color: PdfColor.fromHex('#333333'), // Replace with your desired color
+                      ))
                     ),
-                    pw.SizedBox(height: 12.h),
+                    pw.SizedBox(height: 15),
                     pw.Text(
                       '       Nama Lengkap           : $karyawanPengganti',
                       style: pw.TextStyle(
@@ -499,12 +499,12 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                 margin: const pw.EdgeInsets.only(left: 20.0),
                 child: pw.Text('Dibuat oleh     : $createdBy ($createdDt)', style: pw.TextStyle(fontSize: 12.0,color: PdfColor.fromHex('#555555'),)),
               ),
-              pw.SizedBox(height: 12.h),
+              pw.SizedBox(height: 10),
               pw.Container(
                 margin: const pw.EdgeInsets.only(left: 20.0),
                 child:  pw.Text('Disetujui oleh : $updatedBy ($updatedDt)', style: pw.TextStyle(fontSize: 12.0,color: PdfColor.fromHex('#555555'),)),
               ),
-              pw.SizedBox(height: 20.h),
+              pw.SizedBox(height: 10),
               pw.Divider(thickness: 1.0, color: PdfColor.fromHex('#333333')),
               pw.Footer(
                 title: pw.Text('Dokumen ini dibuat secara otomatis oleh sistem dan tidak membutuhkan tanda tangan', style: pw.TextStyle(fontSize: 8.0,color: PdfColor.fromHex('#555555'),)),
@@ -530,7 +530,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                       // Image.asset(
                       //       'images/kinglab.png',
                       pw.Image(image),
-                      pw.SizedBox(width: 30.sp),
+                      pw.SizedBox(width: 20),
                       pw.Column(
                         children: [
                           pw.Text(companyName, style: 
@@ -540,9 +540,9 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                               color: PdfColor.fromHex('#333333'), // Replace with your desired color
                             ),
                           ),
-                          pw.SizedBox(height: 5.sp),
+                          pw.SizedBox(height: 5),
                           pw.Text(companyAddress, style: pw.TextStyle(fontSize: 12.0,color: PdfColor.fromHex('#555555'),),),
-                          pw.SizedBox(height: 8.sp),
+                          pw.SizedBox(height: 8),
                         ]
                       )
                     ]
@@ -551,7 +551,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                 ]
               ),
               pw.Divider(thickness: 1.0, color: PdfColor.fromHex('#333333')),
-              pw.SizedBox(height: 8.sp),
+              pw.SizedBox(height: 18),
               pw.Expanded(
                 child: pw.Padding(
                 padding: const pw.EdgeInsets.only(),
@@ -569,7 +569,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                         textAlign: pw.TextAlign.center,
                       ),
                     ),
-                    pw.SizedBox(height: 30.sp),
+                    pw.SizedBox(height: 25),
                     pw.Container(
                       margin: const pw.EdgeInsets.only(left: 20.0),
                       child: pw.Column(
@@ -584,7 +584,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                             ),
                             textAlign: pw.TextAlign.left,
                           ),
-                          pw.SizedBox(height: 12.h),
+                          pw.SizedBox(height: 15),
                           pw.Text(
                             '       Nama              : $NamaYangMengajukanIzin',
                             style: pw.TextStyle(
@@ -593,7 +593,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                             ),
                             textAlign: pw.TextAlign.left,
                           ),
-                          pw.SizedBox(height: 8.h),
+                          pw.SizedBox(height: 10),
                           pw.Text(
                             '       NIK                  : $NIKYangMengajukanIzin',
                             style: pw.TextStyle(
@@ -602,7 +602,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                             ),
                             textAlign: pw.TextAlign.left,
                           ),
-                          pw.SizedBox(height: 8.h),
+                          pw.SizedBox(height: 10),
                           pw.Text(
                             '       Departemen    : $DeptYangMengajukanIzin',
                             style: pw.TextStyle(
@@ -611,7 +611,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                             ),
                             textAlign: pw.TextAlign.left,
                           ),
-                          pw.SizedBox(height: 8.h),
+                          pw.SizedBox(height: 10),
                           pw.Text(
                             '       Jabatan           : $JabatanYangMengajukanIzin',
                             style: pw.TextStyle(
@@ -623,7 +623,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                         ],
                       ),
                     ),
-                    pw.SizedBox(height: 10.h),
+                    pw.SizedBox(height: 25),
                     pw.Container(
                       margin: const pw.EdgeInsets.only(left: 20.0),
                       child: pw.Text('Dengan ini menerangkan bahwa pada hari $tanggalLembur dilaksanakan pekerjaan diluar jam kantor (Lembur) dari Pukul $jamMulaiLembur sampai pukul $jamAkhirLembur dengan keperluan $keteranganLembur', style: pw.TextStyle(fontSize: 12.0,color: PdfColor.fromHex('#555555'),),),
@@ -636,12 +636,12 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                 margin: const pw.EdgeInsets.only(left: 20.0),
                 child: pw.Text('Dibuat oleh     : $createdBy ($createdDt)', style: pw.TextStyle(fontSize: 12.0,color: PdfColor.fromHex('#555555'),)),
               ),
-              pw.SizedBox(height: 12.h),
+              pw.SizedBox(height: 10),
               pw.Container(
                 margin: const pw.EdgeInsets.only(left: 20.0),
                 child:  pw.Text('Disetujui oleh : $updatedBy ($updatedDt)', style: pw.TextStyle(fontSize: 12.0,color: PdfColor.fromHex('#555555'),)),
               ),
-              pw.SizedBox(height: 20.h),
+              pw.SizedBox(height: 10),
               pw.Divider(thickness: 1.0, color: PdfColor.fromHex('#333333')),
               pw.Footer(
                 title: pw.Text('Dokumen ini dibuat secara otomatis oleh sistem dan tidak membutuhkan tanda tangan', style: pw.TextStyle(fontSize: 8.0,color: PdfColor.fromHex('#555555'),)),
@@ -851,386 +851,49 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
             children: [
               //Side Menu
               Expanded(
-                flex: 2,
-                child: Container(
-                  color: Colors.white,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 15.sp,),
-                      //company logo and name
-                      ListTile(
-                        contentPadding: const EdgeInsets.only(left: 0, right: 0),
-                        dense: true,
-                        horizontalTitleGap: 0.0, // Adjust this value as needed
-                        leading: Container(
-                          margin: const EdgeInsets.only(right: 2.0), // Add margin to the right of the image
-                          child: Image.asset(
-                            'images/kinglab.png',
-                            width: MediaQuery.of(context).size.width * 0.08,
-                          ),
-                        ),
-                        title: Text(
-                          "$companyName",
-                          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
-                        ),
-                        subtitle: Text(
-                          '$trimmedCompanyAddress',
-                          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w300),
-                        ),
-                      ),
-                      SizedBox(height: 30.sp,),
-                      //halaman utama title
-                      Padding(
-                          padding: EdgeInsets.only(left: 5.w),
-                          child: Text("Halaman utama", 
-                            style: TextStyle( fontSize: 20.sp, fontWeight: FontWeight.w600,)
-                          ),
-                      ),
-                      SizedBox(height: 10.sp,),
-                      //beranda button
-                      Padding(
-                        padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                        child: ElevatedButton(
-                          onPressed: () {Get.to(FullIndexWeb(employeeId));},
-                          style: ElevatedButton.styleFrom(
-                            elevation: 0,
-                            alignment: Alignment.centerLeft,
-                            minimumSize: Size(60.w, 55.h),
-                            foregroundColor: const Color(0xFFFFFFFF),
-                            backgroundColor: const Color(0xff4ec3fc),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: Image.asset('images/home-active.png')
-                              ),
-                              SizedBox(width: 2.w),
-                              Text('Beranda',
-                                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                              )
-                            ],
-                          )
-                        ),
-                      ),
-                      SizedBox(height: 10.sp,),
-                      //karyawan button
-                      Padding(
-                        padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                        child: ElevatedButton(
-                          onPressed: () {Get.to(EmployeePage(employee_id: employeeId,));},
-                          style: ElevatedButton.styleFrom(
-                            elevation: 0,
-                            alignment: Alignment.centerLeft,
-                            minimumSize: Size(60.w, 55.h),
-                            foregroundColor: const Color(0xDDDDDDDD),
-                            backgroundColor: const Color(0xFFFFFFFF),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: Image.asset('images/employee-inactive.png')
-                              ),
-                              SizedBox(width: 2.w),
-                              Text('Karyawan',
-                                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                              )
-                            ],
-                          )
-                        ),
-                      ),
-                      SizedBox(height: 10.sp,),
-                      //gaji button
-                      Padding(
-                        padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Get.to(const SalaryIndex());
-                          },
-                          style: ElevatedButton.styleFrom(
-                            elevation: 0,
-                            alignment: Alignment.centerLeft,
-                            minimumSize: Size(60.w, 55.h),
-                            foregroundColor: const Color(0xDDDDDDDD),
-                            backgroundColor: const Color(0xFFFFFFFF),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: Image.asset('images/gaji-inactive.png')
-                              ),
-                              SizedBox(width: 2.w),
-                              Text('Gaji',
-                                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                              )
-                            ],
-                          )
-                        ),
-                      ),
-                      SizedBox(height: 10.sp,),
-                      //performa button
-                      Padding(
-                        padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Get.to(PerformanceIndex);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            elevation: 0,
-                            alignment: Alignment.centerLeft,
-                            minimumSize: Size(60.w, 55.h),
-                            foregroundColor: const Color(0xDDDDDDDD),
-                            backgroundColor: const Color(0xFFFFFFFF),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: Image.asset('images/performa-inactive.png')
-                              ),
-                              SizedBox(width: 2.w),
-                              Text('Performa',
-                                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                              )
-                            ],
-                          )
-                        ),
-                      ),
-                      SizedBox(height: 10.sp,),
-                      //pelatihan button
-                      Padding(
-                        padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Get.to(const TrainingIndex());
-                          },
-                          style: ElevatedButton.styleFrom(
-                            elevation: 0,
-                            alignment: Alignment.centerLeft,
-                            minimumSize: Size(60.w, 55.h),
-                            foregroundColor: const Color(0xDDDDDDDD),
-                            backgroundColor: const Color(0xFFFFFFFF),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: Image.asset('images/pelatihan-inactive.png')
-                              ),
-                              SizedBox(width: 2.w),
-                              Text('Pelatihan',
-                                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                              )
-                            ],
-                          )
-                        ),
-                      ),
-                      SizedBox(height: 10.sp,),
-                      //acara button
-                      Padding(
-                        padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Get.to(const EventIndex());
-                          },
-                          style: ElevatedButton.styleFrom(
-                            elevation: 0,
-                            alignment: Alignment.centerLeft,
-                            minimumSize: Size(60.w, 55.h),
-                            foregroundColor: const Color(0xDDDDDDDD),
-                            backgroundColor: const Color(0xFFFFFFFF),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: Image.asset('images/acara-inactive.png')
-                              ),
-                              SizedBox(width: 2.w),
-                              Text('Acara',
-                                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                              )
-                            ],
-                          )
-                        ),
-                      ),
-                      SizedBox(height: 10.sp,),
-                      //laporan button
-                      Padding(
-                              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Get.to(const ReportIndex());
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.centerLeft,
-                                  minimumSize: Size(60.w, 55.h),
-                                  foregroundColor: const Color(0xDDDDDDDD),
-                                  backgroundColor: const Color(0xFFFFFFFF),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset('images/laporan-inactive.png')
-                                    ),
-                                    SizedBox(width: 2.w),
-                                    Text('Laporan',
-                                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                                    )
-                                  ],
-                                )
-                              ),
-                            ),
-                      SizedBox(height: 30.sp,),
-                      //pengaturan title
-                      Padding(
-                          padding: EdgeInsets.only(left: 5.w),
-                          child: Text("Pengaturan", 
-                            style: TextStyle( fontSize: 20.sp, fontWeight: FontWeight.w600,)
-                          ),
-                      ),
-                      SizedBox(height: 10.sp,),
-                      //pengaturan button
-                      Padding(
-                        padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Get.to(const SettingIndex());
-                          },
-                          style: ElevatedButton.styleFrom(
-                            elevation: 0,
-                            alignment: Alignment.centerLeft,
-                            minimumSize: Size(60.w, 55.h),
-                            foregroundColor: const Color(0xDDDDDDDD),
-                            backgroundColor: const Color(0xFFFFFFFF),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: Image.asset('images/pengaturan-inactive.png')
-                              ),
-                              SizedBox(width: 2.w),
-                              Text('Pengaturan',
-                                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                              )
-                            ],
-                          )
-                        ),
-                      ),
-                      SizedBox(height: 10.sp,),
-                      //struktur button
-                      Padding(
-                        padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Get.to(const StructureIndex());
-                          },
-                          style: ElevatedButton.styleFrom(
-                            elevation: 0,
-                            alignment: Alignment.centerLeft,
-                            minimumSize: Size(60.w, 55.h),
-                            foregroundColor: const Color(0xDDDDDDDD),
-                            backgroundColor: const Color(0xFFFFFFFF),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: Image.asset('images/struktur-inactive.png')
-                              ),
-                              SizedBox(width: 2.w),
-                              Text('Struktur',
-                                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,)
-                              )
-                            ],
-                          )
-                        ),
-                      ),
-                      SizedBox(height: 10.sp,),
-                      //keluar button
-                      Padding(
-                        padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            //show dialog sure to exit ?
-                            showDialog(
-                              context: context, 
-                              builder: (_) {
-                                return AlertDialog(
-                                  title: const Text("Keluar"),
-                                  content: const Text('Apakah anda yakin akan keluar ?'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {Get.back();},
-                                      child: const Text('Cancel'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {Get.off(const LoginPageDesktop());},
-                                      child: const Text('OK',),
-                                    ),
-                                  ],
-                                );
-                              }
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            elevation: 0,
-                            alignment: Alignment.centerLeft,
-                            minimumSize: Size(60.w, 55.h),
-                            foregroundColor: const Color(0xDDDDDDDD),
-                            backgroundColor: const Color(0xFFFFFFFF),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: Image.asset('images/logout.png')
-                              ),
-                              SizedBox(width: 2.w),
-                              Text('Keluar',
-                                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, color: Colors.red)
-                              )
-                            ],
-                          )
-                        ),
-                      ),
-                      SizedBox(height: 30.sp,),
-                    ],
+                  flex: 2,
+                  child: Container(
+                    color: Colors.white,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 5.sp,),
+                        NamaPerusahaanMenu(companyName: companyName, companyAddress: trimmedCompanyAddress),
+                        SizedBox(height: 10.sp,),
+                        const HalamanUtamaMenu(),
+                        SizedBox(height: 5.sp,),
+                        BerandaActive(employeeId: employeeId.toString()),
+                        SizedBox(height: 5.sp,),
+                        KaryawanNonActive(employeeId: employeeId.toString()),
+                        SizedBox(height: 5.sp,),
+                        const GajiNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const PerformaNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const PelatihanNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const AcaraNonActive(),
+                        SizedBox(height: 5.sp,),
+                        LaporanNonActive(positionId: positionId.toString()),
+                        SizedBox(height: 10.sp,),
+                        const PengaturanMenu(),
+                        SizedBox(height: 5.sp,),
+                        const PengaturanNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const StrukturNonActive(),
+                        SizedBox(height: 5.sp,),
+                        const Logout(),
+                        SizedBox(height: 30.sp,),
+                      ],
+                    ),
                   ),
                 ),
-              ),
               //content
               Expanded(
-                flex: 6,
+                flex: 8,
                 child: Padding(
-                  padding: EdgeInsets.only(left: 7.w),
+                  padding: EdgeInsets.only(left: 7.w, right: 7.w),
                   child: FutureBuilder(
                     future: permissionData,
                     builder: (context, snapshot){
@@ -1255,19 +918,18 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                           NIKYangMengajukanIzin = firstData['employee_id'] ?? 'N/A';
                           DeptYangMengajukanIzin = firstData['department_name'] ?? 'N/A';
                           JabatanYangMengajukanIzin = firstData['position_name'] ?? 'N/A';
-                          tanggalIzin = DateFormat('EEEE, dd MMM yyyy').format(DateTime.parse(firstData['permission_date'] ?? '1999-01-01'),);
-                          startCuti = DateFormat('EEEE, dd MMM yyyy').format(DateTime.parse(firstData['start_date'] ?? '1999-01-01'),);
-                          endCuti = DateFormat('EEEE, dd MMM yyyy').format(DateTime.parse(firstData['end_date'] ?? '1999-01-01'),);
+                          tanggalIzin = formatDate(firstData['permission_date'] ?? '1999-01-01');
+                          startCuti = formatDate(firstData['start_date'] ?? '1999-01-01');
+                          endCuti = formatDate(firstData['end_date'] ?? '1999-01-01');
                           cutiPhone = firstData['cuti_phone'] ?? 'N/A';
                           karyawanPengganti = firstData['pengganti_cuti'] ?? 'N/A';
                           alasanIzin = firstData['permission_reason'] ?? 'N/A';
                           jamIzin = firstData['permission_time'] ?? 'N/A';
+                          createdDt = _formatDate(firstData['created_dt'] ?? '1999-01-01 01:01:01');
                           createdBy = firstData['created_by'] ?? 'N/A';
-                          createdDt = firstData['created_dt'] ?? 'N/A';
                           updatedBy = firstData['update_by'] ?? 'N/A';
-                          updatedDt = firstData['update_dt'] ?? 'N/A';
-
-                          tanggalLembur = DateFormat('EEEE, dd MMM yyyy').format(DateTime.parse(firstData['lembur_date'] ?? '1999-01-01'),);
+                          updatedDt = _formatDate(firstData['update_dt'] ?? '1999-01-01 01:01:01');
+                          tanggalLembur = formatDate(firstData['lembur_date'] ?? '1999-01-01');
                           jamMulaiLembur = firstData['start_time'] ?? 'N/A';
                           jamAkhirLembur = firstData['end_time'] ?? 'N/A';
                           keteranganLembur = firstData['keperluan'] ?? 'N/A';
@@ -1277,322 +939,276 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 100.sp,),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: (MediaQuery.of(context).size.width - 160.w) / 2,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Nama Lengkap",
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                        ),
-                                      ),
-                                      SizedBox(height: 7.h,),
-                                      TextFormField(
-                                        initialValue: firstData != null ? firstData['employee_name'] ?? '' : '',
-                                        decoration: const InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                          hintText: 'Masukkan nama anda'
-                                        ),
-                                        readOnly: true,
-                                      )
-                                    ],
-                                  )
-                                ),
-                                SizedBox(width: 20.sp,),
-                                SizedBox(
-                                  width: (MediaQuery.of(context).size.width - 160.w) / 2,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "NIK",
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                        ),
-                                      ),
-                                      SizedBox(height: 7.h,),
-                                      TextFormField(
-                                        initialValue: firstData != null ? firstData['employee_id'] ?? '' : '',
-                                        decoration: const InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                          hintText: 'Masukkan NIK anda'
-                                        ),
-                                        readOnly: true,
-                                      )
-                                    ],
-                                  )
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 20.sp,),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: (MediaQuery.of(context).size.width - 160.w) / 2,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Departemen",
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                        ),
-                                      ),
-                                      SizedBox(height: 7.h,),
-                                      TextFormField(
-                                        initialValue: firstData != null ? firstData['department_name'] ?? '' : '',
-                                        decoration: const InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                          hintText: 'Masukkan departemen anda'
-                                        ),
-                                        readOnly: true,
-                                      )
-                                    ],
-                                  )
-                                ),
-                                SizedBox(width: 20.sp,),
-                                SizedBox(
-                                  width: (MediaQuery.of(context).size.width - 160.w) / 2,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Jabatan",
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: const Color.fromRGBO(116, 116, 116, 1)
-                                        ),
-                                      ),
-                                      SizedBox(height: 7.h,),
-                                      TextFormField(
-                                        initialValue: firstData != null ? firstData['position_name'] ?? '' : '',
-                                        decoration: const InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                          hintText: 'Masukkan jabatan anda'
-                                        ),
-                                        readOnly: true,
-                                      )
-                                    ],
-                                  )
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 20.sp,),
-                            if(permissionTypeName == 'Sakit')
-                              Row(
+                            SizedBox(height: 5.sp,),
+                            NotificationnProfile(employeeName: employeeName, employeeAddress: employeeEmail, photo: photo),
+                            SizedBox(height: 7.sp,),
+                            Center(child: Text('Pengajuan Izin Karyawan', style: TextStyle(fontSize: 7.sp, fontWeight: FontWeight.w600,))),
+                            SizedBox(height: 10.sp,),
+                            Padding(
+                              padding: EdgeInsets.only(right: 10.sp),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   SizedBox(
-                                    width: (MediaQuery.of(context).size.width - 160.w) / 2,
+                                    width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text('Jenis Permohonan Izin', style: TextStyle(
+                                        fontSize: 4.sp,
+                                        fontWeight: FontWeight.w600,
+                                      )),
+                                        Text(firstData['permission_type_name'])
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text('Status Permohonan Izin', style: TextStyle(
+                                        fontSize: 4.sp,
+                                        fontWeight: FontWeight.w600,
+                                      )),
+                                         Text(firstData['permission_status_name'])
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: (MediaQuery.of(context).size.width - 100.w) / 3,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text('Tanggal Permohonan Izin', style: TextStyle(
+                                        fontSize: 4.sp,
+                                        fontWeight: FontWeight.w600,
+                                      )),
+                                       Text(_formatDate(firstData['created_dt']))
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 7.sp,),
+                            Text('Detail Permohonan', style: TextStyle(fontSize: 7.sp, fontWeight: FontWeight.w600,)),
+                            SizedBox(height: 7.sp,),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width: (MediaQuery.of(context).size.width - 120.w) / 3,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Nama Lengkap", style: TextStyle(
+                                        fontSize: 4.sp,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      ),
+                                      SizedBox(height: 7.h,),
+                                      Text(firstData['employee_name'])
+                                    ],
+                                  )
+                                ),
+                                SizedBox(
+                                  width: (MediaQuery.of(context).size.width - 180.w) / 3,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "NIK", style: TextStyle(
+                                        fontSize: 4.sp,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      ),
+                                      SizedBox(height: 7.h,),
+                                      Text(firstData != null ? firstData['employee_id'] ?? '' : '')
+                                    ],
+                                  )
+                                ),
+                                SizedBox(
+                                  width: (MediaQuery.of(context).size.width - 180.w) / 3,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Departemen", style: TextStyle(
+                                        fontSize: 4.sp,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      ),
+                                      SizedBox(height: 7.h,),
+                                      Text(firstData != null ? firstData['department_name'] ?? '' : '')
+                                    ],
+                                  )
+                                ),
+                                SizedBox(
+                                  width: (MediaQuery.of(context).size.width - 150.w) / 4,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Jabatan", style: TextStyle(
+                                        fontSize: 4.sp,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      ),
+                                      SizedBox(height: 7.h,),
+                                      Text(firstData != null ? firstData['position_name'] ?? '' : '')
+                                    ],
+                                  )
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 7.sp,),
+                            if(permissionTypeName == 'Sakit')
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    width: (MediaQuery.of(context).size.width - 120.w) / 3,
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "Tanggal mulai izin",
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w600,
-                                            color: const Color.fromRGBO(116, 116, 116, 1)
-                                          ),
+                                          "Tanggal mulai izin", style: TextStyle(
+                                        fontSize: 4.sp,
+                                        fontWeight: FontWeight.w600,
+                                      )
                                         ),
                                         SizedBox(height: 7.h,),
                                         //DateTime
-                                        TextFormField(
-                                              initialValue: firstData != null ? DateFormat('dd MMM yyyy').format(DateTime.parse(firstData['start_date'] ?? ''),): '',
-                                              //controller: txtAlasan,
-                                              decoration: const InputDecoration(
-                                                border: OutlineInputBorder(),
-                                                fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                                hintText: 'Masukkan tanggal lembur'
-                                              ),
-                                              readOnly: true,
-                                            )
+                                        Text(firstData != null ? formatDate(firstData['start_date'] ?? '') : '')
                                       ],
                                     )
                                   ),
-                                  SizedBox(width: 20.sp,),
                                   SizedBox(
-                                    width: (MediaQuery.of(context).size.width - 160.w) / 2,
+                                    width: (MediaQuery.of(context).size.width - 180.w) / 3,
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "Tanggal akhir izin",
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w600,
-                                            color: const Color.fromRGBO(116, 116, 116, 1)
-                                          ),
+                                          "Tanggal akhir izin", style: TextStyle(
+                                        fontSize: 4.sp,
+                                        fontWeight: FontWeight.w600,
+                                      )
                                         ),
                                         SizedBox(height: 7.h,),
-                                         TextFormField(
-                                              initialValue: firstData != null ? DateFormat('dd MMM yyyy').format(DateTime.parse(firstData['end_date'] ?? ''),): '',
-                                              //controller: txtAlasan,
-                                              decoration: const InputDecoration(
-                                                border: OutlineInputBorder(),
-                                                fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                                hintText: 'Masukkan tanggal lembur'
-                                              ),
-                                              readOnly: true,
-                                            )
+                                        Text(firstData != null ? formatDate(firstData['end_date'] ?? '') : '')
+                                         
                                       ],
                                     )
+                                  ),
+                                  SizedBox(
+                                    width: (MediaQuery.of(context).size.width - 180.w) / 3,
+                                    child: const Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                      ],
+                                    )
+                                  ),
+                                  SizedBox(
+                                    width: (MediaQuery.of(context).size.width - 150.w) / 4,
+                                    child: const Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                    ],
+                                  )
                                   ),
                                 ],
                               ),
                             if(permissionTypeName == 'Sakit')
-                              SizedBox(height: 20.sp,),
+                              SizedBox(height: 7.sp,),
                             if(permissionTypeName == 'Sakit')
                               suratDokter.isNotEmpty
                                 ? Image.memory(
                                     base64.decode(suratDokter),
                                     fit: BoxFit.cover, // Choose the appropriate BoxFit for your needs
                                   )
-                                : const CircularProgressIndicator(),
+                                : ElevatedButton(
+                                  onPressed: (){}, 
+                                  child: Text('Upload Surat Dokter')
+                                ),
                             if(permissionTypeName == 'Lembur')
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   SizedBox(
-                                    width: (MediaQuery.of(context).size.width - 160.w) / 2,
+                                    width: (MediaQuery.of(context).size.width - 120.w) / 3,
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "Tanggal lembur",
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w600,
-                                            color: const Color.fromRGBO(116, 116, 116, 1)
-                                          ),
+                                          "Tanggal lembur", style: TextStyle(
+                                        fontSize: 4.sp,
+                                        fontWeight: FontWeight.w600,
+                                      )
                                         ),
                                         SizedBox(height: 7.h,),
-                                        //DateTime
-                                        TextFormField(
-                                              initialValue: firstData != null ? DateFormat('dd MMM yyyy').format(DateTime.parse(firstData['permission_date'] ?? ''),): '',
-                                              //controller: txtAlasan,
-                                              decoration: const InputDecoration(
-                                                border: OutlineInputBorder(),
-                                                fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                                hintText: 'Masukkan tanggal lembur'
-                                              ),
-                                              readOnly: true,
-                                            )
+                                        Text(formatDate(firstData['permission_date'] ?? ''))
                                       ],
                                     )
                                   ),
-                                  SizedBox(width: 20.sp,),
                                   SizedBox(
-                                    width: (MediaQuery.of(context).size.width - 160.w) / 2,
+                                    width: (MediaQuery.of(context).size.width - 180.w) / 3,
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "Jam mulai lembur",
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w600,
-                                            color: const Color.fromRGBO(116, 116, 116, 1)
-                                          ),
+                                          "Jam mulai lembur", style: TextStyle(
+                                        fontSize: 4.sp,
+                                        fontWeight: FontWeight.w600,
+                                      )
                                         ),
                                         SizedBox(height: 7.h,),
-                                        TextFormField(
-                                              initialValue: firstData != null ? firstData['start_time'] ?? '' : '',
-                                              //controller: txtAlasan,
-                                              decoration: const InputDecoration(
-                                                border: OutlineInputBorder(),
-                                                fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                                hintText: 'Masukkan alasan anda'
-                                              ),
-                                              readOnly: true,
-                                            )
+                                        Text(firstData['start_time'] ?? '')
                                       ],
                                     )
                                   ),
-                                ],
-                              ),
-                            if(permissionTypeName == 'Lembur')
-                              SizedBox(height: 20.sp,),
-                            if(permissionTypeName == 'Lembur')
-                              Row(
-                                children: [
                                   SizedBox(
-                                    width: (MediaQuery.of(context).size.width - 160.w) / 2,
+                                    width: (MediaQuery.of(context).size.width - 180.w) / 3,
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "Jam akhir lembur",
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w600,
-                                            color: const Color.fromRGBO(116, 116, 116, 1)
-                                          ),
+                                          "Jam akhir lembur", style: TextStyle(
+                                        fontSize: 4.sp,
+                                        fontWeight: FontWeight.w600,
+                                      )
                                         ),
                                         SizedBox(height: 7.h,),
-                                        //DateTime
-                                        TextFormField(
-                                              initialValue: firstData != null ? firstData['end_time'] ?? '' : '',
-                                              //controller: txtAlasan,
-                                              decoration: const InputDecoration(
-                                                border: OutlineInputBorder(),
-                                                fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                                hintText: 'Masukkan tanggal lembur'
-                                              ),
-                                              readOnly: true,
-                                            )
+                                        Text(firstData['end_time'] ?? '')
                                       ],
                                     )
                                   ),
-                                  SizedBox(width: 20.sp,),
                                   SizedBox(
-                                    width: (MediaQuery.of(context).size.width - 160.w) / 2,
+                                    width: (MediaQuery.of(context).size.width - 150.w) / 4,
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "Keperluan",
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w600,
-                                            color: const Color.fromRGBO(116, 116, 116, 1)
-                                          ),
+                                          "Keperluan", style: TextStyle(
+                                        fontSize: 4.sp,
+                                        fontWeight: FontWeight.w600,
+                                      )
                                         ),
                                         SizedBox(height: 7.h,),
-                                        TextFormField(
-                                              initialValue: firstData != null ? firstData['keperluan'] ?? '' : '',
-                                              //controller: txtAlasan,
-                                              decoration: const InputDecoration(
-                                                border: OutlineInputBorder(),
-                                                fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                                hintText: 'Masukkan alasan anda'
-                                              ),
-                                              readOnly: true,
-                                            )
+                                        Text(firstData['keperluan'] ?? '')
                                       ],
                                     )
                                   ),
@@ -1600,343 +1216,172 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                               ),
                             if(permissionTypeName == 'Cuti tahunan')
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   SizedBox(
-                                    width: (MediaQuery.of(context).size.width - 160.w) / 2,
+                                    width: (MediaQuery.of(context).size.width - 120.w) / 3,
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "Tanggal mulai cuti",
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w600,
-                                            color: const Color.fromRGBO(116, 116, 116, 1)
-                                          ),
+                                          "Tanggal mulai cuti", style: TextStyle(
+                                        fontSize: 4.sp,
+                                        fontWeight: FontWeight.w600,
+                                      )
                                         ),
                                         SizedBox(height: 7.h,),
-                                        //DateTime
-                                        TextFormField(
-                                              initialValue: firstData != null ? DateFormat('dd MMM yyyy').format(DateTime.parse(firstData['start_date'] ?? ''),): '',
-                                              //controller: txtAlasan,
-                                              decoration: const InputDecoration(
-                                                border: OutlineInputBorder(),
-                                                fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                                hintText: 'Masukkan alasan anda'
-                                              ),
-                                              readOnly: true,
-                                            )
+                                        Text(firstData != null ? formatDate(firstData['start_date']) : '')
                                       ],
                                     )
                                   ),
-                                  SizedBox(width: 20.sp,),
                                   SizedBox(
-                                    width: (MediaQuery.of(context).size.width - 160.w) / 2,
+                                    width: (MediaQuery.of(context).size.width - 180.w) / 3,
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "Tanggal akhir cuti",
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w600,
-                                            color: const Color.fromRGBO(116, 116, 116, 1)
-                                          ),
+                                          "Tanggal akhir cuti", style: TextStyle(
+                                        fontSize: 4.sp,
+                                        fontWeight: FontWeight.w600,
+                                      )
                                         ),
                                         SizedBox(height: 7.h,),
-                                        TextFormField(
-                                              initialValue: firstData != null ? DateFormat('dd MMM yyyy').format(DateTime.parse(firstData['end_date'] ?? ''),): '',
-                                              //controller: txtAlasan,
-                                              decoration: const InputDecoration(
-                                                border: OutlineInputBorder(),
-                                                fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                                hintText: 'Masukkan alasan anda'
-                                              ),
-                                              readOnly: true,
-                                            )
+                                        Text(firstData != null ? formatDate(firstData['end_date']) : '')
                                       ],
                                     )
+                                  ),
+                                  SizedBox(
+                                    width: (MediaQuery.of(context).size.width - 180.w) / 3,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Nomor yang bisa dihubungi", style: TextStyle(
+                                        fontSize: 4.sp,
+                                        fontWeight: FontWeight.w600,
+                                      )
+                                        ),
+                                        SizedBox(height: 7.h,),
+                                        Text(firstData != null ? firstData['cuti_phone'] ?? '' : '')
+                                      ],
+                                    )
+                                  ),
+                                  SizedBox(
+                                    width: (MediaQuery.of(context).size.width - 150.w) / 4,
+                                    child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                          "Karyawan Pengganti", style: TextStyle(
+                                        fontSize: 4.sp,
+                                        fontWeight: FontWeight.w600,
+                                      )
+                                        ),
+                                        SizedBox(height: 7.h,),
+                                        Text(firstData != null ? firstData['pengganti_cuti'] ?? '' : '')
+                                    ],
+                                  )
                                   ),
                                 ],
                               ),
                             if(permissionTypeName == 'Cuti tahunan')
-                              SizedBox(height: 20.sp,),
+                              SizedBox(height: 7.sp,),
                             if(permissionTypeName == 'Cuti tahunan')
                               Row(
                                 children: [
                                   SizedBox(
-                                    width: (MediaQuery.of(context).size.width - 160.w) / 2,
+                                    width: (MediaQuery.of(context).size.width - 100.w),
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "Tanggal mulai cuti",
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w600,
-                                            color: const Color.fromRGBO(116, 116, 116, 1)
-                                          ),
+                                          "Keterangan atau alasan", style: TextStyle(
+                                        fontSize: 4.sp,
+                                        fontWeight: FontWeight.w600,
+                                      )
                                         ),
                                         SizedBox(height: 7.h,),
-                                        //DateTime
-                                        TextFormField(
-                                              initialValue: firstData != null ? DateFormat('dd MMM yyyy').format(DateTime.parse(firstData['start_date'] ?? ''),): '',
-                                              //controller: txtAlasan,
-                                              decoration: const InputDecoration(
-                                                border: OutlineInputBorder(),
-                                                fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                                hintText: 'Masukkan alasan anda'
-                                              ),
-                                              readOnly: true,
-                                            )
+                                        Text(firstData != null ? firstData['permission_reason'] ?? '' : '')
                                       ],
                                     )
                                   ),
-                                  SizedBox(width: 20.sp,),
-                                  SizedBox(
-                                    width: (MediaQuery.of(context).size.width - 160.w) / 2,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Tanggal akhir cuti",
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w600,
-                                            color: const Color.fromRGBO(116, 116, 116, 1)
-                                          ),
-                                        ),
-                                        SizedBox(height: 7.h,),
-                                        TextFormField(
-                                              initialValue: firstData != null ? DateFormat('dd MMM yyyy').format(DateTime.parse(firstData['end_date'] ?? ''),): '',
-                                              //controller: txtAlasan,
-                                              decoration: const InputDecoration(
-                                                border: OutlineInputBorder(),
-                                                fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                                hintText: 'Masukkan alasan anda'
-                                              ),
-                                              readOnly: true,
-                                            )
-                                      ],
-                                    )
-                                  ),
-                                ],
-                              ),
-                            if(permissionTypeName == 'Cuti tahunan')
-                              SizedBox(height: 20.sp,),
-                            if(permissionTypeName == 'Cuti tahunan')
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: (MediaQuery.of(context).size.width - 160.w) / 2,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Nomor yang bisa dihubungi",
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w600,
-                                            color: const Color.fromRGBO(116, 116, 116, 1)
-                                          ),
-                                        ),
-                                        SizedBox(height: 7.h,),
-                                        TextFormField(
-                                          //initialValue: sisaCuti.toString(),
-                                          initialValue: firstData != null ? firstData['cuti_phone'] ?? '' : '',
-                                          decoration: const InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                            hintText: 'Masukkan sisa cuti berjalan'
-                                          ),
-                                          readOnly: true,
-                                        )
-                                      ],
-                                    )
-                                  ),
-                                  SizedBox(width: 20.sp,),
-                                  SizedBox(
-                                    width: (MediaQuery.of(context).size.width - 160.w) / 2,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Karyawan pengganti",
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w600,
-                                            color: const Color.fromRGBO(116, 116, 116, 1)
-                                          ),
-                                        ),
-                                        SizedBox(height: 7.h,),
-                                        TextFormField(
-                                          initialValue: firstData != null ? firstData['pengganti_cuti'] ?? '' : '',
-                                          decoration: const InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                            hintText: 'Masukkan nomor yang bisa dihubungi'
-                                          ),
-                                          readOnly: true,
-                                        )
-                                      ],
-                                    )
-                                  ),
-                                ],
-                              ),
-                            if(permissionTypeName == 'Cuti tahunan')
-                              SizedBox(height: 20.sp,),
-                            if(permissionTypeName == 'Cuti tahunan')
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: (MediaQuery.of(context).size.width - 158.w),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Keterangan atau alasan",
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w600,
-                                            color: const Color.fromRGBO(116, 116, 116, 1)
-                                          ),
-                                        ),
-                                        SizedBox(height: 7.h,),
-                                        TextFormField(
-                                          initialValue: firstData != null ? firstData['permission_reason'] ?? '' : '',
-                                          maxLines: 3,
-                                          decoration: const InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                            hintText: 'Masukkan keterangan atau alasan anda'
-                                          ),
-                                          readOnly: true,
-                                        )
-                                      ],
-                                    )
-                                  ),
-                                  SizedBox(width: 20.sp,),
-                                  
                                 ],
                               ),
                             if(permissionTypeName == "Izin pulang awal" || permissionTypeName == "Izin datang telat")
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                     SizedBox(
-                                      width: (MediaQuery.of(context).size.width - 160.w) / 2,
+                                      width: (MediaQuery.of(context).size.width - 120.w) / 3,
                                       child: Column(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "Hari dan tanggal",
-                                            style: TextStyle(
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.w600,
-                                              color: const Color.fromRGBO(116, 116, 116, 1)
-                                            ),
+                                            "Hari dan tanggal", style: TextStyle(
+                                        fontSize: 4.sp,
+                                        fontWeight: FontWeight.w600,
+                                      )
                                           ),
                                           SizedBox(height: 7.h,),
-                                          //DateTime
-                                          TextFormField(
-                                            initialValue: firstData != null ? DateFormat('dd MMM yyyy').format(DateTime.parse(firstData['permission_date'] ?? ''),): '',
-                                            //controller: txtAlasan,
-                                            decoration: const InputDecoration(
-                                              border: OutlineInputBorder(),
-                                              fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                              hintText: 'Masukkan alasan anda'
-                                            ),
-                                            readOnly: true,
-                                          )
+                                          Text(formatDate(firstData['permission_date'] ?? ''))
                                         ],
                                       )
                                     ),
-                                  SizedBox(width: 20.sp,),
                                   SizedBox(
-                                    width: (MediaQuery.of(context).size.width - 160.w) / 2,
+                                    width: (MediaQuery.of(context).size.width - 180.w) / 3,
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "Alasan",
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w600,
-                                            color: const Color.fromRGBO(116, 116, 116, 1)
-                                          ),
+                                          "Alasan", style: TextStyle(
+                                        fontSize: 4.sp,
+                                        fontWeight: FontWeight.w600,
+                                      )
                                         ),
                                         SizedBox(height: 7.h,),
-                                        TextFormField(
-                                          initialValue: firstData != null ? firstData['permission_reason'] ?? '' : '',
-                                          //controller: txtAlasan,
-                                          decoration: const InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                            hintText: 'Masukkan alasan anda'
-                                          ),
-                                          readOnly: true,
-                                        )
+                                        Text(firstData['permission_reason'] ?? '')
                                       ],
                                     )
                                   ),
-                                ],
-                              ),
-                            SizedBox(height: 20.sp,),
-                            if(permissionTypeName == 'Izin pulang awal' || permissionTypeName == 'Izin datang telat')
-                              Row(
-                                children: [
                                   SizedBox(
-                                    width: (MediaQuery.of(context).size.width - 160.w) / 2,
+                                    width: (MediaQuery.of(context).size.width - 180.w) / 3,
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "Jam absen",
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w600,
-                                            color: const Color.fromRGBO(116, 116, 116, 1)
-                                          ),
+                                          "Jam absen", style: TextStyle(
+                                        fontSize: 4.sp,
+                                        fontWeight: FontWeight.w600,
+                                      )
                                         ),
                                         SizedBox(height: 7.h,),
-                                        TextFormField(
-                                          initialValue: firstData != null ? firstData['permission_time'] ?? '' : '',
-                                          //controller: txtAlasan,
-                                          decoration: const InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                            hintText: 'Masukkan alasan anda'
-                                          ),
-                                          readOnly: true,
-                                        )
+                                        Text(firstData['permission_time'] ?? '')
                                       ],
                                     )
                                   ),
-                                  SizedBox(width: 20.sp,),
                                   SizedBox(
-                                    width: (MediaQuery.of(context).size.width - 160.w) / 2,
+                                    width: (MediaQuery.of(context).size.width - 150.w) / 4,
                                     child: const Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-
-                                      ],
-                                    )
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                    ],
+                                  )
                                   ),
                                 ],
                               ),
-                            SizedBox(height: 50.sp,),
+                            SizedBox(height: 7.sp,),
                             if(employeeId.toString().padLeft(10, '0') == employee_spv && permission_status == 'PER-STATUS-001')
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   ElevatedButton(
                                     onPressed: (){
@@ -1963,7 +1408,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                                       );
                                     }, 
                                     style: ElevatedButton.styleFrom(
-                                      minimumSize: Size(0.sp, 45.sp),
+                                      minimumSize: Size(40.w, 55.h),
                                       foregroundColor: const Color(0xFFFFFFFF),
                                       backgroundColor: const Color(0xFF26C749),
                                       shape: RoundedRectangleBorder(
@@ -1972,7 +1417,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                                     ),
                                     child: const Text('Terima')
                                   ),
-                                  SizedBox(width: 20.sp,),
+                                  SizedBox(width: 10.sp,),
                                   ElevatedButton(
                                     onPressed: (){
                                       showDialog(
@@ -1998,7 +1443,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                                       );
                                     }, 
                                     style: ElevatedButton.styleFrom(
-                                      minimumSize: Size(0.sp, 45.sp),
+                                      minimumSize: Size(40.w, 55.h),
                                       foregroundColor: const Color(0xFFFFFFFF),
                                       backgroundColor: const Color(0xffBB1717),
                                       shape: RoundedRectangleBorder(
@@ -2009,9 +1454,10 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                                   )
                                 ],
                               ),
-                            SizedBox(height: 50.sp,),
+                            SizedBox(height: 7.sp,),
                             if(positionId == 'POS-HR-002' && permission_status == 'PER-STATUS-002')
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   ElevatedButton(
                                     onPressed: (){
@@ -2038,7 +1484,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                                       );
                                     }, 
                                     style: ElevatedButton.styleFrom(
-                                      minimumSize: Size(0.sp, 45.sp),
+                                      minimumSize: Size(40.w, 55.h),
                                       foregroundColor: const Color(0xFFFFFFFF),
                                       backgroundColor: const Color(0xFF26C749),
                                       shape: RoundedRectangleBorder(
@@ -2047,7 +1493,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                                     ),
                                     child: const Text('Terima')
                                   ),
-                                  SizedBox(width: 20.sp,),
+                                  SizedBox(width: 10.sp,),
                                   ElevatedButton(
                                     onPressed: (){
                                       showDialog(
@@ -2073,7 +1519,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                                       );
                                     }, 
                                     style: ElevatedButton.styleFrom(
-                                      minimumSize: Size(0.sp, 45.sp),
+                                      minimumSize: Size(40.w, 55.h),
                                       foregroundColor: const Color(0xFFFFFFFF),
                                       backgroundColor: const Color(0xffBB1717),
                                       shape: RoundedRectangleBorder(
@@ -2090,7 +1536,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                                   generateAndDisplayPDF();
                                 }, 
                                 style: ElevatedButton.styleFrom(
-                                  minimumSize: Size(0.sp, 45.sp),
+                                  minimumSize: Size(40.w, 55.h),
                                   foregroundColor: const Color(0xFFFFFFFF),
                                   backgroundColor: const Color(0xff4ec3fc),
                                   shape: RoundedRectangleBorder(
@@ -2099,65 +1545,89 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                                 ),
                                 child: const Text('Generate PDF')
                               ),
-                            FutureBuilder(
-                              future: logPermissionData,
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                    return const CircularProgressIndicator();
-                                  } else if (snapshot.hasError) {
-                                    return const Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        //Image.asset('assets/no_data.png'), // Ganti dengan path gambar yang sesuai
-                                        Text('Anda belum pernah mengajukan izin apapun'),
-                                      ],
-                                    );
-                                  } else if (snapshot.data!.isEmpty) {
-                                    return const Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        //Image.asset('assets/no_data.png'), // Ganti dengan path gambar yang sesuai
-                                        Text('Anda belum pernah mengajukan izin apapun'),
-                                      ],
-                                    );
-                                  } else {
-                                    return DataTable(
-                                      dataRowHeight: 100.h,
-                                      showCheckboxColumn: false,
-                                      columns: <DataColumn>[
-                                        const DataColumn(label: Text('Nama')),
-                                        const DataColumn(label: Text('Aksi')),
-                                      ],
-                                      rows: snapshot.data!.map((data) {
-                                        return DataRow(
-                                          cells: <DataCell>[
-                                            DataCell(
-                                              Column(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(data['employee_name']),
-                                                  SizedBox(height: 8.h,),
-                                                  Text(DateFormat('EEEE, d MMM y HH:mm:ss').format(DateTime.parse(data['action_dt']),))
-                                                ],
-                                              )
-                                            ),
-                                            DataCell(
-                                              Text(data['action'])
-                                            ),
-                                          ],
-                                          onSelectChanged: (bool? selected) {
-                                            if (selected!) {
-                                              
-                                            }
-                                          },
-                                        );
-                                      }).toList(),
-                                    );
-                                  }
-                              }
+                            SizedBox(height: 10.sp,),
+                            Text('Riwayat Permohonan', style: TextStyle(fontSize: 7.sp,fontWeight: FontWeight.w600,)),
+                            SizedBox(height: 5.sp,),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height,
+                              child: ListView.builder(
+                                itemCount: historyList.length,
+                                itemBuilder: (context, index){
+                                  var item = historyList[index];
+                                  return ListTile(
+                                    leading: CircleAvatar(
+                                      backgroundColor: const Color(0xff4ec3fc),
+                                      child: Text('${index + 1}', style: const TextStyle(color: Colors.white),),
+                                    ),
+                                    title: Text(item['employee_name'], style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w600),),
+                                    subtitle: Text(item['action'], style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w400),),
+                                    trailing: Text(_formatDate(item['action_dt']), style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w400),),
+                                  );
+                                }
+                              ),
                             ),
-                            SizedBox(height: 100.sp,),
+                            SizedBox(height: 10.sp,),
+                            // FutureBuilder(
+                            //   future: logPermissionData,
+                            //   builder: (context, snapshot) {
+                            //     if (snapshot.connectionState == ConnectionState.waiting) {
+                            //         return const CircularProgressIndicator();
+                            //       } else if (snapshot.hasError) {
+                            //         return const Column(
+                            //           mainAxisAlignment: MainAxisAlignment.center,
+                            //           children: [
+                            //             //Image.asset('assets/no_data.png'), // Ganti dengan path gambar yang sesuai
+                            //             Text('Anda belum pernah mengajukan izin apapun'),
+                            //           ],
+                            //         );
+                            //       } else if (snapshot.data!.isEmpty) {
+                            //         return const Column(
+                            //           mainAxisAlignment: MainAxisAlignment.center,
+                            //           children: [
+                            //             //Image.asset('assets/no_data.png'), // Ganti dengan path gambar yang sesuai
+                            //             Text('Anda belum pernah mengajukan izin apapun'),
+                            //           ],
+                            //         );
+                            //       } else {
+                            //         return 
+                                    
+                            //         DataTable(
+                            //           dataRowHeight: 100.h,
+                            //           showCheckboxColumn: false,
+                            //           columns: <DataColumn>[
+                            //             const DataColumn(label: Text('Nama')),
+                            //             const DataColumn(label: Text('Aksi')),
+                            //           ],
+                            //           rows: snapshot.data!.map((data) {
+                            //             return DataRow(
+                            //               cells: <DataCell>[
+                            //                 DataCell(
+                            //                   Column(
+                            //                     mainAxisAlignment: MainAxisAlignment.center,
+                            //                     crossAxisAlignment: CrossAxisAlignment.start,
+                            //                     children: [
+                            //                       Text(data['employee_name']),
+                            //                       SizedBox(height: 8.h,),
+                            //                       Text(DateFormat('EEEE, d MMM y HH:mm:ss').format(DateTime.parse(data['action_dt']),))
+                            //                     ],
+                            //                   )
+                            //                 ),
+                            //                 DataCell(
+                            //                   Text(data['action'])
+                            //                 ),
+                            //               ],
+                            //               onSelectChanged: (bool? selected) {
+                            //                 if (selected!) {
+                                              
+                            //                 }
+                            //               },
+                            //             );
+                            //           }).toList(),
+                            //         );
+                            //       }
+                            //   }
+                            // ),
+                            // SizedBox(height: 100.sp,),
 
                                 ],
                               );
@@ -2168,39 +1638,26 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
 
                 ),
               ),
-              //right profile
-              Expanded(
-                flex: 2,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 15.sp,),
-                    //photo profile and name
-                    ListTile(
-                      contentPadding: const EdgeInsets.only(left: 0, right: 0),
-                                dense: true,
-                                horizontalTitleGap: 20.0,
-                      leading: Container(
-                              margin: const EdgeInsets.only(right: 2.0),
-                              child: Image.memory(
-                                base64Decode(photo),
-                              ),
-                            ),
-                      title: Text("$employeeName",
-                        style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
-                      ),
-                      subtitle: Text('$employeeEmail',
-                        style: TextStyle( fontSize: 15.sp, fontWeight: FontWeight.w300,),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ],
           ),
         )
       ),
     );
+  }
+
+  String formatDate(String date) {
+    // Parse the date string
+    DateTime parsedDate = DateFormat("yyyy-MM-dd").parse(date);
+
+    // Format the date as "dd MMMM yyyy"
+    return DateFormat("d MMMM yyyy", 'id').format(parsedDate);
+  }
+
+  String _formatDate(String date) {
+    // Parse the date string
+    DateTime parsedDate = DateFormat("yyyy-MM-dd HH:mm").parse(date);
+
+    // Format the date as "dd MMMM yyyy"
+    return DateFormat("d MMMM yyyy HH:mm", 'id').format(parsedDate);
   }
 }

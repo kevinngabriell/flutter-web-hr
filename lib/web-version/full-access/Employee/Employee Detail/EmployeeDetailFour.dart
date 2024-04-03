@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hr_systems_web/web-version/full-access/Employee/Employee%20Detail/EmployeeDetailFive.dart';
+import 'package:hr_systems_web/web-version/full-access/Employee/UpdateData/UpdateDataFour.dart';
 import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -245,7 +246,7 @@ class _EmployeeDetailFourState extends State<EmployeeDetailFour> {
                         SizedBox(height: 5.sp,),
                         BerandaNonActive(employeeId: employeeId.toString()),
                         SizedBox(height: 5.sp,),
-                        KaryawanNonActive(employeeId: employeeId.toString()),
+                        KaryawanActive(employeeId: employeeId.toString()),
                         SizedBox(height: 5.sp,),
                         const GajiNonActive(),
                         SizedBox(height: 5.sp,),
@@ -255,7 +256,7 @@ class _EmployeeDetailFourState extends State<EmployeeDetailFour> {
                         SizedBox(height: 5.sp,),
                         const AcaraNonActive(),
                         SizedBox(height: 5.sp,),
-                        const LaporanActive(),
+                        LaporanNonActive(positionId: widget.employeeID,),
                         SizedBox(height: 10.sp,),
                         const PengaturanMenu(),
                         SizedBox(height: 5.sp,),
@@ -800,7 +801,7 @@ class _EmployeeDetailFourState extends State<EmployeeDetailFour> {
                             children: [
                               ElevatedButton(
                                 onPressed: (){
-                          
+                                  Get.to(UpdateDataFour(employeeId: widget.employeeID));
                                 }, 
                                 style: ElevatedButton.styleFrom(
                                   minimumSize: Size(50.w, 55.h),

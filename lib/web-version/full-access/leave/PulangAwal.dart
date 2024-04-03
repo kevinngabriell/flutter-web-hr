@@ -324,7 +324,6 @@ class _PulangAwalPageState extends State<PulangAwalPage> {
                           style: TextStyle(
                             fontSize: 7.sp,
                             fontWeight: FontWeight.w700,
-                            color: const Color.fromRGBO(116, 116, 116, 1)
                           ),
                         ),
                       ),

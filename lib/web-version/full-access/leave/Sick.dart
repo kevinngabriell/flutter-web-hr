@@ -278,7 +278,6 @@ class _SickPermissionState extends State<SickPermission> {
                           style: TextStyle(
                             fontSize: 7.sp,
                             fontWeight: FontWeight.w700,
-                            color: const Color.fromRGBO(116, 116, 116, 1)
                           ),
                         ),
                       ),

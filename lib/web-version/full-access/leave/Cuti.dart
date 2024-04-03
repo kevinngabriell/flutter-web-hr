@@ -359,8 +359,7 @@ Future<void> fetchEmployeeList() async {
                           "Formulir Pengajuan Cuti Karyawan",
                           style: TextStyle(
                             fontSize: 7.sp,
-                            fontWeight: FontWeight.w700,
-                            color: const Color.fromRGBO(116, 116, 116, 1)
+                            fontWeight: FontWeight.w700
                           ),
                         ),
                       ),
@@ -606,6 +605,7 @@ Future<void> fetchEmployeeList() async {
                       SizedBox(height: 6.sp,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(
                             width: (MediaQuery.of(context).size.width - 210.w) / 2,
@@ -672,28 +672,42 @@ Future<void> fetchEmployeeList() async {
                         ),
                       ),
                       SizedBox(height: 6.sp,),
-                      SizedBox(
-                        width: (MediaQuery.of(context).size.width - 280.w),
-                        child: DropdownButtonFormField<String>(
-                          value: selectedEmployeeId,
-                          hint: const Text('Pilih karyawan pengganti'),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedEmployeeId = newValue;
-                            });
-                          },
-                          items: employees.map((Map<String, String> employee) {
-                            final String? id = employee['id'];
-                            final String? employeeName = employee['employee_name'];
-                        
-                            return DropdownMenuItem<String>(
-                              value: id,
-                              child: Text(employeeName ?? 'Unknown'),
-                            );
-                          }).toList(),
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                                  "Karyawan Pengganti",
+                                  style: TextStyle(
+                                    fontSize: 4.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: const Color.fromRGBO(116, 116, 116, 1)
+                                  ),
+                                ),
+                                SizedBox(height: 7.h,),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width - 280.w),
+                            child: DropdownButtonFormField<String>(
+                              value: selectedEmployeeId,
+                              hint: const Text('Pilih karyawan pengganti'),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedEmployeeId = newValue;
+                                });
+                              },
+                              items: employees.map((Map<String, String> employee) {
+                                final String? id = employee['id'];
+                                final String? employeeName = employee['employee_name'];
+                            
+                                return DropdownMenuItem<String>(
+                                  value: id,
+                                  child: Text(employeeName ?? 'Unknown'),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 40.sp,),
+                      SizedBox(height: 10.sp,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -713,7 +727,7 @@ Future<void> fetchEmployeeList() async {
                           ),
                         ],
                       ),
-                      SizedBox(height: 40.sp,),
+                      SizedBox(height: 10.sp,),
                     ],
                   ),
                 ),

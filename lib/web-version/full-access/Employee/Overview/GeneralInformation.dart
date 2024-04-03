@@ -32,6 +32,7 @@ class _GeneralInformationState extends State<GeneralInformation> {
   bool isLoading = false;
   String spvID = '';
   List<Map<String, String>> spvName = [];
+  String selectedSPV = '';
 
   String formatDate(String date) {
     // Parse the date string
@@ -45,6 +46,26 @@ class _GeneralInformationState extends State<GeneralInformation> {
   void initState() {
     super.initState();
     fetchEmployeeData(widget.employeeId);
+    fetchSPVdata();
+  }
+
+  Future<void> fetchSPVdata() async {
+    try{
+      isLoading = true;
+      final response = await http.get(Uri.parse('https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/account/getspvlist.php'));
+
+      if(response.statusCode == 200){
+        final data = json.decode(response.body);
+        spvName= (data['Data'] as List).map((spv) => Map<String, String>.from(spv)).toList();
+        selectedSPV = spvName[0]['id']!;
+      } else {
+        print('Failed to fetch data');
+      }
+    } catch (e){
+      print('error : $e');
+    } finally {
+      isLoading = false;
+    }
   }
 
   Future<void> deleteAccount(String employeeId) async {
@@ -328,6 +349,7 @@ class _GeneralInformationState extends State<GeneralInformation> {
 
   @override
   Widget build(BuildContext context) {
+    print('selectedSPV : ${selectedSPV}');
     return Padding(
       padding: EdgeInsets.only(top: 5.sp, right: 10.sp),
       child: isLoading ? const Center(child: CircularProgressIndicator(),) : Row(
@@ -592,7 +614,45 @@ class _GeneralInformationState extends State<GeneralInformation> {
                   ),
                   SizedBox(height: 3.sp,),
                   ElevatedButton(
-                    onPressed: (){Get.to(EmployeeDetailOne(widget.employeeId));}, 
+                    onPressed: (){
+                      showDialog(
+                        context: context, 
+                        builder: (_){
+                          return AlertDialog(
+                            title: Text('Pilih supervisor'),
+                            content: DropdownButtonFormField<String>(
+                              value: '000',
+                              hint: Text('Pilih Supervisor'),
+                              items: spvName.map<DropdownMenuItem<String>>((Map<String, String> spv) {
+                                return DropdownMenuItem<String>(
+                                  value: spv['id']!,
+                                  child: Text(spv['name']!),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedSPV = newValue!;
+                                });
+                              },
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: (){
+                                  Get.back();
+                                }, 
+                                child: Text('Batal')
+                              ),
+                              TextButton(
+                                onPressed: (){
+                                  
+                                }, 
+                                child: Text('Kumpul')
+                              )
+                            ],
+                          );
+                        }
+                      );
+                    }, 
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(80.w, 45.h),
                       foregroundColor: const Color(0xFFFFFFFF),
@@ -605,7 +665,45 @@ class _GeneralInformationState extends State<GeneralInformation> {
                   ),
                   SizedBox(height: 3.sp,),
                   ElevatedButton(
-                    onPressed: (){Get.to(EmployeeDetailOne(widget.employeeId));}, 
+                    onPressed: (){
+                      showDialog(
+                        context: context, 
+                        builder: (_){
+                          return AlertDialog(
+                            title: Text('Pilih supervisor'),
+                            content: DropdownButtonFormField<String>(
+                              value: selectedSPV,
+                              hint: Text('Pilih Supervisor'),
+                              items: spvName.map<DropdownMenuItem<String>>((Map<String, String> spv) {
+                                return DropdownMenuItem<String>(
+                                  value: spv['id']!,
+                                  child: Text(spv['name']!),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedSPV = newValue!;
+                                });
+                              },
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: (){
+                                  Get.back();
+                                }, 
+                                child: Text('Batal')
+                              ),
+                              TextButton(
+                                onPressed: (){
+                                  
+                                }, 
+                                child: Text('Kumpul')
+                              )
+                            ],
+                          );
+                        }
+                      );
+                    }, 
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(80.w, 45.h),
                       foregroundColor: const Color(0xFFFFFFFF),
