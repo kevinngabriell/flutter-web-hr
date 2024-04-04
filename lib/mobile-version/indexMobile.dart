@@ -7,7 +7,17 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hr_systems_web/mobile-version/absen.dart';
+import 'package:hr_systems_web/mobile-version/permission/cutiTahunanMobile.dart';
+import 'package:hr_systems_web/mobile-version/permission/izinDatangTelatMobile.dart';
+import 'package:hr_systems_web/mobile-version/permission/izinLemburMobile.dart';
+import 'package:hr_systems_web/mobile-version/permission/izinPulangAwalMobile.dart';
+import 'package:hr_systems_web/mobile-version/permission/izinSakitMobile.dart';
+import 'package:hr_systems_web/mobile-version/permission/viewAllMyPermission.dart';
 import 'package:hr_systems_web/mobile-version/profileMobile.dart';
+import 'package:hr_systems_web/mobile-version/request/newBusinessTripRequestMobile.dart';
+import 'package:hr_systems_web/mobile-version/request/newEmployeeLoanRequest.dart';
+import 'package:hr_systems_web/mobile-version/request/newInventoryRequestMobile.dart';
+import 'package:hr_systems_web/mobile-version/request/newResignRequest.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -45,13 +55,10 @@ class _indexMobileState extends State<indexMobile> {
   }
 
   Future<void> fetchData() async {
-    setState(() {
-      isLoading = true;
-    });
-
     String employeeId = GetStorage().read('employee_id').toString();
 
     try {
+      isLoading = true;
       String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-systems-data-v.1/GetAllPageProfile.php';
       Map<String, dynamic> requestBody = {'employee_id': employeeId};
       String requestBodyJson = json.encode(requestBody);
@@ -79,30 +86,20 @@ class _indexMobileState extends State<indexMobile> {
 
         await Future.delayed(const Duration(seconds: 1)); 
 
-         setState(() {
-          isLoading = false;
-        });
-
-        Get.to(indexMobile(EmployeeID: employeeId,));
       } else {
         print('Failed to load data. Status code: ${response.statusCode}');
-          setState(() {
-            isLoading = false;
-          });
       }
     } catch (e) {
       print('Exception during API call: $e');
-        setState(() {
-          isLoading = false;
-        });
+    } finally{
+      isLoading = false;
     }
   }
 
   Future<void> checkLocation() async {
-  setState(() {
-    isLoading = true;
-  });
+
   try {
+    isLoading = true;
     String employeeId = storage.read('employee_id').toString();
     double targetLatitude;
     double targetLongitude;
@@ -205,6 +202,8 @@ class _indexMobileState extends State<indexMobile> {
   } catch (e) {
     print('Error: $e');
     // Handle the error as needed, e.g., show a user-friendly message
+  } finally {
+    isLoading = false;
   }
 }
 
@@ -222,9 +221,7 @@ class _indexMobileState extends State<indexMobile> {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
-        setState(() {
-          timeIn = data['time'];
-        });
+        timeIn = data['time'];
       } else {
         print('Failed to load data. Status code: ${response.statusCode}');
       }
@@ -249,9 +246,7 @@ class _indexMobileState extends State<indexMobile> {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
-        setState(() {
-          timeOut = data['time'];
-        });
+        timeOut = data['time'];
       } else {
         print('Failed to load data. Status code: ${response.statusCode}');
       }
@@ -263,45 +258,41 @@ class _indexMobileState extends State<indexMobile> {
   }
 
   void _changeSelectedNavBar(int index) {
-        setState(() {
-    
-          if (index == 0) {
-            Get.to(indexMobile(EmployeeID: widget.EmployeeID,));
-          }else if(index == 1){
-            _currentMenu = 'Order';
-          }else if(index == 2){
-            FutureBuilder<void>(
-              future: checkLocation(),
-              builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.none:
-                    return const Text('Press button to start.');
-                  case ConnectionState.active:
-                  case ConnectionState.waiting:
-                    return const CircularProgressIndicator();
-                  case ConnectionState.done:
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    }
-                    return const Text('Location checked successfully!');
-                }
-              },
-            );
-
-          }else if(index == 3){
-            _currentMenu = 'Account';
-          } else if (index == 4){
-            Get.to(const MyProfileMobile());
-            // logoutServicesMobile();
-            // Get.to(MobileLogin());
-            // Get.to(ProfilePage(EmployeeName: "${widget.EmployeeName}", PositionName: "${widget.PositionName}",));
-          }
-        });
+    setState(() {
+      if (index == 0) {
+        Get.to(indexMobile(EmployeeID: widget.EmployeeID,));
+      }else if(index == 1){
+        _currentMenu = 'Order';
+      }else if(index == 2){
+        FutureBuilder<void>(
+          future: checkLocation(),
+          builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+            switch (snapshot.connectionState) {
+                case ConnectionState.none:
+              return const Text('Press button to start.');
+                case ConnectionState.active:
+                case ConnectionState.waiting:
+              return const CircularProgressIndicator();
+                case ConnectionState.done:
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              return const Text('Location checked successfully!');
+            }
+          },
+        );
+      }else if(index == 3){
+        Get.to(viewAllMyPermissionMobile());
+      } else if (index == 4){
+        Get.to(MyProfileMobile(employeeId: widget.EmployeeID,));
       }
-
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    var photo = storage.read('photo');
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: isLoading ? const Center(child: CircularProgressIndicator(),) : SingleChildScrollView(
@@ -317,26 +308,26 @@ class _indexMobileState extends State<indexMobile> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 50.h,),
+                    SizedBox(height: 20.h,),
                     Padding(
                       padding: EdgeInsets.only(top: 10.sp, left: 15.sp),
                       child: Row(
                         children: [
-                          const Text('data'),
+                          Image.memory(base64Decode(photo), width: MediaQuery.of(context).size.width * 0.13,),
                           SizedBox(width: 10.w,),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(employeeName,
                                 style: TextStyle(
-                                  fontSize: 22.sp,
+                                  fontSize: 18.sp,
                                   fontWeight: FontWeight.w600
                                 ),
                               ),
                               Text(positionName,
                                 style: TextStyle(
                                   color: const Color.fromRGBO(116, 116, 116, 1),
-                                  fontSize: 14.sp,
+                                  fontSize: 12.sp,
                                   fontWeight: FontWeight.w400
                                 ),
                               ),
@@ -347,6 +338,7 @@ class _indexMobileState extends State<indexMobile> {
                     ),
                     SizedBox(height: 20.h,),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox( 
                           width: MediaQuery.of(context).size.width / 2,
@@ -439,6 +431,7 @@ class _indexMobileState extends State<indexMobile> {
                     ),
                     SizedBox(height: 10.h,),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox( 
                           width: MediaQuery.of(context).size.width / 2,
@@ -544,7 +537,7 @@ class _indexMobileState extends State<indexMobile> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              print('1');
+                              izinDialog();
                             },
                             child: Column(
                               children: [
@@ -556,7 +549,7 @@ class _indexMobileState extends State<indexMobile> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              print('1');
+                              permohonanDialog();
                             },
                             child: Column(
                               children: [
@@ -639,7 +632,7 @@ class _indexMobileState extends State<indexMobile> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history),
-            label: 'Permohonan',
+            label: 'Izin',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
@@ -654,5 +647,129 @@ class _indexMobileState extends State<indexMobile> {
     // Add error checking as needed
     List<String> parts = fullTime.split(':');
     return '${parts[0]}:${parts[1]}';
+  }
+
+  Future izinDialog() {
+    return showDialog(
+      context: context, 
+      builder: (_){
+        return AlertDialog(
+          title: const Text('Pengajuan Izin'),
+          content: DropdownButtonFormField(
+            value: 'IZIN-001',
+            items: const [
+              DropdownMenuItem(value: 'IZIN-001',child: Text('Izin pulang awal'),),
+              DropdownMenuItem(value: 'IZIN-002',child: Text('Izin datang telat'),),
+              DropdownMenuItem(value: 'IZIN-003',child: Text('Cuti tahunan'),),
+              DropdownMenuItem(value: 'IZIN-004',child: Text('Lembur'),),
+              DropdownMenuItem(value: 'IZIN-005',child: Text('Sakit'),),
+            ],
+            onChanged: (value){
+              leaveoptions = value.toString();
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Get.back();
+              }, 
+              child: const Text('Kembali')
+            ),
+            TextButton(
+              onPressed: (){
+                if(leaveoptions == 'IZIN-001'){
+                  Get.to(const IzinPulangAwal());
+                } else if (leaveoptions == 'IZIN-002'){
+                  Get.to(const izinDatangTelatMobile());
+                } else if (leaveoptions == 'IZIN-003'){
+                  Get.to(const cutiTahunanMobile());
+                } else if (leaveoptions == 'IZIN-004'){
+                  Get.to(const izinLemburMobile());
+                } else if (leaveoptions == 'IZIN-005'){
+                  Get.to(const izinSakitMobile());
+                }
+              }, 
+              child: const Text('Kumpul')
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+  Future permohonanDialog() {
+    return showDialog(
+      context: context, 
+      builder: (_){
+        return AlertDialog(
+          title: const Text('Pengajuan Permohonan'),
+          content: DropdownButtonFormField(
+            value: 'PER-001',
+            items: const [
+              DropdownMenuItem(value: 'PER-001',child: Text('Pengajuan inventaris'),),
+              DropdownMenuItem(value: 'PER-002',child: Text('Pengajuan karyawan baru'),),
+              DropdownMenuItem(value: 'PER-003',child: Text('Pengajuan perjalanan dinas'),),
+              DropdownMenuItem(value: 'PER-004',child: Text('Pengajuan pinjaman karyawan'),),
+              DropdownMenuItem(value: 'PER-005',child: Text('Pengajuan pemunduran diri'),),
+            ],
+            onChanged: (value){
+              leaveoptions = value.toString();
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Get.back();
+              }, 
+              child: const Text('Kembali')
+            ),
+            TextButton(
+              onPressed: (){
+                if(leaveoptions == 'PER-001'){
+                  Get.to(const newInventoryMobileRequest());
+                } else if (leaveoptions == 'PER-002'){
+                  webRequest();
+                } else if (leaveoptions == 'PER-003'){
+                  Get.to(const NewBusinessTripRequestMobile());
+                } else if (leaveoptions == 'PER-004'){
+                  Get.to(const newEmployeeLoanRequestMobile());
+                } else if (leaveoptions == 'PER-005'){
+                  Get.to(const newResignMobile());
+                }
+              }, 
+              child: const Text('Kumpul')
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+  Future webRequest() {
+    return showDialog(
+      context: context, 
+      builder: (_){
+        return AlertDialog(
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset('images/error.png', width: MediaQuery.of(context).size.width * 0.5,),
+              SizedBox(height: 14.sp,),
+              Text('Error !!', style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w700,)),
+              SizedBox(height: 1.sp,),
+              Text('Pengajuan permohonan ini harus melalui web HR.', style: TextStyle(fontSize: 12.sp,), textAlign: TextAlign.center,),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Get.back();
+              }, 
+              child: const Text('Oke')
+            ),
+          ],
+        );
+      }
+    );
   }
 }

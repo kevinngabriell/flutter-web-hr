@@ -258,13 +258,33 @@ class _ListEmployeeSalaryState extends State<ListEmployeeSalary> {
                           )
                         ],
                       ),
-                      SizedBox(height: 50.sp,),
+                      SizedBox(height: 10.sp,),
                       if (isLoading)
                         const CircularProgressIndicator()
                       else if (TanggalMulai == null || TanggalAkhir == null)
-                        const Text('Silahkan mengisi tanggal mulai dan akhir untuk melihat rekap absen')
+                        Center(
+                          child: Column(
+                            children: [
+                              Image.asset('images/warning.png', width: MediaQuery.of(context).size.width * 0.13,),
+                              SizedBox(height: 4.sp,),
+                              Text('Peringatan !!', style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w700,)),
+                              SizedBox(height: 1.sp,),
+                              Text('Silahkan mengisi tanggal mulai dan akhir untuk melihat rekap absen', style: TextStyle(fontSize: 5.sp,)),
+                            ],
+                          )
+                        )
                       else if (differenceDays != null && differenceDays! <= 28)
-                        const Text('Rentang waktu yang anda pilih kurang dari 28 hari kalender')
+                        Center(
+                          child: Column(
+                            children: [
+                              Image.asset('images/error.png', width: MediaQuery.of(context).size.width * 0.3,),
+                              SizedBox(height: 4.sp,),
+                              Text('Error !!', style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w700,)),
+                              SizedBox(height: 1.sp,),
+                              Text('Tanggal akhir dan mulai tidak dapat kurang dari 28 hari', style: TextStyle(fontSize: 5.sp,)),
+                            ],
+                          )
+                        )
                       else if (differenceDays != null && differenceDays! >= 28)
                         FutureBuilder<List<Map<String, dynamic>>>(
                           future: fetchEmployeeList(), // Assuming you have a function to fetch the employee list
@@ -313,7 +333,7 @@ class _ListEmployeeSalaryState extends State<ListEmployeeSalary> {
                                                     trailing: Card(
                                                       color: cardColor,
                                                       child: Padding(
-                                                        padding: EdgeInsets.only(left: 10.sp, right: 10.sp, top: 7.sp, bottom: 7.sp),
+                                                        padding: EdgeInsets.only(left: 2.sp, right: 2.sp, top: 2.sp, bottom: 2.sp),
                                                         child: Text(statusText, style: const TextStyle(color: Colors.white),),
                                                       )
                                                     ),

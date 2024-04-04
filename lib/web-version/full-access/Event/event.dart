@@ -1,12 +1,14 @@
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
 import 'package:http/http.dart' as http;
+import 'package:table_calendar/table_calendar.dart';
 
 class EventIndex extends StatefulWidget {
   const EventIndex({super.key});
@@ -22,6 +24,8 @@ class _EventIndexState extends State<EventIndex> {
   String employeeEmail = '';
   String trimmedCompanyAddress = '';
   final storage = GetStorage();
+  CalendarFormat _calendarFormat = CalendarFormat.month;
+  DateTime _selectedDay = DateTime.now();
 
   @override
   void initState() {
@@ -142,7 +146,7 @@ class _EventIndexState extends State<EventIndex> {
                           children: [
                             ElevatedButton(
                               onPressed: (){
-
+                                dialogCreateEvent();
                               }, 
                               style: ElevatedButton.styleFrom(
                                 elevation: 0,
@@ -156,36 +160,76 @@ class _EventIndexState extends State<EventIndex> {
                             )
                           ],
                         ),
-                      SizedBox(height: 30.sp,),
-                      CarouselSlider(
-                        options: CarouselOptions(),
-                        items: imgList.map((item) => Card(
-                          child: Image.network(
-                            item, fit: BoxFit.fill)
-                          ))
-                        .toList(),
-                      ),
-                      SizedBox(height: 30.sp,),
+                      SizedBox(height: 10.sp,),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(
-                            width: (MediaQuery.of(context).size.width - 192.w),
-                            child: const Card(
-                              child: Column(
-                                children: [
-                                  Text('data')
-                                ],
+                            width: (MediaQuery.of(context).size.width - 180.w),
+                            child: Card(
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 5.sp, bottom: 5.sp, left: 7.sp, right: 7.sp),
+                                child: Text('Acara Kantor'),
                               ),
                             ),
                           ),
-                          SizedBox(width: 10.w,),
                           SizedBox(
-                            width: (MediaQuery.of(context).size.width - 170.w) / 2,
-                            child: const Card(
-                              child: Column(
-                                children: [
-                                  Text('data')
-                                ],
+                            width: (MediaQuery.of(context).size.width - 270.w),
+                            child: Card(
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 5.sp, bottom: 5.sp, left: 7.sp, right: 7.sp),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TableCalendar(
+                                      focusedDay: _selectedDay, 
+                                      firstDay: DateTime(2023, 1, 1),
+                                      lastDay: DateTime(2030, 12, 31),
+                                      selectedDayPredicate: (day) {
+                                        return isSameDay(_selectedDay, day);
+                                      },
+                                      onFormatChanged: (format) {
+                                        if (_calendarFormat != format) {
+                                          setState(() {
+                                            _calendarFormat = format;
+                                          });
+                                        }
+                                      },
+                                      onDaySelected: (selectedDay, focusedDay) {
+                                        setState(() {
+                                          _selectedDay = selectedDay;
+                                        });
+                                      },
+                                      headerStyle: HeaderStyle(
+                                        titleTextStyle: TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'RobotoBold',
+                                          fontSize: 4.sp,
+                                        ),
+                                        formatButtonDecoration: const BoxDecoration(
+                                          color: Colors.blue,
+                                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                                        ),
+                                        formatButtonTextStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'RobotoMedium',
+                                          fontSize: 10.sp
+                                        ),
+                                        leftChevronIcon: const Icon(Icons.chevron_left, color: Colors.black),
+                                        rightChevronIcon: const Icon(Icons.chevron_right, color: Colors.black),
+                                        formatButtonVisible: false,
+                                        formatButtonShowsNext: true,
+                                        titleCentered: true,
+                                      ),
+                                    ),
+                                    Card(
+                                      child: ListTile(
+                                        title: Text('data'),
+                                      )
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           )
@@ -199,6 +243,183 @@ class _EventIndexState extends State<EventIndex> {
           ),
         )
       )
+    );
+  }
+
+  Future dialogCreateEvent() {
+    return showDialog(
+      context: context, 
+      builder: (_){
+        return AlertDialog(
+          title: Center(child: Text('Buat Acara',
+                                  style: TextStyle(
+                                    fontSize: 6.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),)),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: (MediaQuery.of(context).size.width - 200.w) / 2,
+                    child: Padding(
+                      padding: EdgeInsets.all(4.sp),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Nama Acara',
+                                  style: TextStyle(
+                                    fontSize: 4.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),),
+                          SizedBox(height: 2.sp,),
+                          TextFormField(
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              fillColor: Color.fromRGBO(235, 235, 235, 1),
+                              hintText: 'Masukkan nama acara'
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: (MediaQuery.of(context).size.width - 200.w) / 2,
+                    child: Padding(
+                      padding: EdgeInsets.all(4.sp),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Tanggal',
+                                  style: TextStyle(
+                                    fontSize: 4.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),),
+                          SizedBox(height: 2.sp,),
+                          DateTimePicker(
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime(5000),
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              fillColor: Color.fromRGBO(235, 235, 235, 1),
+                              hintText: 'Pilih tanggal acara'
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: (MediaQuery.of(context).size.width - 200.w) / 2,
+                    child: Padding(
+                      padding: EdgeInsets.all(4.sp),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Lokasi',
+                                  style: TextStyle(
+                                    fontSize: 4.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),),
+                          SizedBox(height: 2.sp,),
+                          TextFormField(
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              fillColor: Color.fromRGBO(235, 235, 235, 1),
+                              hintText: 'Masukkan lokasi acara'
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: (MediaQuery.of(context).size.width - 200.w) / 2,
+                    child: Padding(
+                      padding: EdgeInsets.all(4.sp),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Jam',
+                                  style: TextStyle(
+                                    fontSize: 4.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),),
+                          SizedBox(height: 2.sp,),
+                          DateTimePicker(
+                            type: DateTimePickerType.time,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime(5000),
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              fillColor: Color.fromRGBO(235, 235, 235, 1),
+                              hintText: 'Pilih jam acara'
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: (MediaQuery.of(context).size.width - 200.w),
+                    child: Padding(
+                      padding: EdgeInsets.all(4.sp),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Deskripsi',
+                                  style: TextStyle(
+                                    fontSize: 4.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),),
+                          SizedBox(height: 2.sp,),
+                          TextFormField(
+                            maxLines: 3,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              fillColor: Color.fromRGBO(235, 235, 235, 1),
+                              hintText: 'Masukkan deskripsi acara'
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Get.back();
+              }, 
+              child: Text('Kembali')
+            ),
+            TextButton(
+              onPressed: (){
+                
+              }, 
+              child: Text('Kumpulkan')
+            )
+          ],
+        );
+      }
     );
   }
 }

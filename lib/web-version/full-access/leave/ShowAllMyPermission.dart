@@ -73,7 +73,7 @@ late Future<List<Map<String, dynamic>>> permissionData;
     }
   }
 
-Future<List<Map<String, dynamic>>> fetchPermissionData() async {
+  Future<List<Map<String, dynamic>>> fetchPermissionData() async {
     String employeeId = storage.read('employee_id').toString();
 
     final response = await http.get(

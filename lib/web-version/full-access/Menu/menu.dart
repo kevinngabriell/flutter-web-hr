@@ -617,6 +617,12 @@ class _NotificationnProfileState extends State<NotificationnProfile> {
                                         ),
                                         actions: [
                                           TextButton(
+                                            onPressed: () {
+                                              
+                                            }, 
+                                            child: const Text("Hapus")
+                                          ),
+                                          TextButton(
                                             onPressed: () {Get.back();}, 
                                             child: const Text("Ok")
                                           ),
@@ -985,7 +991,7 @@ class _PengaturanActiveState extends State<PengaturanActive> {
               child: Image.asset('images/pengaturan-active.png')
             ),
             SizedBox(width: 2.w),
-            Text('Pengaturan',style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,))
+            Text('Pengaturan',style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w600,))
           ],
         )
       ),
@@ -1025,7 +1031,7 @@ class _StrukturActiveState extends State<StrukturActive> {
               child: Image.asset('images/struktur-active.png')
             ),
             SizedBox(width: 2.w),
-            Text('Struktur',style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600,))
+            Text('Struktur',style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w600,))
           ],
         )
       ),

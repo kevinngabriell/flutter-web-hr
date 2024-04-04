@@ -596,10 +596,52 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
           totalDeductions = int.parse(txtBPJSKetenagPot1.text.replaceAll(RegExp(r'[^0-9]'), '')) + int.parse(txtBPJSKesehatanPot1.text.replaceAll(RegExp(r'[^0-9]'), '')) + int.parse(txtBPJSKetenagPot2.text.replaceAll(RegExp(r'[^0-9]'), '')) + int.parse(txtBPJSKesehatanPot2.text.replaceAll(RegExp(r'[^0-9]'), ''));
           takeHomePay = (totalEarnings! - totalDeductions!);
         });
+      } else {
+        showDialog(
+          context: context, 
+          builder: (_){
+            return AlertDialog(
+              title: Center(child: Text('Error'),),
+              content: Column(
+                children: [
+                  Image.asset('images/error.png', width: MediaQuery.of(context).size.width * 0.3,),
+                  SizedBox(height: 4.sp,),
+                  Text('Error !!', style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w700,)),
+                  SizedBox(height: 1.sp,),
+                  Text('Data bulan lalu tidak ada didalam sistem, Silahkan input secara manual', style: TextStyle(fontSize: 5.sp,)),
+                ],
+              ),
+            );
+          }
+        );
       }
 
     } catch(e){
-
+      showDialog(
+          context: context, 
+          builder: (_){
+            return AlertDialog(
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset('images/error.png', width: MediaQuery.of(context).size.width * 0.3,),
+                  SizedBox(height: 7.sp,),
+                  Text('Error !!', style: TextStyle(fontSize: 7.sp, fontWeight: FontWeight.w700,)),
+                  SizedBox(height: 1.sp,),
+                  Text('Data bulan lalu tidak ada didalam sistem, Silahkan input secara manual', style: TextStyle(fontSize: 4.sp,)),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: (){
+                    Get.back();
+                  }, 
+                  child: Text('Kembali')
+                )
+              ],
+            );
+          }
+        );
     }
 
   }
@@ -889,12 +931,12 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                 borderRadius: BorderRadius.circular(8.0), // Add border radius if needed
                               ),
                               child: Padding(
-                                padding: EdgeInsets.only(left: 15.sp, top: 15.sp, bottom: 15.sp),
+                                padding: EdgeInsets.only(left: 4.sp, top: 5.sp, bottom: 5.sp, right: 4.sp),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('Perhatian', style: TextStyle(fontSize: 16.sp, color: Colors.white, fontWeight: FontWeight.bold)), // Set text color
-                                    SizedBox(height: 7.sp,),
+                                    Text('Perhatian', style: TextStyle(fontSize: 6.sp, color: Colors.white, fontWeight: FontWeight.bold)), // Set text color
+                                    SizedBox(height: 2.sp,),
                                     const Text(
                                       'Jika angka total perhitungan gaji tidak berubah, silahkan coba hapus salah satu 0 dan tambahkan kembali pada pendapatan dan potongan',
                                       style: TextStyle(color: Colors.white), // Set text color
@@ -905,17 +947,17 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 25.sp,),
+                        SizedBox(height: 10.sp,),
                         //Data Absen
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 5.w) / 2,
                               child: Card(
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: 15.sp, right: 15.sp, top: 18.sp, bottom: 18.sp),
+                                  padding: EdgeInsets.only(left: 6.sp, right: 6.sp, top: 8.sp, bottom: 8.sp),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -923,7 +965,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                       //Gaji pokok
                                       Text('Gaji pokok'
                                         ,style: TextStyle(
-                                          fontSize: 14.sp,
+                                          fontSize: 4.sp,
                                           fontWeight: FontWeight.w400,
                                         )
                                       ),
@@ -1035,7 +1077,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                       //Tunjangan Jabatan
                                       Text('Tunjangan jabatan'
                                         ,style: TextStyle(
-                                          fontSize: 14.sp,
+                                          fontSize: 4.sp,
                                           fontWeight: FontWeight.w400,
                                         )
                                       ),
@@ -1063,7 +1105,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                       //BPJS Ketenagakerjaan + JP
                                       Text('BPJS Ketenagakerjaan + JP'
                                         ,style: TextStyle(
-                                          fontSize: 14.sp,
+                                          fontSize: 4.sp,
                                           fontWeight: FontWeight.w400,
                                         )
                                       ),
@@ -1091,7 +1133,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                       //BPJS Kesehatan
                                       Text('BPJS Kesehatan'
                                         ,style: TextStyle(
-                                          fontSize: 14.sp,
+                                          fontSize: 4.sp,
                                           fontWeight: FontWeight.w400,
                                         )
                                       ),
@@ -1119,7 +1161,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                       //Lembur
                                       Text('Lembur'
                                         ,style: TextStyle(
-                                          fontSize: 14.sp,
+                                          fontSize: 4.sp,
                                           fontWeight: FontWeight.w400,
                                         )
                                       ),
@@ -1147,7 +1189,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                       //Transport
                                       Text('Transport'
                                         ,style: TextStyle(
-                                          fontSize: 14.sp,
+                                          fontSize: 4.sp,
                                           fontWeight: FontWeight.w400,
                                         )
                                       ),
@@ -1175,7 +1217,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                       //Lainnya
                                       Text('Lainnya'
                                         ,style: TextStyle(
-                                          fontSize: 14.sp,
+                                          fontSize: 4.sp,
                                           fontWeight: FontWeight.w400,
                                         )
                                       ),
@@ -1207,19 +1249,19 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                               ),
                             ),
                             SizedBox(
-                              width: (MediaQuery.of(context).size.width - 170.w) / 2,
+                              width: (MediaQuery.of(context).size.width - 263.5.w),
                               child: Column(
                                 children: [
                                   Card(
                                     child: Padding(
-                                      padding: EdgeInsets.only(left: 15.sp, right: 15.sp, top: 18.sp, bottom: 18.sp),
+                                      padding: EdgeInsets.only(left: 6.sp, right: 6.sp, top: 8.sp, bottom: 8.sp),
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
                                           Text('Jumlah presensi kehadiran'
                                             ,style: TextStyle(
-                                              fontSize: 14.sp,
+                                              fontSize: 4.sp,
                                               fontWeight: FontWeight.w600,
                                             )
                                           ),
@@ -1228,7 +1270,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                           SizedBox(height: 20.h,),
                                           Text('Jumlah izin pulang awal'
                                             ,style: TextStyle(
-                                              fontSize: 14.sp,
+                                              fontSize: 4.sp,
                                               fontWeight: FontWeight.w600,
                                             )
                                           ),
@@ -1237,7 +1279,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                           SizedBox(height: 20.h,),
                                           Text('Jumlah izin datang terlambat'
                                             ,style: TextStyle(
-                                              fontSize: 14.sp,
+                                              fontSize: 4.sp,
                                               fontWeight: FontWeight.w600,
                                             )
                                           ),
@@ -1246,7 +1288,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                           SizedBox(height: 20.h,),
                                           Text('Jumlah izin cuti tahunan'
                                             ,style: TextStyle(
-                                              fontSize: 14.sp,
+                                              fontSize: 4.sp,
                                               fontWeight: FontWeight.w600,
                                             )
                                           ),
@@ -1255,7 +1297,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                           SizedBox(height: 20.h,),
                                           Text('Jumlah izin sakit'
                                             ,style: TextStyle(
-                                              fontSize: 14.sp,
+                                              fontSize: 4.sp,
                                               fontWeight: FontWeight.w600,
                                             )
                                           ),
@@ -1268,7 +1310,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                             },
                                             child: Text('Jumlah lembur'
                                               ,style: TextStyle(
-                                                fontSize: 14.sp,
+                                                fontSize: 4.sp,
                                                 fontWeight: FontWeight.w600,
                                               )
                                             ),
@@ -1304,7 +1346,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                             )
                           ],
                         ),
-                        SizedBox(height: 25.sp,),
+                        SizedBox(height: 10.sp,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1313,7 +1355,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                               width: (MediaQuery.of(context).size.width - 5.w) / 2,
                               child: Card(
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: 15.sp, right: 15.sp, top: 18.sp, bottom: 18.sp),
+                                  padding: EdgeInsets.only(left: 6.sp, right: 6.sp, top: 8.sp, bottom: 8.sp),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -1321,7 +1363,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                       //Pinjaman
                                       Text('Pinjaman'
                                         ,style: TextStyle(
-                                          fontSize: 14.sp,
+                                          fontSize: 4.sp,
                                           fontWeight: FontWeight.w400,
                                         )
                                       ),
@@ -1349,7 +1391,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                       //Pajak (PPH 21)
                                       Text('Pajak (PPH 21)'
                                         ,style: TextStyle(
-                                          fontSize: 14.sp,
+                                          fontSize: 4.sp,
                                           fontWeight: FontWeight.w400,
                                         )
                                       ),
@@ -1377,7 +1419,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                       //BPJS Ketenag
                                       Text('BPJS Ketenag'
                                         ,style: TextStyle(
-                                          fontSize: 14.sp,
+                                          fontSize: 4.sp,
                                           fontWeight: FontWeight.w400,
                                         )
                                       ),
@@ -1405,7 +1447,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                       //BPJS Kesehatan
                                       Text('BPJS Kesehatan',
                                         style: TextStyle(
-                                          fontSize: 14.sp,
+                                          fontSize: 4.sp,
                                           fontWeight: FontWeight.w400,
                                         )
                                       ),
@@ -1433,7 +1475,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                       //BPJS Ketenag
                                       Text('BPJS Ketenag',
                                         style: TextStyle(
-                                          fontSize: 14.sp,
+                                          fontSize: 4.sp,
                                           fontWeight: FontWeight.w400,
                                         )
                                       ),
@@ -1461,7 +1503,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                       //BPJS Kesehatan
                                       Text('BPJS Kesehatan',
                                         style: TextStyle(
-                                          fontSize: 14.sp,
+                                          fontSize: 4.sp,
                                           fontWeight: FontWeight.w400,
                                         )
                                       ),
@@ -1489,7 +1531,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                       //PPH atas bonus/komisi
                                       Text('PPH atas bonus/komisi',
                                         style: TextStyle(
-                                          fontSize: 14.sp,
+                                          fontSize: 4.sp,
                                           fontWeight: FontWeight.w400,
                                         )
                                       ),
@@ -1517,7 +1559,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                       //Lainnya
                                       Text('Lainnya',
                                         style: TextStyle(
-                                          fontSize: 14.sp,
+                                          fontSize: 4.sp,
                                           fontWeight: FontWeight.w400,
                                         )
                                       ),
@@ -1549,7 +1591,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                             )
                           ],
                         ),
-                        SizedBox(height: 25.sp,),
+                        SizedBox(height: 10.sp,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1558,7 +1600,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                               width: (MediaQuery.of(context).size.width - 5.w) / 2,
                               child: Card(
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: 15.sp, right: 15.sp, top: 18.sp, bottom: 18.sp),
+                                  padding: EdgeInsets.only(left: 6.sp, right: 6.sp, top: 8.sp, bottom: 8.sp),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -1569,7 +1611,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                           const Text('Pendapatan kotor'),
                                           Text(formatCurrency(totalEarnings ?? 0),
                                             style: TextStyle(
-                                              fontSize: 14.sp,
+                                              fontSize: 4.sp,
                                               fontWeight: FontWeight.w600,
                                             )
                                           )
@@ -1581,7 +1623,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                           const Text('Total pengurangan'),
                                           Text(formatCurrency(totalDeductions ?? 0),
                                             style: TextStyle(
-                                              fontSize: 14.sp,
+                                              fontSize: 4.sp,
                                               fontWeight: FontWeight.w600,
                                             )
                                           )
@@ -1593,7 +1635,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                                           const Text('Take Home Pay'),
                                           Text(formatCurrency(takeHomePay ?? 0),
                                             style: TextStyle(
-                                              fontSize: 14.sp,
+                                              fontSize: 4.sp,
                                               fontWeight: FontWeight.w600,
                                             )
                                           )
@@ -1606,66 +1648,63 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
                             )
                           ],
                         ),
-                        SizedBox(height: 25.sp,),
-                        Padding(
-                          padding: EdgeInsets.only(right: 25.sp),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              ElevatedButton(
-                                onPressed: (){
-                                  showDialog(
-                                    context: context, 
-                                    builder: (_){
-                                      return AlertDialog(
-                                        title: const Text('Konfirmasi'),
-                                        content: const Text('Apakah anda yakin ingin mengumpulkan data ? Data yang sudah dikumpulkan tidak dapat diubah'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: (){
-                                              Get.back();
-                                            }, 
-                                            child: const Text('Batal')
-                                          ),
-                                          TextButton(
-                                            onPressed: (){
-                                              Get.back();
-                                              savePayroll();
-                                            }, 
-                                            child: const Text('Kumpul')
-                                          )
-                                        ],
-                                      );
-                                    }
-                                  );
-                                }, 
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.center,
-                                  minimumSize: Size(40.w, 50.h),
-                                  foregroundColor: const Color(0xFFFFFFFF),
-                                  backgroundColor: const Color(0xff4ec3fc),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: const Text('Simpan dan Verifikasi')
+                        SizedBox(height: 10.sp,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            ElevatedButton(
+                              onPressed: (){
+                                showDialog(
+                                  context: context, 
+                                  builder: (_){
+                                    return AlertDialog(
+                                      title: const Text('Konfirmasi'),
+                                      content: const Text('Apakah anda yakin ingin mengumpulkan data ? Data yang sudah dikumpulkan tidak dapat diubah'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: (){
+                                            Get.back();
+                                          }, 
+                                          child: const Text('Batal')
+                                        ),
+                                        TextButton(
+                                          onPressed: (){
+                                            Get.back();
+                                            savePayroll();
+                                          }, 
+                                          child: const Text('Kumpul')
+                                        )
+                                      ],
+                                    );
+                                  }
+                                );
+                              }, 
+                              style: ElevatedButton.styleFrom(
+                                elevation: 0,
+                                alignment: Alignment.center,
+                                minimumSize: Size(40.w, 50.h),
+                                foregroundColor: const Color(0xFFFFFFFF),
+                                backgroundColor: const Color(0xff4ec3fc),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                               ),
-                              SizedBox(width: 5.w,),
-                              // ElevatedButton(
-                              //   onPressed: (){
-                              //     submitPayroll();
-                              //   }, 
-                              //   style: ElevatedButton.styleFrom(
-                              //     elevation: 0,
-                              //     alignment: Alignment.center,
-                              //     minimumSize: Size(40.w, 50.h),
-                              //     foregroundColor: const Color(0xFFFFFFFF),
-                              //     backgroundColor: const Color(0xff4ec3fc),
-                              //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              //   ),
-                              //   child: const Text('Verifikasi')
-                              // )
-                            ],
-                          ),
+                              child: const Text('Simpan dan Verifikasi')
+                            ),
+                            SizedBox(width: 5.w,),
+                            // ElevatedButton(
+                            //   onPressed: (){
+                            //     submitPayroll();
+                            //   }, 
+                            //   style: ElevatedButton.styleFrom(
+                            //     elevation: 0,
+                            //     alignment: Alignment.center,
+                            //     minimumSize: Size(40.w, 50.h),
+                            //     foregroundColor: const Color(0xFFFFFFFF),
+                            //     backgroundColor: const Color(0xff4ec3fc),
+                            //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            //   ),
+                            //   child: const Text('Verifikasi')
+                            // )
+                          ],
                         ),
                         SizedBox(height: 25.sp,),
                       ]

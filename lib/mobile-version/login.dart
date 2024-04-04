@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'dart:convert';
 import 'package:get_storage/get_storage.dart';
+import 'package:hr_systems_web/mobile-version/changepassword.dart';
 import 'package:hr_systems_web/mobile-version/indexMobile.dart';
 import 'package:http/http.dart' as http;
 
@@ -56,13 +57,17 @@ class _MobileLoginState extends State<MobileLogin> {
         // Successful login, handle the response data here
         var result = json.decode(response.body);
 
-        // Save user data to session using GetStorage
-        GetStorage().write('employee_id', result['employee_id']);
-        GetStorage().write('company_id', result['company_id']);
-        GetStorage().write('username', result['username']);
+        if(txtPassword.text == '123456'){
+          Get.to(changePasswordMobile(username: txtUsername.text));
+        } else {
+          // Save user data to session using GetStorage
+          GetStorage().write('employee_id', result['employee_id']);
+          GetStorage().write('company_id', result['company_id']);
+          GetStorage().write('username', result['username']);
 
-        // Navigate to the FullIndexWeb screen
-        checkPosition();
+          // Navigate to the FullIndexWeb screen
+          checkPosition();
+        }
 
       } else if (response.statusCode == 400) {
         // Show an alert dialog for a bad request
@@ -171,7 +176,8 @@ class _MobileLoginState extends State<MobileLogin> {
           isLoading = false;
         });
 
-        Get.to(indexMobile(EmployeeID: employeeId,));
+        getProfileImage();
+
       } else {
         print('Failed to load data. Status code: ${response.statusCode}');
           setState(() {
@@ -183,6 +189,43 @@ class _MobileLoginState extends State<MobileLogin> {
         setState(() {
           isLoading = false;
         });
+    }
+  }
+
+  Future<void> getProfileImage() async{
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final storage = GetStorage();
+
+      var employeeId = storage.read('employee_id');
+      String imageUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/account/getprofilepicture.php?employee_id=$employeeId';
+
+      final response = await http.get(Uri.parse(imageUrl));
+
+      if (response.statusCode == 200) {
+        // Decode base64 image
+        Map<String, dynamic> data = json.decode(response.body);
+        String profilePictureBased64 = data['photo'];
+
+        GetStorage().write('photo', profilePictureBased64);
+        final storage = GetStorage();
+
+        var employeeId = storage.read('employee_id');
+        Get.to(indexMobile(EmployeeID: employeeId.toString()));
+      } else {
+        // Handle error
+        print('Failed to load image. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Handle exception
+      print('Error: $error');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -301,7 +344,7 @@ class _MobileLoginState extends State<MobileLogin> {
                         textAlign: TextAlign.end,
                         style: TextStyle(
                           color: Colors.red,
-                          fontSize: 15.sp,
+                          fontSize: 10.sp,
                           fontWeight: FontWeight.w600,
                         )
                       ),
@@ -342,7 +385,7 @@ class _MobileLoginState extends State<MobileLogin> {
                       'Masuk',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontSize: 20.sp, fontWeight: FontWeight.w700),
+                          fontSize: 15.sp, fontWeight: FontWeight.w700),
                     ),
                 )
               ),

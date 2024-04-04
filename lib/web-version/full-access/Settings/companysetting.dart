@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
+import 'package:hr_systems_web/web-version/full-access/Settings/setting.dart';
 import 'package:http/http.dart' as http;
 
 class companySettingIndex extends StatefulWidget {
@@ -24,7 +25,7 @@ class _companySettingIndexState extends State<companySettingIndex> {
   String trimmedCompanyAddress = '';
   String companyID = '';
   final storage = GetStorage();
-
+  bool isLoading = false;
   TextEditingController txtNamaPerusahaan = TextEditingController();
 
   String inTime = '';
@@ -45,6 +46,7 @@ class _companySettingIndexState extends State<companySettingIndex> {
     String employeeId = storage.read('employee_id').toString();
 
     try {
+      isLoading = true;
       String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/account/getprofileforallpage.php';
       Map<String, dynamic> requestBody = {'employee_id': employeeId};
       String requestBodyJson = json.encode(requestBody);
@@ -72,12 +74,15 @@ class _companySettingIndexState extends State<companySettingIndex> {
       }
     } catch (e) {
       print('Exception during API call: $e');
+    } finally {
+      isLoading = false;
     }
   }
 
   Future<void> fetchCompanySetting() async {
 
     try{
+      isLoading = true;
       String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/company/getjamabsensetting.php?company_id=$companyID';
 
       var response = await http.get(Uri.parse(apiUrl));
@@ -105,6 +110,8 @@ class _companySettingIndexState extends State<companySettingIndex> {
 
     } catch (e){
       print('Error: $e');
+    } finally {
+      isLoading = false;
     }
 
   }
@@ -119,6 +126,7 @@ class _companySettingIndexState extends State<companySettingIndex> {
 
   Future<void> updateCompanySetting() async{
     try{
+      isLoading = true;
       String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/company/updatejamabsen.php';
       String employeeId = storage.read('employee_id').toString();
 
@@ -141,7 +149,7 @@ class _companySettingIndexState extends State<companySettingIndex> {
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
-                    Get.back();
+                    Get.to(SettingIndex());
                   }, 
                   child: const Text("Oke")
                 )
@@ -158,6 +166,8 @@ class _companySettingIndexState extends State<companySettingIndex> {
     } catch (e){
       Get.snackbar('Gagal', '$e');
       print('Exception during API call: $e');
+    } finally {
+      isLoading = false;
     }
   }
 
@@ -171,7 +181,7 @@ class _companySettingIndexState extends State<companySettingIndex> {
     return MaterialApp(
       title: "Pengaturan",
       home: Scaffold(
-        body: SingleChildScrollView(
+        body: isLoading ? const Center(child: CircularProgressIndicator(),) : SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -237,7 +247,7 @@ class _companySettingIndexState extends State<companySettingIndex> {
                                 Text(
                                   "Nama perusahaan",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                     color: const Color.fromRGBO(116, 116, 116, 1)
                                   ),
@@ -265,7 +275,7 @@ class _companySettingIndexState extends State<companySettingIndex> {
                                 Text(
                                   "Jam masuk",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                     color: const Color.fromRGBO(116, 116, 116, 1)
                                   ),
@@ -294,7 +304,7 @@ class _companySettingIndexState extends State<companySettingIndex> {
                                 Text(
                                   "Jam pulang",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                     color: const Color.fromRGBO(116, 116, 116, 1)
                                   ),
@@ -315,20 +325,25 @@ class _companySettingIndexState extends State<companySettingIndex> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 40.sp,),
-                      ElevatedButton(
-                        onPressed: () async {
-                          updateCompanySetting();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(0.sp, 45.sp),
-                          foregroundColor: const Color(0xFFFFFFFF),
-                          backgroundColor: const Color(0xff4ec3fc),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                      SizedBox(height: 10.sp,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () async {
+                              updateCompanySetting();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: Size(60.w, 50.h),
+                              foregroundColor: const Color(0xFFFFFFFF),
+                              backgroundColor: const Color(0xff4ec3fc),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: const Text('Perbaharui')
                           ),
-                        ),
-                        child: const Text('Perbaharui')
+                        ],
                       )
                     ]
                   )
