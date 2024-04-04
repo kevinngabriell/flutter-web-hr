@@ -789,29 +789,33 @@ class _PinjamanKaryawanDetailState extends State<PinjamanKaryawanDetail> {
                                 ],
                               ),
                             if(widget.statusPinjaman == 'Disetujui oleh HRD')
-                              ElevatedButton(
-                                onPressed: (){
-                                  String a = widget.pinjamanKaryawanID;
-                                  String b = widget.namaKaryawan;
-                                  String c = widget.jabatan;
-                                  String d = formatCurrency2(widget.jumlahPinjaman);
-                                  String e = widget.alasanPinjaman;
-                                  String f = widget.caraBayarPinjaman;
-                                  String g = _formatDate(widget.tanggalPengajuan);
-                                  // String h = _formatDate(tanggalSPV);
-                                  // String i = _formatDate(tanggalHRD);
-
-                                  generateAndDisplayPDFPinjamanKaryawan(companyName, companyAddress, a, b, c, d, e, f, namaSPV, tanggalSPV, namaHRD, tanggalHRD, g);
-                                }, 
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  alignment: Alignment.center,
-                                  minimumSize: Size(40.w, 55.h),
-                                  foregroundColor: const Color(0xFFFFFFFF),
-                                  backgroundColor: const Color(0xff4ec3fc),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: const Text('Download PDF')
+                              Row(
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: (){
+                                      String a = widget.pinjamanKaryawanID;
+                                      String b = widget.namaKaryawan;
+                                      String c = widget.jabatan;
+                                      String d = formatCurrency2(widget.jumlahPinjaman);
+                                      String e = widget.alasanPinjaman;
+                                      String f = widget.caraBayarPinjaman;
+                                      String g = _formatDate(widget.tanggalPengajuan);
+                                      // String h = _formatDate(tanggalSPV);
+                                      // String i = _formatDate(tanggalHRD);
+                                  
+                                      generateAndDisplayPDFPinjamanKaryawan(companyName, companyAddress, a, b, c, d, e, f, namaSPV, tanggalSPV, namaHRD, tanggalHRD, g);
+                                    }, 
+                                    style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      alignment: Alignment.center,
+                                      minimumSize: Size(40.w, 55.h),
+                                      foregroundColor: const Color(0xFFFFFFFF),
+                                      backgroundColor: const Color(0xff4ec3fc),
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                    ),
+                                    child: const Text('Download PDF')
+                                  ),
+                                ],
                               )
                           ]
                         ),

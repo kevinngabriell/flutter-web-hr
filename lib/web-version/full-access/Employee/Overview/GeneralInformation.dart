@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hr_systems_web/web-version/full-access/Employee/Employee%20Detail/EmployeeDetailOne.dart';
+import 'package:hr_systems_web/web-version/full-access/Employee/EmployeeList.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -32,7 +33,10 @@ class _GeneralInformationState extends State<GeneralInformation> {
   bool isLoading = false;
   String spvID = '';
   List<Map<String, String>> spvName = [];
-  String selectedSPV = '';
+  List<Map<String, dynamic>> spvList = [];
+  Map<String, dynamic>? selectedSPV;
+  List<Map<String, String>> locationList = [];
+  String selectedLocation = '';
 
   String formatDate(String date) {
     // Parse the date string
@@ -46,25 +50,88 @@ class _GeneralInformationState extends State<GeneralInformation> {
   void initState() {
     super.initState();
     fetchEmployeeData(widget.employeeId);
-    fetchSPVdata();
+    fetchSPVData();
+    fetchLocationData();
   }
 
-  Future<void> fetchSPVdata() async {
-    try{
-      isLoading = true;
-      final response = await http.get(Uri.parse('https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/account/getspvlist.php'));
+  Future<void> fetchLocationData() async {
+    final apiUrl = "https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/absent/getlistabsencelocation.php";
 
-      if(response.statusCode == 200){
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        spvName= (data['Data'] as List).map((spv) => Map<String, String>.from(spv)).toList();
-        selectedSPV = spvName[0]['id']!;
+        List<dynamic> dataList = data['Data'];
+        setState(() {
+          locationList = dataList.map((location) => Map<String, String>.from(location)).toList();
+          selectedLocation = locationList.isNotEmpty ? locationList[0]['location_name'] ?? '' : '';
+        });
       } else {
         print('Failed to fetch data');
       }
-    } catch (e){
-      print('error : $e');
-    } finally {
-      isLoading = false;
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> inputUpdateAbsenceMapping(String selectedLocation) async {
+  const String apiUrl = "https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/absent/insertabsencemapping.php";
+
+  try {
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      body: {
+        'employee_id': widget.employeeId,
+        'absence_location': selectedLocation,
+      }
+    );
+
+    if (response.statusCode == 200) {
+      Get.back();
+      showDialog(
+        context: context, 
+        builder: (_) {
+          return AlertDialog(
+            title: const Text("Sukses"),
+            content: const Text("Lokasi absen telah berhasil diupdate"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Get.to(const EmployeeListPage());
+                }, 
+                child: const Text("Kembali")
+              ),
+            ],
+          );
+        }
+      );
+    } else {
+      Get.snackbar("Error", "Gagal update lokasi absen");
+    }
+  } catch (e) {
+    // Handle error
+    print('Error: $e');
+  }
+}
+
+
+  Future<void> fetchSPVData() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/account/getspvlist.php'));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          spvList = List<Map<String, dynamic>>.from(data['Data']);
+          selectedSPV = spvList.isNotEmpty ? spvList[0] : null;
+        });
+      } else {
+        print('Failed to fetch data');
+      }
+    } catch (e) {
+      print('Error: $e');
     }
   }
 
@@ -347,6 +414,63 @@ class _GeneralInformationState extends State<GeneralInformation> {
     }
   }
 
+  Future<void> updateSPVdata() async {
+  const String apiUrl = "https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/updateemployeespv.php";
+
+  try {
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      body: {
+        'employee_id': widget.employeeId,
+        'spv_id': selectedSPV?['id'] ?? '', // Pass the selected SPV ID
+      },
+    );
+
+    if (response.statusCode == 200) {
+      showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: const Text("Sukses"),
+            content: const Text("SPV telah berhasil diupdate"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Get.to(const EmployeeListPage());
+                },
+                child: const Text("Kembali"),
+              ),
+            ],
+          );
+        },
+      );
+    } else if (response.statusCode == 300) {
+      showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: const Text("Gagal"),
+            content: const Text("Update SPV gagal"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: const Text("Ok"),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      Get.snackbar("Error", "Gagal update SPV");
+    }
+  } catch (e) {
+    print('Error: $e');
+  }
+}
+
+
   @override
   Widget build(BuildContext context) {
     print('selectedSPV : ${selectedSPV}');
@@ -620,18 +744,19 @@ class _GeneralInformationState extends State<GeneralInformation> {
                         builder: (_){
                           return AlertDialog(
                             title: Text('Pilih supervisor'),
-                            content: DropdownButtonFormField<String>(
-                              value: '000',
-                              hint: Text('Pilih Supervisor'),
-                              items: spvName.map<DropdownMenuItem<String>>((Map<String, String> spv) {
-                                return DropdownMenuItem<String>(
-                                  value: spv['id']!,
-                                  child: Text(spv['name']!),
+                            content: 
+                            DropdownButtonFormField<Map<String, dynamic>>(
+                              value: selectedSPV,
+                              hint: Text('Pilih supervisor'),
+                              items: spvList.map<DropdownMenuItem<Map<String, dynamic>>>((spv) {
+                                return DropdownMenuItem<Map<String, dynamic>>(
+                                  value: spv,
+                                  child: Text(spv['employee_name'] ?? ''),
                                 );
                               }).toList(),
-                              onChanged: (String? newValue) {
+                              onChanged: (Map<String, dynamic>? newValue) {
                                 setState(() {
-                                  selectedSPV = newValue!;
+                                  selectedSPV = newValue;
                                 });
                               },
                             ),
@@ -644,7 +769,7 @@ class _GeneralInformationState extends State<GeneralInformation> {
                               ),
                               TextButton(
                                 onPressed: (){
-                                  
+                                  updateSPVdata();
                                 }, 
                                 child: Text('Kumpul')
                               )
@@ -670,19 +795,20 @@ class _GeneralInformationState extends State<GeneralInformation> {
                         context: context, 
                         builder: (_){
                           return AlertDialog(
-                            title: Text('Pilih supervisor'),
-                            content: DropdownButtonFormField<String>(
-                              value: selectedSPV,
-                              hint: Text('Pilih Supervisor'),
-                              items: spvName.map<DropdownMenuItem<String>>((Map<String, String> spv) {
+                            title: Text('Pilih lokasi absen'),
+                            content: 
+                            DropdownButtonFormField<String>(
+                              value: selectedLocation,
+                              hint: Text('Select Location'),
+                              items: locationList.map<DropdownMenuItem<String>>((location) {
                                 return DropdownMenuItem<String>(
-                                  value: spv['id']!,
-                                  child: Text(spv['name']!),
+                                  value: location['location_name'] ?? '',
+                                  child: Text(location['location_name'] ?? ''),
                                 );
                               }).toList(),
                               onChanged: (String? newValue) {
                                 setState(() {
-                                  selectedSPV = newValue!;
+                                  selectedLocation = newValue ?? '';
                                 });
                               },
                             ),
@@ -695,7 +821,7 @@ class _GeneralInformationState extends State<GeneralInformation> {
                               ),
                               TextButton(
                                 onPressed: (){
-                                  
+                                  inputUpdateAbsenceMapping(selectedLocation);
                                 }, 
                                 child: Text('Kumpul')
                               )

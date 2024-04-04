@@ -347,7 +347,7 @@ class _ApplicantIndexState extends State<ApplicantIndex> {
                                             borderRadius: BorderRadius.all(Radius.circular(8))
                                           ),
                                           child: Padding(
-                                            padding: EdgeInsets.all(8.sp),
+                                            padding: EdgeInsets.all(2.sp),
                                             child: Text(statusname, style: TextStyle(fontSize: 4.sp, color: Colors.white),),
                                           ),
                                         ),

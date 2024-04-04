@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations, avoid_web_libraries_in_flutter, file_names, avoid_print, unused_element, deprecated_member_use
 
 import 'dart:async';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -14,6 +15,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'dart:html' as html;
 import '../index.dart';
+import 'package:dio/dio.dart' as dio;
 
 class ViewOnlyPermission extends StatefulWidget {
   final String permission_id;
@@ -38,7 +40,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
   String DeptYangMengajukanIzin = '';
   String JabatanYangMengajukanIzin = '';
   String tanggalIzin = '';
-
+  bool isLoading = false;
   String startCuti = '';
   String endCuti = '';
   String cutiPhone = '';
@@ -69,6 +71,69 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
     permissionData = fetchDetailPermission();
     fetchLogPermissionData();
     getSuratDokter();
+  }
+
+  Future<void> selectFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'bmp'],
+    );
+
+    if (result != null) {
+      String selectedFileName = result.files.first.name;
+      List<int> imageBytes = result.files.first.bytes!;
+
+      // Convert the image bytes to base64
+      String base64Image = base64Encode(imageBytes);
+
+      try{
+        setState(() {
+          isLoading = true;
+        });
+
+        String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/permission/updatesuratdokter.php';
+
+        var data = {
+          'permission_id' : widget.permission_id,
+          'base64_image': base64Image
+        };
+
+        // Send the request using dio for multipart/form-data
+        var dioClient = dio.Dio();
+        dio.Response response = await dioClient.post(apiUrl, data: dio.FormData.fromMap(data));
+        if (response.statusCode == 200) {
+
+          showDialog(
+            context: context, // Make sure to have access to the context
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Sukses'),
+                content: const Text('Upload surat dokter telah berhasil dilakukan'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(FullIndexWeb(employeeId));
+                    },
+                    child: const Text('Oke'),
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          Get.snackbar("Error", "Error: ${response.statusCode}, ${response.data}");
+        }
+      } catch(e){
+        Get.snackbar("Error", "Error: $e");
+      } finally{
+        setState(() {
+          isLoading = false;
+        });
+      }
+
+    } else {
+      // User canceled the file picking
+    }
   }
 
   Future<void> getSuratDokter() async {
@@ -844,7 +909,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
 
     return SafeArea(
       child: Scaffold(
-        body: SingleChildScrollView(
+        body: isLoading ? Center(child: CircularProgressIndicator(),) : SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1379,6 +1444,28 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                                 ],
                               ),
                             SizedBox(height: 7.sp,),
+                            if(permission_status == 'PER-STATUS-001')
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  ElevatedButton(
+                                      onPressed: (){
+                                        selectFile();
+                                      }, 
+                                      style: ElevatedButton.styleFrom(
+                                        minimumSize: Size(40.w, 55.h),
+                                        foregroundColor: const Color(0xFFFFFFFF),
+                                        backgroundColor: const Color(0xff4ec3fc),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                      child: const Text('Upload Surat Dokter')
+                                    ),
+                                ],
+                              ),
+                            if(permission_status == 'PER-STATUS-001')
+                              SizedBox(height: 7.sp,),
                             if(employeeId.toString().padLeft(10, '0') == employee_spv && permission_status == 'PER-STATUS-001')
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
@@ -1546,88 +1633,27 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                                 child: const Text('Generate PDF')
                               ),
                             SizedBox(height: 10.sp,),
-                            Text('Riwayat Permohonan', style: TextStyle(fontSize: 7.sp,fontWeight: FontWeight.w600,)),
-                            SizedBox(height: 5.sp,),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height,
-                              child: ListView.builder(
-                                itemCount: historyList.length,
-                                itemBuilder: (context, index){
-                                  var item = historyList[index];
-                                  return ListTile(
-                                    leading: CircleAvatar(
-                                      backgroundColor: const Color(0xff4ec3fc),
-                                      child: Text('${index + 1}', style: const TextStyle(color: Colors.white),),
-                                    ),
-                                    title: Text(item['employee_name'], style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w600),),
-                                    subtitle: Text(item['action'], style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w400),),
-                                    trailing: Text(_formatDate(item['action_dt']), style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w400),),
-                                  );
-                                }
-                              ),
-                            ),
-                            SizedBox(height: 10.sp,),
-                            // FutureBuilder(
-                            //   future: logPermissionData,
-                            //   builder: (context, snapshot) {
-                            //     if (snapshot.connectionState == ConnectionState.waiting) {
-                            //         return const CircularProgressIndicator();
-                            //       } else if (snapshot.hasError) {
-                            //         return const Column(
-                            //           mainAxisAlignment: MainAxisAlignment.center,
-                            //           children: [
-                            //             //Image.asset('assets/no_data.png'), // Ganti dengan path gambar yang sesuai
-                            //             Text('Anda belum pernah mengajukan izin apapun'),
-                            //           ],
-                            //         );
-                            //       } else if (snapshot.data!.isEmpty) {
-                            //         return const Column(
-                            //           mainAxisAlignment: MainAxisAlignment.center,
-                            //           children: [
-                            //             //Image.asset('assets/no_data.png'), // Ganti dengan path gambar yang sesuai
-                            //             Text('Anda belum pernah mengajukan izin apapun'),
-                            //           ],
-                            //         );
-                            //       } else {
-                            //         return 
-                                    
-                            //         DataTable(
-                            //           dataRowHeight: 100.h,
-                            //           showCheckboxColumn: false,
-                            //           columns: <DataColumn>[
-                            //             const DataColumn(label: Text('Nama')),
-                            //             const DataColumn(label: Text('Aksi')),
-                            //           ],
-                            //           rows: snapshot.data!.map((data) {
-                            //             return DataRow(
-                            //               cells: <DataCell>[
-                            //                 DataCell(
-                            //                   Column(
-                            //                     mainAxisAlignment: MainAxisAlignment.center,
-                            //                     crossAxisAlignment: CrossAxisAlignment.start,
-                            //                     children: [
-                            //                       Text(data['employee_name']),
-                            //                       SizedBox(height: 8.h,),
-                            //                       Text(DateFormat('EEEE, d MMM y HH:mm:ss').format(DateTime.parse(data['action_dt']),))
-                            //                     ],
-                            //                   )
-                            //                 ),
-                            //                 DataCell(
-                            //                   Text(data['action'])
-                            //                 ),
-                            //               ],
-                            //               onSelectChanged: (bool? selected) {
-                            //                 if (selected!) {
-                                              
-                            //                 }
-                            //               },
-                            //             );
-                            //           }).toList(),
-                            //         );
-                            //       }
-                            //   }
+                            // Text('Riwayat Permohonan', style: TextStyle(fontSize: 7.sp,fontWeight: FontWeight.w600,)),
+                            // SizedBox(height: 5.sp,),
+                            // SizedBox(
+                            //   height: MediaQuery.of(context).size.height,
+                            //   child: ListView.builder(
+                            //     itemCount: historyList.length,
+                            //     itemBuilder: (context, index){
+                            //       var item = historyList[index];
+                            //       return ListTile(
+                            //         leading: CircleAvatar(
+                            //           backgroundColor: const Color(0xff4ec3fc),
+                            //           child: Text('${index + 1}', style: const TextStyle(color: Colors.white),),
+                            //         ),
+                            //         title: Text(item['employee_name'], style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w600),),
+                            //         subtitle: Text(item['action'], style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w400),),
+                            //         trailing: Text(_formatDate(item['action_dt']), style: TextStyle(fontSize: 3.sp, fontWeight: FontWeight.w400),),
+                            //       );
+                            //     }
+                            //   ),
                             // ),
-                            // SizedBox(height: 100.sp,),
+                            // SizedBox(height: 10.sp,),
 
                                 ],
                               );

@@ -10,6 +10,7 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hr_systems_web/logout.dart';
@@ -79,6 +80,9 @@ class _FullIndexWebState extends State<FullIndexWeb> {
   List<Map<String, dynamic>> permissionDataLimitApprovalHRD = [];
   List<Map<String, dynamic>> noticationList = [];
 
+  late CameraController controller;
+  late Future<void> initializeControllerFuture;
+
   @override
   void initState() {
     _cnt = SingleValueDropDownController();
@@ -91,10 +95,149 @@ class _FullIndexWebState extends State<FullIndexWeb> {
     fetchPermission();
   }
 
+  void initializeCamera() async {
+    final cameras = await availableCameras();
+    final firstCamera = cameras.last;
+    controller = CameraController(firstCamera, ResolutionPreset.medium);
+    initializeControllerFuture = controller.initialize();
+  }
+
   @override
   void dispose() {
     _cnt.dispose();
     super.dispose();
+  }
+
+  Future<void> _getCurrentLocation() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      // Get the current position
+      Position position = await Geolocator.getCurrentPosition();
+
+      String employeeId = storage.read('employee_id').toString();
+      double targetLatitude;
+      double targetLongitude;
+      String locationName = '';
+
+      final response = await http.get(
+        Uri.parse('https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/absent/checkabsencelocation.php?employee_id=$employeeId'),
+      );
+
+      if (response.statusCode == 200) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      if (data['StatusCode'] == 200) {
+        // Access the 'Data' key which contains a list of items
+        List<dynamic> dataList = data['Data'];
+        if (dataList.isNotEmpty) {
+          // Assuming you want the first item in the list
+          Map<String, dynamic> firstItem = dataList[0];
+
+          setState(() async {
+            locationName = firstItem['absence_location'] as String;
+            targetLongitude = double.parse(firstItem['longitude']?.toString() ?? '0.0');
+            targetLatitude = double.parse(firstItem['latitude']?.toString() ?? '0.0');
+
+            if(locationName == "Free"){
+              initializeCamera();
+              final cameras = await availableCameras();
+              final firstCamera = cameras.last;
+              if (controller.value.isInitialized) {
+                controller.dispose();
+              }
+              Get.to(Absence(camera: firstCamera));
+              setState(() {
+                isLoading = false;
+              });
+            } else {
+              LocationPermission permission = await Geolocator.checkPermission();
+              if (permission == LocationPermission.denied) {
+                permission = await Geolocator.requestPermission();
+              }
+
+              if (permission == LocationPermission.deniedForever) {
+                // Handle denied forever case
+                print("Location permission denied forever");
+                return;
+              }
+
+              if (permission == LocationPermission.always || permission == LocationPermission.whileInUse) {
+                Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best,);
+
+                double tolerance = 500;
+
+                double distance = Geolocator.distanceBetween(
+                  position.latitude,
+                  position.longitude,
+                  targetLatitude,
+                  targetLongitude,
+                );
+
+                print("User's Latitude: ${position.latitude}");
+                print("User's Longitude: ${position.longitude}");
+                print("Target Latitude: $targetLatitude");
+                print("Target Longitude: $targetLongitude");
+                print("Distance: $distance");
+
+                if (distance <= tolerance) {
+                  initializeCamera();
+                  final cameras = await availableCameras();
+                  final firstCamera = cameras.last;
+                  
+                 if (controller.value.isInitialized) {
+                    controller.dispose();
+                  }
+
+                  Get.to(Absence(camera: firstCamera));
+                  setState(() {
+                    isLoading = false;
+                  });
+                } else {
+                  if (controller.value.isInitialized) {
+                    controller.dispose();
+                  }
+                  setState(() {
+                    isLoading = false;
+                  });
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text("Error"),
+                      content: Text("Anda berada diluar area kantor dan tidak dapat melakukan absen pada saat ini"),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Get.to(FullIndexWeb(employeeId));
+                          },
+                          child: Text("OK"),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              }
+            }
+          });
+        } else {
+          throw Exception('No data available in the response.');
+        }
+      } else {
+        throw Exception('Failed to load data. StatusCode: ${data['StatusCode']}');
+      }
+    } else {
+      throw Exception('Failed to load data. Status code: ${response.statusCode}');
+    }
+
+      // print('Latitude: ${position.latitude}, Longitude: ${position.longitude}');
+
+    } catch (e) {
+      print('Error occurred while getting location: $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   final storage = GetStorage();
@@ -666,9 +809,8 @@ class _FullIndexWebState extends State<FullIndexWeb> {
                                 children: [
                                   GestureDetector(
                                     onTap: () async {
-                                      final cameras = await availableCameras();
-                                      final firstCamera = cameras.first;
-                                      Get.to(Absence(camera: firstCamera,));
+                                      
+                                      _getCurrentLocation();
                                     },
                                     child: SizedBox(
                                       width: MediaQuery.of(context).size.width * 0.49 / 5,

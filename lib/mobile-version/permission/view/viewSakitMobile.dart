@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:camera/camera.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,6 +12,7 @@ import 'package:hr_systems_web/mobile-version/permission/viewAllMyPermission.dar
 import 'package:hr_systems_web/mobile-version/profileMobile.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:dio/dio.dart' as dio;
 
 class viewSakitMobile extends StatefulWidget {
   final String permissionId;
@@ -36,6 +38,69 @@ class _viewSakitMobileState extends State<viewSakitMobile> {
     permissionData = fetchDetailPermission();
     fetchLogPermissionData();
     getSuratDokter();
+  }
+
+  Future<void> selectFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'bmp'],
+    );
+
+    if (result != null) {
+      String selectedFileName = result.files.first.name;
+      List<int> imageBytes = result.files.first.bytes!;
+
+      // Convert the image bytes to base64
+      String base64Image = base64Encode(imageBytes);
+
+      try{
+        setState(() {
+          isLoading = true;
+        });
+
+        String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/permission/updatesuratdokter.php';
+
+        var data = {
+          'permission_id' : widget.permissionId,
+          'base64_image': base64Image
+        };
+
+        // Send the request using dio for multipart/form-data
+        var dioClient = dio.Dio();
+        dio.Response response = await dioClient.post(apiUrl, data: dio.FormData.fromMap(data));
+        if (response.statusCode == 200) {
+
+          showDialog(
+            context: context, // Make sure to have access to the context
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Sukses'),
+                content: const Text('Upload surat dokter telah berhasil dilakukan'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(indexMobile(EmployeeID: employeeId,));
+                    },
+                    child: const Text('Oke'),
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          Get.snackbar("Error", "Error: ${response.statusCode}, ${response.data}");
+        }
+      } catch(e){
+        Get.snackbar("Error", "Error: $e");
+      } finally{
+        setState(() {
+          isLoading = false;
+        });
+      }
+
+    } else {
+      // User canceled the file picking
+    }
   }
 
   Future<void> getSuratDokter() async {
@@ -274,6 +339,7 @@ class _viewSakitMobileState extends State<viewSakitMobile> {
                           } else {
                             var data = (snapshot.data as Map<String, dynamic>)['Data'];
                             var firstData = data[0];
+                            var permission_status = firstData['id_permission_status'] ?? 'N/A';
 
                             return Column(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -500,22 +566,23 @@ class _viewSakitMobileState extends State<viewSakitMobile> {
                                   child: Text('Upload Surat Dokter')
                                 ),
                                 SizedBox(height: 60.h,),
-                                Center(
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      // insertCuti();
-                                    }, 
-                                    style: ElevatedButton.styleFrom(
-                                      minimumSize: Size(40.w, 55.h),
-                                      foregroundColor: const Color(0xFFFFFFFF),
-                                      backgroundColor: const Color(0xff4ec3fc),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
+                                if(permission_status == 'PER-STATUS-001')
+                                  Center(
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        selectFile();
+                                      }, 
+                                      style: ElevatedButton.styleFrom(
+                                        minimumSize: Size(40.w, 55.h),
+                                        foregroundColor: const Color(0xFFFFFFFF),
+                                        backgroundColor: const Color(0xff4ec3fc),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
                                       ),
+                                      child: const Text('Upload Surat Dokter')
                                     ),
-                                    child: const Text('Upload Surat Dokter')
                                   ),
-                                ),
                                 SizedBox(height: 35.h,),
                               ]
                             );

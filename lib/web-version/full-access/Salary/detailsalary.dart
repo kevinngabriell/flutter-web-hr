@@ -49,6 +49,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
   int jumlahLembur = 0;
   int? terlambat;
   String jumlahAbsen = '0';
+  String jumlahPinjaman = '0';
 
   int? selectedMethod = 1;
 
@@ -110,6 +111,7 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
     totalEarnings = 0;
     totalDeductions = 0;
     takeHomePay = 0;
+    fetchJumlahPinjaman();
   }
 
   Future<void> fetchJumlahCuti() async {
@@ -159,6 +161,40 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
         // Ensure that the fields are of the correct type
         setState(() {
           jumlahSakit = data['sakit'];
+        });
+      } else {
+        print('Failed to load data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Exception during API call: $e');
+    }
+  }
+
+  String formatCurrency2(String value) {
+    // Parse the string to a number.
+    double numberValue = double.tryParse(value) ?? 0;
+
+    // Format the number as currency.
+    return NumberFormat.currency(locale: 'id_ID', symbol: 'Rp. ', decimalDigits: 0).format(numberValue);
+  }
+
+  Future<void> fetchJumlahPinjaman() async {
+    try {
+      String ID1 = widget.employeeID;
+
+      String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/salary/getpinjamanactive.php?employee_id=$ID1';
+
+      final response = await http.get(
+        Uri.parse(apiUrl),
+      );
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = json.decode(response.body);
+        Map<String, dynamic> data = responseData['Data'][0];
+
+        // Ensure that the fields are of the correct type
+        setState(() {
+          jumlahPinjaman = data['total'];
         });
       } else {
         print('Failed to load data. Status code: ${response.statusCode}');
@@ -1321,6 +1357,25 @@ class _DetailSalaryPageState extends State<DetailSalaryPage> {
 
                                             },
                                             child: Text('$jumlahLembur jam')
+                                          ),
+                                          SizedBox(height: 20.h,),
+                                          GestureDetector(
+                                            onTap: () {
+                                              
+                                            },
+                                            child: Text('Jumlah pinjaman'
+                                              ,style: TextStyle(
+                                                fontSize: 4.sp,
+                                                fontWeight: FontWeight.w600,
+                                              )
+                                            ),
+                                          ),
+                                          SizedBox(height: 10.h,),
+                                          GestureDetector(
+                                            onTap: () {
+
+                                            },
+                                            child: Text(formatCurrency2(jumlahPinjaman))
                                           )
                                         ],
                                       ),

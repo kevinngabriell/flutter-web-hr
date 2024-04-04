@@ -3,9 +3,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:hr_systems_web/web-version/full-access/Employee/EmployeeList.dart';
 import 'package:hr_systems_web/web-version/full-access/Employee/Overview/AbsenTableCalendarOverview.dart';
 import 'package:hr_systems_web/web-version/full-access/Employee/Overview/CutiOverview.dart';
 import 'package:hr_systems_web/web-version/full-access/Employee/Overview/Document/BPJSDocument.dart';
@@ -142,63 +140,6 @@ class _EmployeeOverviewPageState extends State<EmployeeOverviewPage> with Ticker
 
   }
 
-  Future<void> updateSPVdata() async {
-    const String apiUrl = "https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/employee/updateemployeespv.php";
-
-    try{
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        body: {
-          'employee_id': widget.employeeId,
-          'spv_id': selectedSPV
-        }
-      );
-
-      if(response.statusCode == 200){
-        showDialog(
-          context: context, 
-          builder: (_) {
-            return AlertDialog(
-              title: const Text("Sukses"),
-              content: const Text("SPV telah berhasil diupdate"),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Get.to(const EmployeeListPage());
-                  }, 
-                  child: const Text("Kembali")
-                ),
-              ],
-            );
-          }
-        );
-      } else if (response.statusCode == 300){
-        showDialog(
-          context: context, 
-          builder: (_) {
-            return AlertDialog(
-              title: const Text("Gagal"),
-              content: const Text("Update SPV gagal"),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Get.back();
-                  }, 
-                  child: const Text("Ok")
-                ),
-              ],
-            );
-          }
-        );
-      } else {
-        Get.snackbar("Error", "Gagal update SPV");
-      }
-    } catch(e){
-
-    }
-
-  }
-  
   @override
   Widget build(BuildContext context) {
     final storage = GetStorage();

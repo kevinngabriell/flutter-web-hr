@@ -240,6 +240,35 @@ class _ViewApproveNewEmployeeRequestState extends State<ViewApproveNewEmployeeRe
 
   }
 
+  Future<void> closedbyHR() async {
+    try{
+      String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/requestemployee/updatetutuplowongan.php';
+      String request_id = widget.requestID;
+
+      String employeeId = storage.read('employee_id').toString();
+
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        body: {
+          'request_id': request_id,
+          'employee_id': employeeId
+        }
+      );
+
+      if(response.statusCode == 200){
+        Get.to(FullIndexWeb(employeeId));
+      } else {
+        Get.snackbar('Error : ', response.body);
+        print('Response body: ${response.body}');
+      }
+
+    } catch (e) {
+      print('Exception: $e');
+      Get.snackbar('Error', 'An error occurred. Please try again later.');
+    }
+
+  }
+
   Future<void> rejectbyHR() async {
     try{
       String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/requestemployee/updatenewemployeerequestrejectbyhr.php';
@@ -1257,8 +1286,7 @@ class _ViewApproveNewEmployeeRequestState extends State<ViewApproveNewEmployeeRe
                             children: [
                               ElevatedButton(
                                 onPressed: () {
-                                  
-                                
+                                  closedbyHR();
                                 }, 
                                 style: ElevatedButton.styleFrom(
                                   minimumSize: Size(40.w, 55.h),

@@ -151,6 +151,9 @@ class _PinjamanKaryawanIndexState extends State<PinjamanKaryawanIndex> {
         print('Failed to load data: ${response.statusCode}');
       }
     } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
       print('Exception during API call: $e');
     } finally {
       isLoading = false;
