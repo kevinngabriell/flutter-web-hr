@@ -1,12 +1,14 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print, file_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hr_systems_web/services/pdf_downloader.dart';
 import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
 import 'package:hr_systems_web/web-version/full-access/PinjamanKaryawan/PinjamanKaryawanIndex.dart';
+import 'package:hr_systems_web/web-version/full-access/Salary/currencyformatter.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'dart:convert';
@@ -40,7 +42,8 @@ class _PinjamanKaryawanDetailState extends State<PinjamanKaryawanDetail> {
   bool isLoading = false;
   List<Map<String, dynamic>> noticationList = [];
   List<Map<String, dynamic>> historyList = [];
-
+  TextEditingController txtAmountPembayaran = TextEditingController();
+  List<Map<String, dynamic>> kasbonData = [];
   String employeeSPV = '';
   String namaSPV = '';
   String tanggalSPV = '';
@@ -62,6 +65,98 @@ class _PinjamanKaryawanDetailState extends State<PinjamanKaryawanDetail> {
     fetchData();
     fetchEmployeeSPV();
     fetchHistory();
+    fetchKasbonData();
+  }
+
+  Future<void> fetchKasbonData() async {
+    final response = await http.get(
+        Uri.parse('https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/loan/getloan.php?action=7&id_pinjaman=${widget.pinjamanKaryawanID}'));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      setState(() {
+        kasbonData = List<Map<String, dynamic>>.from(data['Data']);
+      });
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
+  Future<void> actionKasbon() async {
+    try{
+      isLoading = true;
+      String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/loan/loan.php';
+      String employeeId = storage.read('employee_id').toString();
+
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        body: {
+          "action" : "7",
+          "loan_id" : widget.pinjamanKaryawanID,
+          "amount" : txtAmountPembayaran.text.replaceAll(RegExp(r'[^0-9]'), ''),
+          "insert_by" : employeeId,
+        }
+      );
+
+      if (response.statusCode == 200) {
+          showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Sukses'),
+                content: const Text('Anda telah berhasil update data pinjaman'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PinjamanKaryawanIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+        } else {
+          print(response.body + response.statusCode.toString());
+          showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('Error ${response.statusCode}'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(const PinjamanKaryawanIndex());
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+        }
+    } catch (e){
+      isLoading = false;
+      showDialog(
+        context: context, 
+        builder: (_) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: Text('Error $e'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Get.to(const PinjamanKaryawanIndex());
+              }, 
+              child: const Text("Oke")
+            ),
+          ],
+        );}
+      );
+    } finally {
+      isLoading = false;
+    }
   }
 
   Future<void> fetchHistory() async {
@@ -508,6 +603,7 @@ class _PinjamanKaryawanDetailState extends State<PinjamanKaryawanDetail> {
     var positionId = storage.read('position_id');
     String numberAsString = employeeId.toString().padLeft(10, '0');
 
+    String lunas = widget.sudahLunasPinjaman == '0' ? 'Belum Lunas' : 'Sudah Lunas';
     return MaterialApp(
       title: 'Pinjaman Karyawan',
       home: SafeArea(
@@ -570,7 +666,19 @@ class _PinjamanKaryawanDetailState extends State<PinjamanKaryawanDetail> {
                         NotificationnProfile(employeeName: employeeName, employeeAddress: employeeEmail, photo: photo),
                         SizedBox(height: 7.sp,),
                         Center(child: Text('Pengajuan Pinjaman Karyawan', style: TextStyle(fontSize: 7.sp, fontWeight: FontWeight.w600,))),
-                        SizedBox(height: 10.sp,),
+                        SizedBox(height: 7.sp,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                showTransactionHistory();
+                              },
+                              child: Text('Riwayat Transaksi', style: TextStyle(fontSize: 4.sp, fontWeight: FontWeight.w400, color: const Color(0xFF2A85FF)))
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 7.sp,),
                         Padding(
                           padding: EdgeInsets.only(right: 10.sp),
                           child: Row(
@@ -581,11 +689,11 @@ class _PinjamanKaryawanDetailState extends State<PinjamanKaryawanDetail> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('Nomor Permohonan', style: TextStyle(
+                                    Text('Status Pinjaman', style: TextStyle(
                                     fontSize: 4.sp,
                                     fontWeight: FontWeight.w600,
                                   )),
-                                    Text(widget.pinjamanKaryawanID),
+                                    Text(lunas),
                                   ],
                                 ),
                               ),
@@ -793,6 +901,21 @@ class _PinjamanKaryawanDetailState extends State<PinjamanKaryawanDetail> {
                                 children: [
                                   ElevatedButton(
                                     onPressed: (){
+                                      showDialogpembayaran();
+                                    }, 
+                                    style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      alignment: Alignment.center,
+                                      minimumSize: Size(40.w, 55.h),
+                                      foregroundColor: const Color(0xFFFFFFFF),
+                                      backgroundColor: Colors.green,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                    ),
+                                    child: const Text('Pembayaran')
+                                  ),
+                                  SizedBox(width: 5.w,),
+                                  ElevatedButton(
+                                    onPressed: (){
                                       String a = widget.pinjamanKaryawanID;
                                       String b = widget.namaKaryawan;
                                       String c = widget.jabatan;
@@ -850,6 +973,79 @@ class _PinjamanKaryawanDetailState extends State<PinjamanKaryawanDetail> {
           )
         )
       )
+    );
+  }
+
+  Future<void> showDialogpembayaran(){
+    return showDialog(
+      context: context, 
+      builder: (_){
+        return AlertDialog(
+          title: Text('Pembayaran Pinjaman Karyawan'),
+          content: TextFormField(
+            controller: txtAmountPembayaran,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              CurrencyFormatter(),
+            ],
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              fillColor: Color.fromRGBO(235, 235, 235, 1),
+              hintText: 'Masukkan jumlah pembayaran'
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Get.back();
+              }, 
+              child: Text('Kembali')
+            ),
+            TextButton(
+              onPressed: (){
+                actionKasbon();
+              }, 
+              child: Text('Kumpulkan')
+            )
+          ],
+        );
+      }
+    );
+  }
+
+  Future<void> showTransactionHistory(){
+    return showDialog(
+      context: context, 
+      builder: (_){
+        return AlertDialog(
+          title: Center(child: Text('Riwayat Pembayaran')),
+          content: 
+          DataTable(
+            columns: [
+              DataColumn(label: Text('Jenis Pinjaman')),
+              DataColumn(label: Text('Jumlah')),
+              DataColumn(label: Text('Tanggal')),
+            ],
+            rows: kasbonData.map((data) {
+              String paymentLabel =
+                  data['transaction'] == 1 ? 'Pembayaran' : 'Pinjaman';
+              return DataRow(cells: [
+                DataCell(Text(paymentLabel)),
+                DataCell(Text(formatCurrency2(data['amount'].toString()))),
+                DataCell(Text(_formatDate(data['transaction_date']))),
+              ]);
+            }).toList(),
+          ),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Get.back();
+              }, 
+              child: Text('Tutup')
+            )
+          ],
+        );
+      }
     );
   }
 

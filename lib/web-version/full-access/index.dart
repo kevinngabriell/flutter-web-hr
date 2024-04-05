@@ -21,6 +21,7 @@ import 'package:hr_systems_web/web-version/full-access/Employee/AddRequestNewEmp
 import 'package:hr_systems_web/web-version/full-access/Employee/RequestNewEmployee.dart';
 import 'package:hr_systems_web/web-version/full-access/Employee/ResignForm.dart';
 import 'package:hr_systems_web/web-version/full-access/Event/event.dart';
+import 'package:hr_systems_web/web-version/full-access/Kasbon/kasbonIndex.dart';
 import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
 import 'package:hr_systems_web/web-version/full-access/Performance/performance.dart';
 import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/AddNewPerjalananDinas.dart';
@@ -984,7 +985,25 @@ class _FullIndexWebState extends State<FullIndexWeb> {
                                   if(positionId == 'POS-HR-002')
                                     GestureDetector(
                                       onTap: () {
-                                       
+                                        if(positionId == 'POS-HR-002'){
+                                          Get.to(const kasbonIndex());
+                                        } else {
+                                          showDialog(
+                                            context: context, 
+                                            builder: (_) {
+                                              return AlertDialog(
+                                                title: const Text("Error"),
+                                                content: const Text("Maaf anda tidak memiliki akses ke menu ini"),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    onPressed: () {Get.back();}, 
+                                                    child: const Text("Oke")
+                                                  ),
+                                                ],
+                                              );
+                                            }
+                                          );
+                                        }
                                       },
                                       child: SizedBox(
                                         width: MediaQuery.of(context).size.width * 0.49 / 5,
