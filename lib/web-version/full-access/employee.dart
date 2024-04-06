@@ -7,6 +7,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:hr_systems_web/web-version/full-access/Employee/Applicant/applicantdashboard.dart';
 import 'package:hr_systems_web/web-version/full-access/Employee/EmployeeList.dart';
 import 'package:hr_systems_web/web-version/full-access/Employee/RequestNewEmployee.dart';
+import 'package:hr_systems_web/web-version/full-access/Employee/Resign/ViewListAllResign.dart';
+import 'package:hr_systems_web/web-version/full-access/Employee/Resign/ViewListMyResign.dart';
 import 'package:hr_systems_web/web-version/full-access/Inventory/InventoryDashboard.dart';
 import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
 import 'package:hr_systems_web/web-version/full-access/PerjalananDinas/PerjalananDinasIndex.dart';
@@ -481,7 +483,11 @@ class _EmployeePageState extends State<EmployeePage> {
                               height: MediaQuery.of(context).size.height - 65.sp,
                               child: GestureDetector(
                                 onTap: () {
-                                 
+                                  if(positionId == 'POS-HR-002'){
+                                    Get.to(const viewListAllResign());
+                                  } else {
+                                    Get.to(const ViewListMyResign());
+                                  }
                                 },
                                 child: Card(
                                   shape: const RoundedRectangleBorder(
@@ -497,14 +503,14 @@ class _EmployeePageState extends State<EmployeePage> {
                                       children: [
                                         Image.asset('images/NewEmployeeRequest.png'),
                                         SizedBox(height: 5.sp,),
-                                        Text('Soon',
+                                        Text('Pemunduran Diri',
                                           style: TextStyle(
                                             fontSize: 6.sp,
                                             fontWeight: FontWeight.w700,
                                           )
                                         ),
                                         SizedBox(height: 3.sp,),
-                                        Text('Fitur segera hadir! Tetap tunggu kabar lebih lanjut tentang fitur menarik yang akan segera kami luncurkan',
+                                        Text('Lihat dan pantau pemunduran diri anda melalui menu ini.',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             color: const Color.fromRGBO(116, 116, 116, 1),

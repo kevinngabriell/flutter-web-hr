@@ -223,12 +223,40 @@ class PelatihanNonActive extends StatefulWidget {
 }
 
 class _PelatihanNonActiveState extends State<PelatihanNonActive> {
+  final storage = GetStorage();
+  String employeeId = '';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    employeeId = storage.read('employee_id').toString();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 5.w, right: 5.w),
       child: ElevatedButton(
-        onPressed: () {Get.to(const TrainingIndex());},
+        onPressed: () {
+          showDialog(
+            context: context, 
+            builder: (_){
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text('Fitur ini belum tersedia saat ini !!'),
+                actions: [
+                  TextButton(
+                    onPressed: (){
+                      Get.back();
+                    }, 
+                    child: Text('Oke')
+                  )
+                ],
+              );
+            }
+          );
+        },
         style: ElevatedButton.styleFrom(
           elevation: 0,
           alignment: Alignment.centerLeft,
@@ -261,12 +289,40 @@ class AcaraNonActive extends StatefulWidget {
 }
 
 class _AcaraNonActiveState extends State<AcaraNonActive> {
+  final storage = GetStorage();
+  String employeeId = '';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    employeeId = storage.read('employee_id').toString();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 5.w, right: 5.w),
       child: ElevatedButton(
-        onPressed: () {Get.to(const EventIndex());},
+        onPressed: () {
+          showDialog(
+            context: context, 
+            builder: (_){
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text('Fitur ini belum tersedia saat ini !!'),
+                actions: [
+                  TextButton(
+                    onPressed: (){
+                      Get.back();
+                    }, 
+                    child: Text('Oke')
+                  )
+                ],
+              );
+            }
+          );
+        },
         style: ElevatedButton.styleFrom(
           elevation: 0,
           alignment: Alignment.centerLeft,
