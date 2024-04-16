@@ -572,10 +572,77 @@ class _NotificationnProfileState extends State<NotificationnProfile> {
   final storage = GetStorage();
   bool isLoading = false;
 
+  String notificationID = '';
+
   @override
   void initState() {
     super.initState();
     fetchNotification();
+  }
+
+  Future<void> Notification(action_id) async {
+    //delete only one notif
+    if(action_id == '1'){
+      try{
+        isLoading = true;
+        String apiUrl = 'https://kinglabindonesia.com/hr-systems-api/hr-system-data-v.1.2/notification/notification.php';
+
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          body: {
+            "action" : "1",
+            "notification_id": notificationID
+          }
+        );
+
+        String employeeId = storage.read('employee_id').toString();
+
+        if (response.statusCode == 200) {
+          setState(() {
+            isLoading = false;
+          });
+        } else {
+          showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('Error ${response.body}'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(FullIndexWeb(employeeId));
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+        }
+      } catch(e){
+        String employeeId = storage.read('employee_id').toString();
+        showDialog(
+            context: context, 
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('Error $e'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Get.to(FullIndexWeb(employeeId));
+                    }, 
+                    child: const Text("Oke")
+                  ),
+                ],
+              );
+            }
+          );
+      } finally {
+        isLoading = false;
+      }
+    }
   }
 
   Future<void> fetchNotification() async {
@@ -655,6 +722,7 @@ class _NotificationnProfileState extends State<NotificationnProfile> {
                                     showDialog(
                                       context: context, 
                                       builder: (_) {
+                                      notificationID = noticationList[index]['id'];
                                       return AlertDialog(
                                         title: Center(child: Text("${noticationList[index]['title']} ", style: TextStyle(fontSize: 5.sp, fontWeight: FontWeight.w600))),
                                         content: SizedBox(
@@ -674,7 +742,7 @@ class _NotificationnProfileState extends State<NotificationnProfile> {
                                         actions: [
                                           TextButton(
                                             onPressed: () {
-                                              
+                                              Notification('1');
                                             }, 
                                             child: const Text("Hapus")
                                           ),

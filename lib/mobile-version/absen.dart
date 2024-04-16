@@ -24,6 +24,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final cameras = await availableCameras();
+  final firstCamera = cameras[1];
 
   CameraDescription? frontCamera;
 
@@ -44,7 +45,7 @@ Future<void> main() async {
     MaterialApp(
       theme: ThemeData.dark(),
       home: TakePictureScreen(
-        camera: frontCamera,
+        camera: firstCamera,
       ),
     ),
   );
@@ -274,7 +275,9 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
               content: Text('Error ' + response.data),
               actions: <Widget>[
                 TextButton(
-                  onPressed: () {Get.to(indexMobile(EmployeeID: employeeId.toString()));}, 
+                  onPressed: () {
+                    Get.to(indexMobile(EmployeeID: employeeId.toString()));
+                  }, 
                   child: const Text("Oke")
                 ),
               ],

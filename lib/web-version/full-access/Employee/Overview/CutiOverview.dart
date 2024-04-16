@@ -262,7 +262,7 @@ class _CutiOverviewState extends State<CutiOverview> {
         ),
         SizedBox(height: 25.h),
         SizedBox(
-          width: (MediaQuery.of(context).size.width - 100.w),
+          width: (MediaQuery.of(context).size.width),
           child: Card(
             shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
             color: Colors.white,

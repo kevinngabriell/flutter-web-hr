@@ -429,7 +429,15 @@ class _AddNewPinjamanKaryawanState extends State<AddNewPinjamanKaryawan> {
                           children: [
                             ElevatedButton(
                               onPressed: (){
-                                actionLoan('1');
+                                if(txtBesarPinajman.text == ''){
+                                  dialogError('Besar pinjaman tidak dapat kosong !!');
+                                } else if (txtKeperluanPinjaman.text == ''){
+                                  dialogError('Keperluan pinjaman tidak dapat kosong !!');
+                                } else if (txtCaraMembayar.text == ''){
+                                  dialogError('Cara membayar tidak dapat kosong !!');
+                                } else {
+                                  actionLoan('1');
+                                }
                               }, 
                               style: ElevatedButton.styleFrom(
                                 elevation: 0,
@@ -455,5 +463,23 @@ class _AddNewPinjamanKaryawanState extends State<AddNewPinjamanKaryawan> {
     );
   }
 
-
+  Future <void> dialogError (String message) async {
+    return showDialog(
+      context: context, 
+      builder: (_){
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Get.back();
+              }, 
+              child: Text('Kembali')
+            )
+          ],
+        );
+      }
+    );
+  }
 }

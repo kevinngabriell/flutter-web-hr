@@ -299,15 +299,7 @@ class _SickPermissionState extends State<SickPermission> {
                                   if(isLoading)
                                     const CircularProgressIndicator()
                                   else
-                                    TextFormField(
-                                      controller: txtNamaLengkap,
-                                      decoration: const InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                        hintText: 'Masukkan nama anda'
-                                      ),
-                                      readOnly: true,
-                                    )
+                                    Text(txtNamaLengkap.text)
                                 ],
                               )
                             ),
@@ -332,15 +324,7 @@ class _SickPermissionState extends State<SickPermission> {
                                   if(isLoading)
                                     const CircularProgressIndicator()
                                   else
-                                    TextFormField(
-                                      controller: txtNIK,
-                                      decoration: const InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                        hintText: 'Masukkan NIK anda'
-                                      ),
-                                      readOnly: true,
-                                    )
+                                    Text(txtNIK.text)
                                 ],
                               )
                             ),
@@ -362,15 +346,7 @@ class _SickPermissionState extends State<SickPermission> {
                                     ),
                                   ),
                                   SizedBox(height: 7.h,),
-                                  TextFormField(
-                                    controller: txtDepartemen,
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                      hintText: 'Masukkan departemen anda'
-                                    ),
-                                    readOnly: true,
-                                  )
+                                  Text(txtDepartemen.text)
                                 ],
                               )
                             ),
@@ -397,15 +373,7 @@ class _SickPermissionState extends State<SickPermission> {
                                     ),
                                   ),
                                   SizedBox(height: 7.h,),
-                                  TextFormField(
-                                    controller: txtJabatan,
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                      hintText: 'Masukkan jabatan anda'
-                                    ),
-                                    readOnly: true,
-                                  )
+                                  Text(txtJabatan.text)
                                 ],
                               )
                             ),
@@ -432,6 +400,11 @@ class _SickPermissionState extends State<SickPermission> {
                                     lastDate: nextweek,
                                     initialDate: DateTime.now(),
                                     dateMask: 'd MMM yyyy',
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                      hintText: 'Pilih tanggal mulai izin'
+                                    ),
                                     onChanged: (value) {
                                       setState(() {
                                         TanggalMulai = DateFormat('yyyy-MM-dd').parse(value);
@@ -464,6 +437,11 @@ class _SickPermissionState extends State<SickPermission> {
                                     lastDate: nextweek,
                                     initialDate: DateTime.now(),
                                     dateMask: 'd MMM yyyy',
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                      hintText: 'Pilih tanggal akhir izin'
+                                    ),
                                     onChanged: (value) {
                                       setState(() {
                                         TanggalAkhir = DateFormat('yyyy-MM-dd').parse(value);
@@ -482,7 +460,12 @@ class _SickPermissionState extends State<SickPermission> {
                         children: [
                           ElevatedButton(
                             onPressed: () async {
-                              showDialog(
+                              if(TanggalMulai == null){
+                                dialogError('Tanggal mulai izin tidak dapat kosong !!');
+                              } else if (TanggalAkhir == null){
+                                dialogError('Tanggal akhir izin tidak dapat kosong !!');
+                              } else {
+                                showDialog(
                                     context: context,
                                     builder: (_) {
                                       return const AlertDialog(
@@ -497,10 +480,11 @@ class _SickPermissionState extends State<SickPermission> {
                                     },
                                   );
 
-                              try {
-                                await insertSakit(); 
-                              } finally {
-                                Get.to(FullIndexWeb(employeeId));
+                                try {
+                                  await insertSakit(); 
+                                } finally {
+                                  Get.to(FullIndexWeb(employeeId));
+                                }
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -524,6 +508,26 @@ class _SickPermissionState extends State<SickPermission> {
           ),
         ),
       ),
+    );
+  }
+
+  Future <void> dialogError (String message) async {
+    return showDialog(
+      context: context, 
+      builder: (_){
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Get.back();
+              }, 
+              child: Text('Kembali')
+            )
+          ],
+        );
+      }
     );
   }
 }

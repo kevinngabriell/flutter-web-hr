@@ -342,15 +342,7 @@ class _ResignFormState extends State<ResignForm> {
                                     fontWeight: FontWeight.w600,
                                   )),
                                   SizedBox(height: 4.h,),
-                                  TextFormField(
-                                    controller: txtNamaKaryawan,
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                      hintText: 'Masukkan nama karyawan' ,
-                                    ),
-                                    readOnly: true,
-                                  )
+                                  Text(txtNamaKaryawan.text)
                                 ],
                               ),
                             ),
@@ -364,15 +356,7 @@ class _ResignFormState extends State<ResignForm> {
                                     fontWeight: FontWeight.w600,
                                   )),
                                   SizedBox(height: 4.h,),
-                                  TextFormField(
-                                    controller: txtDepartemenKaryawan,
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                      hintText: 'Masukkan nama karyawan' ,
-                                    ),
-                                    readOnly: true,
-                                  )
+                                  Text(txtDepartemenKaryawan.text)
                                 ],
                               ),
                             ),
@@ -386,15 +370,7 @@ class _ResignFormState extends State<ResignForm> {
                                     fontWeight: FontWeight.w600,
                                   )),
                                   SizedBox(height: 4.h,),
-                                  TextFormField(
-                                    controller: txtJabatanKaryawan,
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                      hintText: 'Masukkan jabaran karyawan' ,
-                                    ),
-                                    readOnly: true,
-                                  )
+                                  Text(txtJabatanKaryawan.text)
                                 ],
                               ),
                             )
@@ -519,7 +495,13 @@ class _ResignFormState extends State<ResignForm> {
                           children: [
                             ElevatedButton(
                               onPressed: (){
-                                actionKasbon();
+                                if(tanggalResign == null){
+                                  dialogError('Tanggal efektif tidak dapat kosong !!');
+                                } else if (txtAlasanKaryawan.text == ''){
+                                  dialogError('Alasan berhenti tidak dapat kosong !!');
+                                } else{
+                                  actionKasbon();
+                                }
                               }, 
                               style: ElevatedButton.styleFrom(
                                 elevation: 0,
@@ -551,5 +533,25 @@ class _ResignFormState extends State<ResignForm> {
 
     // Format the date as "dd MMMM yyyy"
     return DateFormat("d MMMM yyyy HH:mm").format(parsedDate);
+  }
+
+  Future <void> dialogError (String message) async {
+    return showDialog(
+      context: context, 
+      builder: (_){
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Get.back();
+              }, 
+              child: Text('Kembali')
+            )
+          ],
+        );
+      }
+    );
   }
 }

@@ -7,6 +7,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hr_systems_web/mobile-version/absen.dart';
+import 'package:hr_systems_web/mobile-version/document.dart';
+import 'package:hr_systems_web/mobile-version/others.dart';
 import 'package:hr_systems_web/mobile-version/permission/cutiTahunanMobile.dart';
 import 'package:hr_systems_web/mobile-version/permission/izinDatangTelatMobile.dart';
 import 'package:hr_systems_web/mobile-version/permission/izinLemburMobile.dart';
@@ -125,7 +127,13 @@ class _indexMobileState extends State<indexMobile> {
 
             if(locationName == "Free"){
               final cameras = await availableCameras();
-              final firstCamera = cameras.last;
+              final firstCamera = cameras[1];
+              for (CameraDescription camera in cameras) {
+                print('Camera name: ${camera.name}');
+                print('Camera lens direction: ${camera.lensDirection}');
+                print('Camera sensor orientation: ${camera.sensorOrientation}');
+                print('-----------------------------');
+              }
               setState(() {
                 isLoading = false;
               });
@@ -282,7 +290,7 @@ class _indexMobileState extends State<indexMobile> {
           },
         );
       }else if(index == 3){
-        Get.to(viewAllMyPermissionMobile());
+        Get.to(const viewAllMyPermissionMobile());
       } else if (index == 4){
         Get.to(MyProfileMobile(employeeId: widget.EmployeeID,));
       }
@@ -561,19 +569,19 @@ class _indexMobileState extends State<indexMobile> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              print('1');
+                              Get.to(documentMobile());
                             },
                             child: Column(
                               children: [
                                 Image.asset('images/BonIcon.png'),
                                 SizedBox(height: 5.sp,),
-                                const Text('Bon'),
+                                const Text('Dokumen'),
                               ],
                             ),
                           ),
                           GestureDetector(
                             onTap: () {
-                              // Get.to(OthersMenu());
+                              Get.to(const othersMobile());
                             },
                             child: Column(
                               children: [

@@ -21,7 +21,7 @@ class ShowAllMyPermission extends StatefulWidget {
 
 class _ShowAllMyPermissionState extends State<ShowAllMyPermission> {
   final storage = GetStorage();
-
+  bool isSearch = false;
   String companyName = '';
   String companyAddress = '';
   String employeeName = '';
@@ -29,14 +29,21 @@ class _ShowAllMyPermissionState extends State<ShowAllMyPermission> {
   String employeeId = '';
   String departmentName = '';
   String positionName = '';
-String trimmedCompanyAddress = '';
-late Future<List<Map<String, dynamic>>> permissionData;
+  String trimmedCompanyAddress = '';
+  List<Map<String, dynamic>> permissionData = [];
+
+  List<Map<String, String>> departmentList = [];
+  String? selectedDepartment;
+
+  List<Map<String, String>> permissionTypeList = [];
+  String? selectedPermissionType;
+  TextEditingController txtNamaKaryawanCari = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     fetchData();
-    permissionData = fetchPermissionData();
+    fetchPermissionData();
   }
 
   Future<void> fetchData() async {
@@ -73,7 +80,7 @@ late Future<List<Map<String, dynamic>>> permissionData;
     }
   }
 
-  Future<List<Map<String, dynamic>>> fetchPermissionData() async {
+  Future<void> fetchPermissionData() async {
     String employeeId = storage.read('employee_id').toString();
 
     final response = await http.get(
@@ -83,7 +90,11 @@ late Future<List<Map<String, dynamic>>> permissionData;
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
       if (data['StatusCode'] == 200) {
-        return List<Map<String, dynamic>>.from(data['Data']);
+        var data = json.decode(response.body);
+
+        setState(() {
+          permissionData = List<Map<String, dynamic>>.from(data['Data']);
+        });
       } else {
         throw Exception('Failed to load data');
       }
@@ -158,81 +169,94 @@ late Future<List<Map<String, dynamic>>> permissionData;
                       //Profile Name
                       NotificationnProfile(employeeName: employeeName, employeeAddress: employeeEmail, photo: photo),
                       SizedBox(height: 7.sp,),
-                      FutureBuilder(
-                        future: Future.value(storage.read('position_id')),
-                        builder: (context, snapshot){
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return const CircularProgressIndicator();
-                            } else if (snapshot.hasError) {
-                              return const Column(
+                      if(isSearch == true && permissionData.isNotEmpty)
+                        const SizedBox(
+                          child: Text(''),
+                        ),
+                      if(isSearch == false && permissionData.isEmpty)  
+                        SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: (MediaQuery.of(context).size.height - 100.h),
+                            child: Center(
+                              child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  //Image.asset('assets/no_data.png'), // Ganti dengan path gambar yang sesuai
-                                  Text('Anda belum pernah mengajukan izin apapun'),
+                                  Text('Kosong', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 45.sp),),
+                                  SizedBox(height: 15.h,),
+                                  Text('Belum ada izin yang membutuhkan persetujuan anda', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 4.sp),)
                                 ],
-                              );
-                            } else {
-                              String? positionId = snapshot.data as String?;
+                              )
+                            ),
+                          ),
+                      if(isSearch == false && permissionData.isNotEmpty)  
+                        Column(
+                            children: [
+                              SizedBox(
+                                width: (MediaQuery.of(context).size.width),
+                                height: (MediaQuery.of(context).size.height - 100.h),
+                                child: ListView.builder(
+                                  itemCount: permissionData.length,
+                                  itemBuilder: (context, index){
+                                    var employeeName = permissionData[index]['employee_name'] as String;
+                                    var permissiontype = permissionData[index]['permission_type_name'] as String;
+                                    var permissionDate = formatDate(permissionData[index]['permission_date'] as String? ?? permissionData[index]['start_date'] as String);
+                                    var permissionstatus = permissionData[index]['permission_status_name'] as String;
+                                    var permissionid = permissionData[index]['id_permission'] as String;
 
-                              return FutureBuilder(
-                                  future: permissionData,
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState == ConnectionState.waiting) {
-                                      // If the data is still loading, show a loading indicator
-                                      return const Center(
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    } else if (snapshot.hasError) {
-                                      // If an error occurred, display an error message
-                                      return const Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text('Error fetching permission data'),
-                                        ],
-                                      );
-                                    } else if (snapshot.data!.isEmpty) {
-                                      // If the data is empty, display a message indicating that no data is available
-                                      return const Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text('No permission data available'),
-                                        ],
-                                      );
-                                    } else {
-                                      // If the data is available, display it in a DataTable
-                                      return DataTable(
-                                        showCheckboxColumn: false,
-                                        columns: const <DataColumn>[
-                                          DataColumn(label: Text('Jenis izin')),
-                                          DataColumn(label: Text('Nama')),
-                                          DataColumn(label: Text('Tanggal izin')),
-                                          DataColumn(label: Text('Status izin')),
-                                        ],
-                                        rows: snapshot.data!.map((data) {
-                                          return DataRow(
-                                            cells: <DataCell>[
-                                              DataCell(Text(data['permission_type_name'] ?? 'N/A')),
-                                              DataCell(Text(data['employee_name'] ?? 'N/A')),
-                                              DataCell(
-                                                Text(formatDate(data['permission_date'] ?? data['start_cuti'] ?? data['start_date'] ?? '-')),
-                                              ),
-                                              DataCell(Text(data['permission_status_name'] ?? 'N/A')),
-                                            ],
-                                            onSelectChanged: (bool? selected) {
-                                              if (selected!) {
-                                                Get.to(ViewOnlyPermission(permission_id: data['id_permission'].toString()));
-                                              }
-                                            },
-                                          );
-                                        }).toList(),
-                                      );
+                                    if (permissionstatus == 'Menunggu persetujuan manajer' || permissionstatus == 'Menunggu persetujuan HRD') {
+                                      permissionstatus = 'Pending';
+                                    } else if (permissionstatus == 'Izin telah disetujui '){
+                                      permissionstatus = 'Diterima';
+                                    } else if (permissionstatus == 'Izin ditolak dengan alasan tertentu'){
+                                      permissionstatus = 'Ditolak';
                                     }
-                                  },
-                                );
 
-                              
-                        }}
-                      )
+                                    Color backgroundColor = Colors.transparent;
+                                    Color textColor = Colors.transparent;
+                                    if (permissionstatus == 'Pending') {
+                                      backgroundColor = Colors.yellow;
+                                      textColor = Colors.black;
+                                    } else if (permissionstatus == 'Diterima'){
+                                      backgroundColor = Colors.green;
+                                      textColor = Colors.white;
+                                    } else if (permissionstatus == 'Ditolak'){
+                                      backgroundColor = Colors.red;
+                                      textColor = Colors.white;
+                                    }
+
+                                    return Padding(
+                                      padding: EdgeInsets.only(bottom: 4.sp),
+                                      child: Card(
+                                        child: ListTile(
+                                          title: Text('$employeeName | $permissiontype', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 4.sp),),
+                                          subtitle: Text(permissionDate),
+                                          trailing: Container(
+                                            constraints: BoxConstraints(
+                                              minWidth: 25.w,
+                                              minHeight: 50.h
+                                            ),
+                                            child: Card(
+                                              color: backgroundColor,
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Text(permissionstatus, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 4.sp),),
+                                                ],
+                                              )
+                                            ),
+                                          ),
+                                          minVerticalPadding: 13.0,
+                                          onTap: () {
+                                            Get.to(ViewOnlyPermission(permission_id: permissionid,));
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                ),
+                              ),
+                            ],
+                          ),
                     ],
                   ),
                 ),
@@ -251,4 +275,5 @@ late Future<List<Map<String, dynamic>>> permissionData;
     // Format the date as "dd MMMM yyyy"
     return DateFormat("d MMMM yyyy", 'id').format(parsedDate);
   }
+
 }

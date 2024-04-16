@@ -235,9 +235,25 @@ class _viewAllMyPermissionMobileState extends State<viewAllMyPermissionMobile> {
                                       permissionstatus = 'Pending';
                                     }
 
+                                    if (permissionstatus == 'Izin ditolak dengan alasan tertentu') {
+                                      permissionstatus = ' Ditolak ';
+                                    }
+
+                                    if (permissionstatus == 'Izin telah disetujui ') {
+                                      permissionstatus = 'Diterima';
+                                    }
+
                                     Color backgroundColor = Colors.transparent;
                                     if (permissionstatus == 'Pending') {
                                       backgroundColor = Colors.yellow;
+                                    }
+
+                                    if (permissionstatus == ' Ditolak ') {
+                                      backgroundColor = Colors.red;
+                                    }
+
+                                    if (permissionstatus == 'Diterima') {
+                                      backgroundColor = Colors.green;
                                     }
                                     return Padding(
                                       padding: EdgeInsets.only(bottom: 7.sp),

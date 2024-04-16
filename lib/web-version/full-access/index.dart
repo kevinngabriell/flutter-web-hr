@@ -139,7 +139,7 @@ class _FullIndexWebState extends State<FullIndexWeb> {
             locationName = firstItem['absence_location'] as String;
             targetLongitude = double.parse(firstItem['longitude']?.toString() ?? '0.0');
             targetLatitude = double.parse(firstItem['latitude']?.toString() ?? '0.0');
-
+            
             if(locationName == "Free"){
               initializeCamera();
               final cameras = await availableCameras();
@@ -158,7 +158,6 @@ class _FullIndexWebState extends State<FullIndexWeb> {
               }
 
               if (permission == LocationPermission.deniedForever) {
-                // Handle denied forever case
                 print("Location permission denied forever");
                 return;
               }
@@ -175,32 +174,26 @@ class _FullIndexWebState extends State<FullIndexWeb> {
                   targetLongitude,
                 );
 
-                print("User's Latitude: ${position.latitude}");
-                print("User's Longitude: ${position.longitude}");
-                print("Target Latitude: $targetLatitude");
-                print("Target Longitude: $targetLongitude");
-                print("Distance: $distance");
+                // print("User's Latitude: ${position.latitude}");
+                // print("User's Longitude: ${position.longitude}");
+                // print("Target Latitude: $targetLatitude");
+                // print("Target Longitude: $targetLongitude");
+                // print("Distance: $distance");
 
                 if (distance <= tolerance) {
+                  // print('object');
                   initializeCamera();
                   final cameras = await availableCameras();
                   final firstCamera = cameras.last;
-                  
-                 if (controller.value.isInitialized) {
+                  if (controller.value.isInitialized) {
                     controller.dispose();
                   }
-
                   Get.to(Absence(camera: firstCamera));
                   setState(() {
                     isLoading = false;
                   });
                 } else {
-                  if (controller.value.isInitialized) {
-                    controller.dispose();
-                  }
-                  setState(() {
-                    isLoading = false;
-                  });
+                  
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
@@ -209,7 +202,7 @@ class _FullIndexWebState extends State<FullIndexWeb> {
                       actions: [
                         TextButton(
                           onPressed: () {
-                            Get.to(FullIndexWeb(employeeId));
+                            Get.back();
                           },
                           child: Text("OK"),
                         ),

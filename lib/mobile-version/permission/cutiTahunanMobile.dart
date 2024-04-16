@@ -131,7 +131,7 @@ Future<void> fetchEmployeeList() async {
       String employeeId = storage.read('employee_id').toString(); // replace with your logic to get employee ID
       DateTime dateNow = DateTime.now();
 
-      print(employeeId);
+      print('aaaaaaaa : ${employeeId}');
 
       final response = await http.post(
         Uri.parse(apiUrl),
@@ -532,7 +532,7 @@ Future<void> fetchEmployeeList() async {
                         initialDate: DateTime.now(),
                         dateMask: 'd MMM yyyy',
                         onChanged: (value) {
-                          TanggalMulaiCuti = DateFormat('yyyy-MM-dd').parse(value);
+                          TanggalAkhirCuti = DateFormat('yyyy-MM-dd').parse(value);
                         },
                       ),
                       SizedBox(height: 15.h,),

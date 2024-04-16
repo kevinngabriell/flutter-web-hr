@@ -943,7 +943,7 @@ class _DetailInventoryRequestState extends State<DetailInventoryRequest> {
                                                     if (snapshot.connectionState == ConnectionState.waiting) {
                                                       return const Center(child: CircularProgressIndicator());
                                                     } else if (snapshot.hasError) {
-                                                      return Text("Error: ${snapshot.error}");
+                                                      return const Center(child: Text("Tidak ada inventaris yang tercatat"));
                                                     } else {
                                                       return SizedBox(
                                                         width: MediaQuery.of(context).size.width,

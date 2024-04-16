@@ -691,7 +691,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                     pw.SizedBox(height: 25),
                     pw.Container(
                       margin: const pw.EdgeInsets.only(left: 20.0),
-                      child: pw.Text('Dengan ini menerangkan bahwa pada hari $tanggalLembur dilaksanakan pekerjaan diluar jam kantor (Lembur) dari Pukul $jamMulaiLembur sampai pukul $jamAkhirLembur dengan keperluan $keteranganLembur', style: pw.TextStyle(fontSize: 12.0,color: PdfColor.fromHex('#555555'),),),
+                      child: pw.Text('Dengan ini menerangkan bahwa pada hari $tanggalIzin dilaksanakan pekerjaan diluar jam kantor (Lembur) dari Pukul $jamMulaiLembur sampai pukul $jamAkhirLembur dengan keperluan $keteranganLembur', style: pw.TextStyle(fontSize: 12.0,color: PdfColor.fromHex('#555555'),),),
                     ),
                   ],
                 ),
@@ -906,7 +906,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
     var employeeId = storage.read('employee_id');
     var positionId = storage.read('position_id');
     var photo = storage.read('photo');
-
+    print(permissionTypeName);
     return SafeArea(
       child: Scaffold(
         body: isLoading ? Center(child: CircularProgressIndicator(),) : SingleChildScrollView(
@@ -984,6 +984,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                           DeptYangMengajukanIzin = firstData['department_name'] ?? 'N/A';
                           JabatanYangMengajukanIzin = firstData['position_name'] ?? 'N/A';
                           tanggalIzin = formatDate(firstData['permission_date'] ?? '1999-01-01');
+                          print(tanggalIzin);
                           startCuti = formatDate(firstData['start_date'] ?? '1999-01-01');
                           endCuti = formatDate(firstData['end_date'] ?? '1999-01-01');
                           cutiPhone = firstData['cuti_phone'] ?? 'N/A';
@@ -1196,15 +1197,13 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                             if(permissionTypeName == 'Sakit')
                               SizedBox(height: 7.sp,),
                             if(permissionTypeName == 'Sakit')
-                              suratDokter.isNotEmpty
-                                ? Image.memory(
-                                    base64.decode(suratDokter),
-                                    fit: BoxFit.cover, // Choose the appropriate BoxFit for your needs
-                                  )
-                                : ElevatedButton(
-                                  onPressed: (){}, 
-                                  child: Text('Upload Surat Dokter')
-                                ),
+                              Center(
+                                child: Image.memory(
+                                      base64.decode(suratDokter),
+                                      fit: BoxFit.cover,
+                                      width: MediaQuery.of(context).size.width * 0.5,
+                                    ),
+                              ),
                             if(permissionTypeName == 'Lembur')
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1444,7 +1443,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
                                 ],
                               ),
                             SizedBox(height: 7.sp,),
-                            if(permission_status == 'PER-STATUS-001')
+                            if(permission_status == 'PER-STATUS-001' && permissionTypeName == 'Sakit')
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
@@ -1676,7 +1675,7 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
     DateTime parsedDate = DateFormat("yyyy-MM-dd").parse(date);
 
     // Format the date as "dd MMMM yyyy"
-    return DateFormat("d MMMM yyyy", 'id').format(parsedDate);
+    return DateFormat("EEEE, d MMMM yyyy", 'id').format(parsedDate);
   }
 
   String _formatDate(String date) {
@@ -1684,6 +1683,6 @@ class _ViewOnlyPermissionState extends State<ViewOnlyPermission> {
     DateTime parsedDate = DateFormat("yyyy-MM-dd HH:mm").parse(date);
 
     // Format the date as "dd MMMM yyyy"
-    return DateFormat("d MMMM yyyy HH:mm", 'id').format(parsedDate);
+    return DateFormat("EEEE, d MMMM yyyy HH:mm", 'id').format(parsedDate);
   }
 }

@@ -274,7 +274,7 @@ class _ShowAllPermissionPageState extends State<ShowAllPermissionPage> {
                       SizedBox(height: 7.sp,),
                         if(isSearch == true && permissionData.isNotEmpty && (positionId == 'POS-HR-001' || positionId == 'POS-HR-004' || positionId == 'POS-HR-024'))
                           const SizedBox(
-                            child: Text('Cari apa om ?'),
+                            child: Text(''),
                           ),
                         if(isSearch == true && permissionData.isNotEmpty && (positionId == 'POS-HR-002'))
                           Column(
@@ -700,145 +700,6 @@ class _ShowAllPermissionPageState extends State<ShowAllPermissionPage> {
                             ],
                           ),
                         SizedBox(height: 10.h,)
-                      // FutureBuilder(
-                      //   future: Future.value(storage.read('position_id')),
-                      //   builder: (context, snapshot){
-                      //       if (snapshot.connectionState == ConnectionState.waiting) {
-                      //         return const CircularProgressIndicator();
-                      //       } else if (snapshot.hasError) {
-                      //         return Column(
-                      //           mainAxisAlignment: MainAxisAlignment.center,
-                      //           children: const [
-                      //             //Image.asset('assets/no_data.png'), // Ganti dengan path gambar yang sesuai
-                      //             Text('Anda belum pernah mengajukan izin apapun'),
-                      //           ],
-                      //         );
-                      //       } else {
-                      //         String? positionId = snapshot.data as String?;
-
-                      //         if(positionId == 'POS-HR-002' || positionId == 'POS-HR-008'){
-                      //           return FutureBuilder(
-                      //             future: HRDpermissionData,
-                      //             builder: (context, snapshot) {
-                      //               if (snapshot.connectionState == ConnectionState.waiting) {
-                      //                 // If the data is still loading, show a loading indicator
-                      //                 return Center(
-                      //                   child: CircularProgressIndicator(),
-                      //                 );
-                      //               } else if (snapshot.hasError) {
-                      //                 // If an error occurred, display an error message
-                      //                 return Column(
-                      //                   mainAxisAlignment: MainAxisAlignment.center,
-                      //                   children: const [
-                      //                     Text('Error fetching HRD permission data'),
-                      //                   ],
-                      //                 );
-                      //               } else if (snapshot.data!.isEmpty) {
-                      //                 // If the data is empty, display a message indicating that no data is available
-                      //                 return Column(
-                      //                   mainAxisAlignment: MainAxisAlignment.center,
-                      //                   children: const [
-                      //                     Text('No HRD permission data available'),
-                      //                   ],
-                      //                 );
-                      //               } else {
-                      //                 // If the data is available, display it in a DataTable
-                      //                 return DataTable(
-                      //                   showCheckboxColumn: false,
-                      //                   columns: const <DataColumn>[
-                      //                     DataColumn(label: Text('Jenis izin')),
-                      //                     DataColumn(label: Text('Nama')),
-                      //                     DataColumn(label: Text('Tanggal izin')),
-                      //                     DataColumn(label: Text('Status izin')),
-                      //                   ],
-                      //                   rows: snapshot.data!.map((data) {
-                      //                     return DataRow(
-                      //                       cells: <DataCell>[
-                      //                         DataCell(Text(data['permission_type_name'] ?? 'N/A')),
-                      //                         DataCell(Text(data['employee_name'] ?? 'N/A')),
-                      //                         DataCell(
-                      //                           Text(data['permission_date'] ?? data['start_cuti'] ?? 'N/A'),
-                      //                         ),
-                      //                         DataCell(Text(data['permission_status_name'] ?? 'N/A')),
-                      //                       ],
-                      //                       onSelectChanged: (bool? selected) {
-                      //                         if (selected!) {
-                      //                           Get.to(ViewOnlyPermission(permission_id: data['id_permission'].toString()));
-                      //                         }
-                      //                       },
-                      //                     );
-                      //                   }).toList(),
-                      //                 );
-                      //               }
-                      //             },
-                      //           );
-
-                      //         } else if (positionId == 'POS-HR-001' || positionId == 'POS-HR-004' || positionId == 'POS-HR-024'){
-                      //           return FutureBuilder(
-                      //             future: permissionData,
-                      //             builder: (context, snapshot) {
-                      //               if (snapshot.connectionState == ConnectionState.waiting) {
-                      //                 // If the data is still loading, show a loading indicator
-                      //                 return Center(
-                      //                   child: CircularProgressIndicator(),
-                      //                 );
-                      //               } else if (snapshot.hasError) {
-                      //                 // If an error occurs, display an error message
-                      //                 return Column(
-                      //                   mainAxisAlignment: MainAxisAlignment.center,
-                      //                   children: const [
-                      //                     Text('Error fetching permission data'),
-                      //                   ],
-                      //                 );
-                      //               } else if (snapshot.data!.isEmpty) {
-                      //                 // If the data is empty, display a message indicating that no data is available
-                      //                 return Column(
-                      //                   mainAxisAlignment: MainAxisAlignment.center,
-                      //                   children: const [
-                      //                     Text('No permission data available'),
-                      //                   ],
-                      //                 );
-                      //               } else {
-                      //                 // If the data is available, display it in the DataTable
-                      //                 return DataTable(
-                      //                   showCheckboxColumn: false,
-                      //                   columns: const <DataColumn>[
-                      //                     DataColumn(label: Text('Jenis izin')),
-                      //                     DataColumn(label: Text('Nama')),
-                      //                     DataColumn(label: Text('Tanggal izin')),
-                      //                     DataColumn(label: Text('Status izin')),
-                      //                   ],
-                      //                   rows: snapshot.data!.map((data) {
-                      //                     return DataRow(
-                      //                       cells: <DataCell>[
-                      //                         DataCell(Text(data['permission_type_name'] ?? 'N/A')),
-                      //                         DataCell(Text(data['employee_name'] ?? 'N/A')),
-                      //                         DataCell(
-                      //                           Text(data['permission_date'] ?? data['start_cuti'] ?? 'N/A'),
-                      //                         ),
-                      //                         DataCell(Text(data['permission_status_name'])),
-                      //                       ],
-                      //                       onSelectChanged: (bool? selected) {
-                      //                         if (selected!) {
-                      //                           Get.to(ViewOnlyPermission(permission_id: data['id_permission'].toString()));
-                      //                         }
-                      //                       },
-                      //                     );
-                      //                   }).toList(),
-                      //                 );
-                      //               }
-                      //             },
-                      //           );
-
-                      //         } else {
-                      //             return Container(
-                                    
-                      //             );
-                      //         }
-
-                      //       } 
-                      //   }
-                      // )
                     ],
                   ),
                 ),
@@ -855,6 +716,6 @@ class _ShowAllPermissionPageState extends State<ShowAllPermissionPage> {
     DateTime parsedDate = DateFormat("yyyy-MM-dd").parse(date);
 
     // Format the date as "dd MMMM yyyy"
-    return DateFormat("d MMMM yyyy").format(parsedDate);
+    return DateFormat("d MMMM yyyy", 'id').format(parsedDate);
   }
 }

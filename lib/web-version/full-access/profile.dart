@@ -224,7 +224,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         const StrukturNonActive(),
                         SizedBox(height: 5.sp,),
                         const Logout(),
-                        SizedBox(height: 30.sp,),
+                        SizedBox(height: 10.sp,),
                       ],
                     ),
                   ),
@@ -241,7 +241,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         SizedBox(height: 15.sp,),
                         //Profile Name
                         NotificationnProfile(employeeName: employeeName, employeeAddress: employeeEmail, photo: photo),
-                        SizedBox(height: 30.sp,),
+                        SizedBox(height: 10.sp,),
                         Row(
                           children: [
                             SizedBox(
@@ -253,7 +253,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   Text(
                                     "Nama Lengkap",
                                     style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                       color: const Color.fromRGBO(116, 116, 116, 1)
                                     ),
@@ -274,7 +274,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ],
                               ),
                             ),
-                            SizedBox(width: 30.sp,),
+                            SizedBox(width: 10.sp,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 160.w) / 2,
                               child: Column(
@@ -284,7 +284,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   Text(
                                     "Username",
                                     style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                       color: const Color.fromRGBO(116, 116, 116, 1)
                                     ),
@@ -307,7 +307,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 30.sp,),
+                        SizedBox(height: 10.sp,),
                         Row(
                           children: [
                             SizedBox(
@@ -319,7 +319,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   Text(
                                     "Password baru",
                                     style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                       color: const Color.fromRGBO(116, 116, 116, 1)
                                     ),
@@ -341,7 +341,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ],
                               ),
                             ),
-                            SizedBox(width: 30.sp,),
+                            SizedBox(width: 10.sp,),
                             SizedBox(
                               width: (MediaQuery.of(context).size.width - 160.w) / 2,
                               child: Column(
@@ -351,7 +351,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   Text(
                                     "Konfirmasi password baru",
                                     style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 4.sp,
                                       fontWeight: FontWeight.w600,
                                       color: const Color.fromRGBO(116, 116, 116, 1)
                                     ),
@@ -375,7 +375,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 70.sp,),
+                        SizedBox(height: 15.sp,),
                         Row(
                           children: [
                             SizedBox(
@@ -383,7 +383,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   minimumSize:
-                                    Size(0.sp, 45.sp),
+                                    Size(0.sp, 15.sp),
                                     foregroundColor:
                                       const Color(0xFFFFFFFF),
                                     backgroundColor:

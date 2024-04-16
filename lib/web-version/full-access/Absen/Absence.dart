@@ -196,7 +196,12 @@ class _AbsenceState extends State<Absence> {
                   final cameras = await availableCameras();
                   final firstCamera = cameras.last;
                   setState(() {
-                    isLoading = false;
+                    controller = CameraController(
+                      widget.camera,
+                      ResolutionPreset.medium,
+                    );
+
+                    initializeControllerFuture = controller.initialize();
                   });
                 } else {
                   setState(() {

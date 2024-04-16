@@ -1596,8 +1596,8 @@ class _SalaryIndexState extends State<SalaryIndex> with TickerProviderStateMixin
     DateTime previousMonthDate = DateTime(now.year, now.month - 1, 21);
     DateTime nextMonthDate = DateTime(now.year, now.month, 21);
 
-    String previousMonth = DateFormat('MMMM').format(previousMonthDate);
-    String currentNextMonth = DateFormat('MMMM').format(nextMonthDate);
+    String previousMonth = DateFormat('MMMM', 'id').format(previousMonthDate);
+    String currentNextMonth = DateFormat('MMMM', 'id').format(nextMonthDate);
     
     return MaterialApp(
       title: 'Salary',

@@ -2,11 +2,13 @@
 
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hr_systems_web/web-version/full-access/Inventory/InventoryDashboard.dart';
 import 'package:hr_systems_web/web-version/full-access/Menu/menu.dart';
+import 'package:hr_systems_web/web-version/full-access/Salary/currencyformatter.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'dart:convert';
@@ -327,8 +329,8 @@ class _addNewInventoryState extends State<addNewInventory> {
             "purchase_method" : selectedMetodePembayaran,
             "installment_period" : selectedCicilan,
             "due_date" : TanggalJatuhTempo.toString(),
-            "installment_price" : txtJumlahCicilan.text,
-            "purchase_price" : txtHargaInventaris.text,
+            "installment_price" : txtJumlahCicilan.text.replaceAll(RegExp(r'[^0-9]'), ''),
+            "purchase_price" : txtHargaInventaris.text.replaceAll(RegExp(r'[^0-9]'), ''),
             "supplier_name" : txtSupplier.text,
             "inventory_status" : selectedStatus,
             "inventory_notes" : txtCatatan.text,
@@ -831,6 +833,10 @@ class _addNewInventoryState extends State<addNewInventory> {
                                     SizedBox(height: 7.h,),
                                     TextFormField(
                                     controller: txtJumlahCicilan,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly,
+                                      CurrencyFormatter(),
+                                    ],
                                     decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
                                       fillColor: Color.fromRGBO(235, 235, 235, 1),
@@ -864,6 +870,10 @@ class _addNewInventoryState extends State<addNewInventory> {
                                     SizedBox(height: 7.h,),
                                     TextFormField(
                                       controller: txtHargaInventaris,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly,
+                                        CurrencyFormatter(),
+                                      ],
                                       decoration: const InputDecoration(
                                         border: OutlineInputBorder(),
                                         fillColor: Color.fromRGBO(235, 235, 235, 1),

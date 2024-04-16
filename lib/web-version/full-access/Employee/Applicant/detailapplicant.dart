@@ -789,7 +789,7 @@ class _DetailApplicantState extends State<DetailApplicant> {
                                       padding: EdgeInsets.only(left: 10.sp, right: 13.sp, top: 10.sp, bottom: 8.sp),
                                       child: SizedBox(
                                         width: MediaQuery.of(context).size.width,
-                                        height: MediaQuery.of(context).size.height / 5,
+                                        height: MediaQuery.of(context).size.height / 4,
                                         child: ListView.builder(
                                           itemCount: 3,
                                           itemBuilder: (context, index) {
@@ -804,24 +804,27 @@ class _DetailApplicantState extends State<DetailApplicant> {
                                             // Check to ensure the index is within bounds for documentUrls and documentNames
                                             assert(index < documentNames.length && index < documentUrls.length);
                                       
-                                            return ListTile(
-                                              title: Text(documentNames[index]),
-                                              trailing: GestureDetector(
-                                                onTap: () {
-                                                  final url = 'https://kinglabindonesia.com/KinglabJobPortal/Document/${documentUrls[index]}';
-                                                  // Open the URL in a new tab
-                                                  html.window.open(url, '_blank');
-                                                },
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.green,
-                                                    borderRadius: BorderRadius.all(Radius.circular(8))
-                                                  ),
-                                                  child: Padding(
-                                                    padding: EdgeInsets.all(2.sp),
-                                                    child: Text('Download', style: TextStyle(fontSize: 4.sp, color: Colors.white)),
+                                            return Padding(
+                                              padding: EdgeInsets.only(bottom: 2.sp),
+                                              child: ListTile(
+                                                title: Text(documentNames[index]),
+                                                trailing: GestureDetector(
+                                                  onTap: () {
+                                                    final url = 'https://kinglabindonesia.com/KinglabJobPortal/Document/${documentUrls[index]}';
+                                                    // Open the URL in a new tab
+                                                    html.window.open(url, '_blank');
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.green,
+                                                      borderRadius: BorderRadius.all(Radius.circular(8))
+                                                    ),
+                                                    child: Padding(
+                                                      padding: EdgeInsets.all(2.sp),
+                                                      child: Text('Download', style: TextStyle(fontSize: 4.sp, color: Colors.white)),
+                                                    )
                                                   )
-                                                )
+                                                ),
                                               ),
                                             );
                                           },
@@ -837,6 +840,7 @@ class _DetailApplicantState extends State<DetailApplicant> {
                         SizedBox(height: 9.sp,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Card(
                               child: SizedBox(
@@ -968,7 +972,6 @@ class _DetailApplicantState extends State<DetailApplicant> {
                                 child: Padding(
                                   padding: EdgeInsets.all(7.sp),
                                   child: SizedBox(
-                                    height: (MediaQuery.of(context).size.height - 10.h),
                                     child: Column(
                                       children: [
                                         Text('Cek Kriteria', style: TextStyle(

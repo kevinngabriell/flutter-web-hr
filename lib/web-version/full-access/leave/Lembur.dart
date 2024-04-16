@@ -302,15 +302,7 @@ final storage = GetStorage();
                                   if(isLoading)
                                     const CircularProgressIndicator()
                                   else
-                                    TextFormField(
-                                      controller: txtNamaLengkap,
-                                      decoration: const InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                        hintText: 'Masukkan nama anda'
-                                      ),
-                                      readOnly: true,
-                                    )
+                                    Text(txtNamaLengkap.text)
                                 ],
                               )
                             ),
@@ -335,15 +327,7 @@ final storage = GetStorage();
                                   if(isLoading)
                                     const CircularProgressIndicator()
                                   else
-                                    TextFormField(
-                                      controller: txtNIK,
-                                      decoration: const InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                        hintText: 'Masukkan NIK anda'
-                                      ),
-                                      readOnly: true,
-                                    )
+                                    Text(txtNIK.text)
                                 ],
                               )
                             ),
@@ -365,15 +349,7 @@ final storage = GetStorage();
                                     ),
                                   ),
                                   SizedBox(height: 7.h,),
-                                  TextFormField(
-                                    controller: txtDepartemen,
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                      hintText: 'Masukkan departemen anda'
-                                    ),
-                                    readOnly: true,
-                                  )
+                                  Text(txtDepartemen.text)
                                 ],
                               )
                             ),
@@ -401,15 +377,7 @@ final storage = GetStorage();
                                     ),
                                   ),
                                   SizedBox(height: 7.h,),
-                                  TextFormField(
-                                    controller: txtJabatan,
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                      hintText: 'Masukkan jabatan anda'
-                                    ),
-                                    readOnly: true,
-                                  )
+                                  Text(txtJabatan.text)
                                 ],
                               )
                             ),
@@ -436,6 +404,11 @@ final storage = GetStorage();
                                     lastDate: DateTime.now(),
                                     initialDate: DateTime.now(),
                                     dateMask: 'd MMM yyyy',
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                      hintText: 'Pilih tanggal perizinan'
+                                    ),
                                     onChanged: (value) {
                                       setState(() {
                                         TanggalLembur = DateFormat('yyyy-MM-dd').parse(value);
@@ -466,6 +439,11 @@ final storage = GetStorage();
                                   SizedBox(height: 7.h,),
                                   DateTimePicker(
                                     type: DateTimePickerType.time,
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                      hintText: 'Pilih jam mulai lembur'
+                                    ),
                                     onChanged: (value) {
                                       setState(() {
                                         JamMulai = value.toString();
@@ -501,6 +479,11 @@ final storage = GetStorage();
                                   SizedBox(height: 7.h,),
                                   DateTimePicker(
                                     type: DateTimePickerType.time,
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      fillColor: Color.fromRGBO(235, 235, 235, 1),
+                                      hintText: 'Pilih jam akhir lembur'
+                                    ),
                                     onChanged: (value) {
                                       setState(() {
                                         JamAkhir = value.toString();
@@ -561,33 +544,42 @@ final storage = GetStorage();
                         children: [
                           ElevatedButton(
                             onPressed: () async {
-                              namaLengkapText = txtNamaLengkap.text;
-                              nikText = txtNIK.text;
-                              departemenText = txtDepartemen.text;
-                              jabatanText = txtDepartemen.text;
-                              alasanText = txtAlasan.text;
-                          
-                              showDialog(
-                                context: context,
-                                builder: (_) {
-                                return const AlertDialog(
-                                  content: Row(
-                                    children: [
-                                      CircularProgressIndicator(),
-                                      SizedBox(width: 20),
-                                      Text('Loading ...'),
-                                    ],
-                                  ),
+                              if(TanggalLembur == null){
+                                dialogError('Tanggal perizinan tidak dapat kosong !!');
+                              } else if (JamMulai == null){
+                                dialogError('Jam mulai lembur tidak dapat kosong !!');
+                              } else if (JamAkhir == null){
+                                dialogError('Jam akhir lembur tidak dapat kosong !!');
+                              } else if (txtKeperluan.text == ''){
+                                dialogError('Keperluan tidak dapat kosong !!'); 
+                              } else {
+                                namaLengkapText = txtNamaLengkap.text;
+                                nikText = txtNIK.text;
+                                departemenText = txtDepartemen.text;
+                                jabatanText = txtDepartemen.text;
+                                alasanText = txtAlasan.text;
+                            
+                                showDialog(
+                                  context: context,
+                                  builder: (_) {
+                                  return const AlertDialog(
+                                    content: Row(
+                                      children: [
+                                        CircularProgressIndicator(),
+                                        SizedBox(width: 20),
+                                        Text('Loading ...'),
+                                      ],
+                                    ),
+                                  );
+                                  },
                                 );
-                                },
-                              );
-                          
-                              try {
-                                await insertLembur(); 
-                              } catch (e){
-                                print(e);
+                            
+                                try {
+                                  await insertLembur(); 
+                                } catch (e){
+                                  print(e);
+                                }
                               }
-                          
                             }, 
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(40.w, 55.h),
@@ -609,6 +601,26 @@ final storage = GetStorage();
           ),
         )
       ),
+    );
+  }
+
+  Future <void> dialogError (String message) async {
+    return showDialog(
+      context: context, 
+      builder: (_){
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Get.back();
+              }, 
+              child: Text('Kembali')
+            )
+          ],
+        );
+      }
     );
   }
 }

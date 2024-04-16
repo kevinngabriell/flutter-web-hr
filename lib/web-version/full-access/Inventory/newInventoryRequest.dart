@@ -325,15 +325,7 @@ class _NewInventoryRequestState extends State<NewInventoryRequest> {
                                 if(isLoading)
                                   const CircularProgressIndicator()
                                 else
-                                  TextFormField(
-                                    controller: txtNamaLengkap,
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                      hintText: 'Masukkan nama anda'
-                                    ),
-                                    readOnly: true,
-                                  )
+                                  Text(txtNamaLengkap.text)
                               ],
                             )
                           ),
@@ -356,15 +348,7 @@ class _NewInventoryRequestState extends State<NewInventoryRequest> {
                                 if(isLoading)
                                   const CircularProgressIndicator()
                                 else
-                                  TextFormField(
-                                    controller: txtNIK,
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                      hintText: 'Masukkan NIK anda'
-                                    ),
-                                    readOnly: true,
-                                  )
+                                  Text(txtNIK.text)
                               ],
                             )
                           ),
@@ -388,15 +372,7 @@ class _NewInventoryRequestState extends State<NewInventoryRequest> {
                                   ),
                                 ),
                                 SizedBox(height: 7.h,),
-                                TextFormField(
-                                  controller: txtDepartemen,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan departemen anda'
-                                  ),
-                                  readOnly: true,
-                                )
+                                Text(txtDepartemen.text)
                               ],
                             )
                           ),
@@ -416,15 +392,7 @@ class _NewInventoryRequestState extends State<NewInventoryRequest> {
                                   ),
                                 ),
                                 SizedBox(height: 7.h,),
-                                TextFormField(
-                                  controller: txtJabatan,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                    hintText: 'Masukkan jabatan anda'
-                                  ),
-                                  readOnly: true,
-                                )
+                                Text(txtJabatan.text)
                               ],
                             )
                           ),
@@ -535,7 +503,15 @@ class _NewInventoryRequestState extends State<NewInventoryRequest> {
                         children: [
                           ElevatedButton(
                             onPressed: () async {
-                              sendRequest();
+                              if(txtDescInventory.text == ''){
+                                dialogError('Inventaris yang diajukan tidak dapat kosong !!');
+                              } else if (selectedReason == ''){
+                                dialogError('Alasan pengajuan tidak dapat kosong !!');
+                              } else if (txtKeterangan.text == ''){
+                                dialogError('Detail permintaan tidak dapat kosong !!');
+                              } else {
+                                sendRequest();
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(40.w, 55.h),
@@ -557,6 +533,26 @@ class _NewInventoryRequestState extends State<NewInventoryRequest> {
           )
         )
       )
+    );
+  }
+
+  Future <void> dialogError (String message) async {
+    return showDialog(
+      context: context, 
+      builder: (_){
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Get.back();
+              }, 
+              child: Text('Kembali')
+            )
+          ],
+        );
+      }
     );
   }
 }

@@ -391,15 +391,7 @@ class _AddNewPerjalananDinasState extends State<AddNewPerjalananDinas> {
                                     ),
                                   ),
                                   SizedBox(height: 10.h,),
-                                  TextFormField(
-                                    controller: txtNamaKaryawan,
-                                    readOnly: true,
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                      hintText: 'Masukkan nama karyawan'
-                                    ),
-                                  )
+                                  Text(txtNamaKaryawan.text)
                                 ],
                               ),
                             ),
@@ -417,15 +409,7 @@ class _AddNewPerjalananDinasState extends State<AddNewPerjalananDinas> {
                                     ),
                                   ),
                                   SizedBox(height: 10.h,),
-                                  TextFormField(
-                                    controller: txtDeptKaryawan,
-                                    readOnly: true,
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      fillColor: Color.fromRGBO(235, 235, 235, 1),
-                                      hintText: 'Masukkan nama departemen'
-                                    ),
-                                  )
+                                  Text(txtDeptKaryawan.text)
                                 ],
                               ),
                             ),
@@ -756,7 +740,13 @@ class _AddNewPerjalananDinasState extends State<AddNewPerjalananDinas> {
                           children: [
                             ElevatedButton(
                               onPressed: (){
-                                perjalananDinas();
+                                if(selectedKotaTujuan == ''){
+                                  dialogError('Kota tujuan tidak dapat kosong !!');
+                                } else if (txtKeperluan.text == ''){
+                                  dialogError('Keperluan tidak dapat kosong !!');
+                                } else {
+                                  perjalananDinas();
+                                }
                               }, 
                               style: ElevatedButton.styleFrom(
                                 elevation: 0,
@@ -782,4 +772,23 @@ class _AddNewPerjalananDinasState extends State<AddNewPerjalananDinas> {
     );
   }
 
+  Future <void> dialogError (String message) async {
+    return showDialog(
+      context: context, 
+      builder: (_){
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Get.back();
+              }, 
+              child: Text('Kembali')
+            )
+          ],
+        );
+      }
+    );
+  }
 }
