@@ -379,15 +379,7 @@ void _changeSelectedNavBar(int index) {
                     ),
                   ),
                   SizedBox(height: 7.h,),
-                  TextFormField(
-                    controller: txtNamaKaryawan,
-                    readOnly: true,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      fillColor: Color.fromRGBO(235, 235, 235, 1),
-                      hintText: 'Masukkan nama karyawan'
-                    ),
-                  )
+                  Text(txtNamaKaryawan.text)
                 ]
               ),
               SizedBox(height: 10.h,),
@@ -403,15 +395,7 @@ void _changeSelectedNavBar(int index) {
                     ),
                   ),
                   SizedBox(height: 7.h,),
-                  TextFormField(
-                    controller: txtDepartemenKaryawan,
-                    readOnly: true,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      fillColor: Color.fromRGBO(235, 235, 235, 1),
-                      hintText: 'Masukkan nama karyawan'
-                    ),
-                  )
+                  Text(txtDepartemenKaryawan.text)
                 ]
               ),
               SizedBox(height: 10.h,),
@@ -427,15 +411,7 @@ void _changeSelectedNavBar(int index) {
                     ),
                   ),
                   SizedBox(height: 7.h,),
-                  TextFormField(
-                    controller: txtJabatanKaryawan,
-                    readOnly: true,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      fillColor: Color.fromRGBO(235, 235, 235, 1),
-                      hintText: 'Masukkan nama karyawan'
-                    ),
-                  )
+                  Text(txtJabatanKaryawan.text)
                 ]
               ),
               SizedBox(height: 10.h,),
@@ -546,7 +522,13 @@ void _changeSelectedNavBar(int index) {
                           child: 
                           ElevatedButton(
                             onPressed: () {
-                              actionKasbon();
+                              if(tanggalResign == null){
+                                  dialogError('Tanggal efektif tidak dapat kosong !!');
+                                } else if (txtAlasanKaryawan.text == ''){
+                                  dialogError('Alasan berhenti tidak dapat kosong !!');
+                                } else{
+                                  actionKasbon();
+                                }
                             }, 
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(40.w, 55.h),
@@ -601,6 +583,26 @@ void _changeSelectedNavBar(int index) {
           ),
         ],
       ),
+    );
+  }
+
+  Future <void> dialogError (String message) async {
+    return showDialog(
+      context: context, 
+      builder: (_){
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Get.back();
+              }, 
+              child: Text('Kembali')
+            )
+          ],
+        );
+      }
     );
   }
 }

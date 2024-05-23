@@ -347,15 +347,7 @@ class _izinDatangTelatMobileState extends State<izinDatangTelatMobile> {
                           ),
                         ),
                         SizedBox(height: 7.h,),
-                        TextFormField(
-                          controller: txtNamaLengkap,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            fillColor: Color.fromRGBO(235, 235, 235, 1),
-                            hintText: 'Masukkan nama anda'
-                          ),
-                          readOnly: true,
-                        ),
+                        Text(txtNamaLengkap.text),
                         SizedBox(height: 20.h,),
                         Text("NIK",
                           style: TextStyle(
@@ -365,15 +357,7 @@ class _izinDatangTelatMobileState extends State<izinDatangTelatMobile> {
                           ),
                         ),
                         SizedBox(height: 7.h,),
-                        TextFormField(
-                          controller: txtNIK,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            fillColor: Color.fromRGBO(235, 235, 235, 1),
-                            hintText: 'Masukkan NIK anda'
-                          ),
-                          readOnly: true,
-                        ),
+                        Text(txtNIK.text),
                         SizedBox(height: 20.h,),
                         Text("Departemen",
                           style: TextStyle(
@@ -383,15 +367,7 @@ class _izinDatangTelatMobileState extends State<izinDatangTelatMobile> {
                           ),
                         ),
                         SizedBox(height: 7.h,),
-                        TextFormField(
-                          controller: txtDepartemen,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            fillColor: Color.fromRGBO(235, 235, 235, 1),
-                            hintText: 'Masukkan departemen anda'
-                          ),
-                          readOnly: true,
-                        ),
+                        Text(txtDepartemen.text),
                         SizedBox(height: 20.h,),
                         Text("Jabatan",
                           style: TextStyle(
@@ -401,15 +377,7 @@ class _izinDatangTelatMobileState extends State<izinDatangTelatMobile> {
                           ),
                         ),
                         SizedBox(height: 7.h,),
-                        TextFormField(
-                          controller: txtJabatan,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            fillColor: Color.fromRGBO(235, 235, 235, 1),
-                            hintText: 'Masukkan jabatan anda'
-                          ),
-                          readOnly: true,
-                        ),
+                        Text(txtJabatan.text),
                         SizedBox(height: 20.h,),
                         Text("Hari dan tanggal",
                           style: TextStyle(
@@ -424,6 +392,11 @@ class _izinDatangTelatMobileState extends State<izinDatangTelatMobile> {
                           lastDate: tomorrow,
                           initialDate: now,
                           dateMask: 'd MMM yyyy',
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            fillColor: Color.fromRGBO(235, 235, 235, 1),
+                            hintText: 'Pilih tanggal perizinan'
+                          ),
                           onChanged: (value) {
                             setState(() {
                               TanggalDatangTelat = DateFormat('yyyy-MM-dd').parse(value);
@@ -441,6 +414,11 @@ class _izinDatangTelatMobileState extends State<izinDatangTelatMobile> {
                         SizedBox(height: 7.h,),
                         DateTimePicker(
                           type: DateTimePickerType.time,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            fillColor: Color.fromRGBO(235, 235, 235, 1),
+                            hintText: 'Pilih jam absen'
+                          ),
                           onChanged: (value) {
                             setState(() {
                               JamAbsen = value.toString();
@@ -468,7 +446,15 @@ class _izinDatangTelatMobileState extends State<izinDatangTelatMobile> {
                         Center(
                           child: ElevatedButton(
                             onPressed: () {
-                              insertPermission();
+                              if(TanggalDatangTelat == null){
+                                  dialogError('Tanggal perizinan tidak dapat kosong !!');
+                                } else if (txtAlasan.text == ''){
+                                  dialogError('Alasan perizinan tidak dapat kosong !!');
+                                } else if (JamAbsen == null) {
+                                  dialogError('Jam perizinan tidak dapat kosong !!');
+                                } else {
+                                  insertPermission();
+                                }
                             }, 
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(40.w, 55.h),
@@ -527,6 +513,26 @@ class _izinDatangTelatMobileState extends State<izinDatangTelatMobile> {
           ),
         ],
       ),
+    );
+  }
+
+  Future <void> dialogError (String message) async {
+    return showDialog(
+      context: context, 
+      builder: (_){
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Get.back();
+              }, 
+              child: Text('Kembali')
+            )
+          ],
+        );
+      }
     );
   }
 }

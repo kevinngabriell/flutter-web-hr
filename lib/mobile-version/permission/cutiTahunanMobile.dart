@@ -428,15 +428,7 @@ Future<void> fetchEmployeeList() async {
                           ),
                         ),
                         SizedBox(height: 7.h,),
-                        TextFormField(
-                          controller: txtNamaLengkap,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            fillColor: Color.fromRGBO(235, 235, 235, 1),
-                            hintText: 'Masukkan nama anda'
-                          ),
-                          readOnly: true,
-                        ),
+                        Text(txtNamaLengkap.text),
                       SizedBox(height: 15.h,),
                       Text("NIK",
                           style: TextStyle(
@@ -446,15 +438,7 @@ Future<void> fetchEmployeeList() async {
                           ),
                         ),
                       SizedBox(height: 7.h,),
-                      TextFormField(
-                          controller: txtNIK,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            fillColor: Color.fromRGBO(235, 235, 235, 1),
-                            hintText: 'Masukkan NIK anda'
-                          ),
-                          readOnly: true,
-                        ),
+                      Text(txtNIK.text),
                       SizedBox(height: 15.h,),
                       Text("Departemen",
                           style: TextStyle(
@@ -464,15 +448,7 @@ Future<void> fetchEmployeeList() async {
                           ),
                         ),
                       SizedBox(height: 7.h,),
-                      TextFormField(
-                          controller: txtDepartemen,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            fillColor: Color.fromRGBO(235, 235, 235, 1),
-                            hintText: 'Masukkan departemen anda'
-                          ),
-                          readOnly: true,
-                        ),
+                      Text(txtDepartemen.text),
                       SizedBox(height: 15.h,),
                       Text("Jabatan",
                           style: TextStyle(
@@ -482,15 +458,7 @@ Future<void> fetchEmployeeList() async {
                           ),
                         ),
                       SizedBox(height: 7.h,),
-                      TextFormField(
-                          controller: txtJabatan,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            fillColor: Color.fromRGBO(235, 235, 235, 1),
-                            hintText: 'Masukkan jabatan anda'
-                          ),
-                          readOnly: true,
-                        ),
+                      Text(txtJabatan.text),
                       SizedBox(height: 15.h,),
                       Text("Keterangan Cuti",
                             style: TextStyle(
@@ -509,10 +477,15 @@ Future<void> fetchEmployeeList() async {
                         ),
                       SizedBox(height: 7.h,),
                       DateTimePicker(
-                        firstDate: DateTime(2023),
+                        firstDate: DateTime.now(),
                         lastDate: DateTime(2100),
                         initialDate: DateTime.now(),
                         dateMask: 'd MMM yyyy',
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            fillColor: Color.fromRGBO(235, 235, 235, 1),
+                            hintText: 'Pilih tanggal mulai cuti'
+                          ),
                         onChanged: (value) {
                           TanggalMulaiCuti = DateFormat('yyyy-MM-dd').parse(value);
                         },
@@ -527,10 +500,15 @@ Future<void> fetchEmployeeList() async {
                         ),
                       SizedBox(height: 7.h,),
                       DateTimePicker(
-                        firstDate: DateTime(2023),
+                        firstDate: DateTime.now(),
                         lastDate: DateTime(2100),
                         initialDate: DateTime.now(),
                         dateMask: 'd MMM yyyy',
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            fillColor: Color.fromRGBO(235, 235, 235, 1),
+                            hintText: 'Pilih tanggal akhir cuti'
+                          ),
                         onChanged: (value) {
                           TanggalAkhirCuti = DateFormat('yyyy-MM-dd').parse(value);
                         },
@@ -544,15 +522,7 @@ Future<void> fetchEmployeeList() async {
                           ),
                         ),
                       SizedBox(height: 7.h,),
-                      TextFormField(
-                          controller: sisaCutiController,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            fillColor: Color.fromRGBO(235, 235, 235, 1),
-                            hintText: 'Masukkan jabatan anda'
-                          ),
-                          readOnly: true,
-                        ),
+                      Text(sisaCutiController.text),
                       SizedBox(height: 15.h,),
                       Text("Nomor yang bisa dihubungi",
                           style: TextStyle(
@@ -630,7 +600,19 @@ Future<void> fetchEmployeeList() async {
                         Center(
                           child: ElevatedButton(
                             onPressed: () {
-                              insertCuti();
+                              if(TanggalMulaiCuti == null){
+                                dialogError('Tanggal mulai cuti tidak dapat kosong dan harus diisi !!');
+                              } else if (TanggalAkhirCuti == null){
+                                dialogError('Tanggal akhir cuti tidak dapat kosong dan harus diisi !!');
+                              } else if (cutiPhone.text == ''){
+                                dialogError('Nomor yang bisa dihubungi tidak dapat kosong dan harus diisi !!');
+                              } else if (txtAlasan.text == ''){
+                                dialogError('Keterangan atau alasan tidak dapat kosong dan harus diisi !!');
+                              } else if (selectedEmployeeId == null){
+                                dialogError('Karyawan pengganti harus diisi !!');
+                              } else {
+                                insertCuti();
+                              }
                             }, 
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(40.w, 55.h),
@@ -689,6 +671,26 @@ Future<void> fetchEmployeeList() async {
           ),
         ],
       ),
+    );
+  }
+
+  Future <void> dialogError (String message) async {
+    return showDialog(
+      context: context, 
+      builder: (_){
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Get.back();
+              }, 
+              child: Text('Kembali')
+            )
+          ],
+        );
+      }
     );
   }
 }

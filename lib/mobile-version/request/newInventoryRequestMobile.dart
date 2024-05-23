@@ -409,15 +409,7 @@ void _changeSelectedNavBar(int index) {
                     ),
                   ),
                   SizedBox(height: 7.h,),
-                  TextFormField(
-                    controller: txtNamaLengkap,
-                    readOnly: true,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      fillColor: Color.fromRGBO(235, 235, 235, 1),
-                      hintText: 'Masukkan nama karyawan'
-                    ),
-                  )
+                  Text(txtNamaLengkap.text)
                 ]
               ),
               SizedBox(height: 10.h,),
@@ -433,15 +425,7 @@ void _changeSelectedNavBar(int index) {
                     ),
                   ),
                   SizedBox(height: 7.h,),
-                  TextFormField(
-                    controller: txtNIK,
-                    readOnly: true,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      fillColor: Color.fromRGBO(235, 235, 235, 1),
-                      hintText: 'Masukkan NIK anda'
-                    ),
-                  )
+                  Text(txtNIK.text)
                 ]
               ),
               SizedBox(height: 10.h,),
@@ -457,15 +441,7 @@ void _changeSelectedNavBar(int index) {
                     ),
                   ),
                   SizedBox(height: 7.h,),
-                  TextFormField(
-                    controller: txtDepartemen,
-                    readOnly: true,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      fillColor: Color.fromRGBO(235, 235, 235, 1),
-                      hintText: 'Masukkan departemen anda'
-                    ),
-                  )
+                  Text(txtDepartemen.text)
                 ]
               ),
               SizedBox(height: 10.h,),
@@ -481,15 +457,7 @@ void _changeSelectedNavBar(int index) {
                     ),
                   ),
                   SizedBox(height: 7.h,),
-                  TextFormField(
-                    controller: txtJabatan,
-                    readOnly: true,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      fillColor: Color.fromRGBO(235, 235, 235, 1),
-                      hintText: 'Masukkan jabatan anda'
-                    ),
-                  )
+                  Text(txtJabatan.text)
                 ]
               ),
               SizedBox(height: 10.h,),
@@ -573,7 +541,15 @@ void _changeSelectedNavBar(int index) {
                         Center(
                           child: ElevatedButton(
                             onPressed: () {
-                              sendRequest();
+                              if(txtDescInventory.text == ''){
+                                dialogError('Inventaris yang diajukan tidak dapat kosong !!');
+                              } else if (selectedReason == ''){
+                                dialogError('Alasan pengajuan tidak dapat kosong !!');
+                              } else if (txtKeterangan.text == ''){
+                                dialogError('Detail permintaan tidak dapat kosong !!');
+                              } else {
+                                sendRequest();
+                              }
                             }, 
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(40.w, 55.h),
@@ -628,6 +604,26 @@ void _changeSelectedNavBar(int index) {
           ),
         ],
       ),
+    );
+  }
+
+  Future <void> dialogError (String message) async {
+    return showDialog(
+      context: context, 
+      builder: (_){
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Get.back();
+              }, 
+              child: Text('Kembali')
+            )
+          ],
+        );
+      }
     );
   }
 }

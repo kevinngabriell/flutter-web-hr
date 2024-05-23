@@ -744,6 +744,8 @@ class _AddNewPerjalananDinasState extends State<AddNewPerjalananDinas> {
                                   dialogError('Kota tujuan tidak dapat kosong !!');
                                 } else if (txtKeperluan.text == ''){
                                   dialogError('Keperluan tidak dapat kosong !!');
+                                } else if (selectedTim == null){
+                                  dialogError('Tim harus dipilih !!');
                                 } else {
                                   perjalananDinas();
                                 }

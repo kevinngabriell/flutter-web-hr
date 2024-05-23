@@ -213,12 +213,12 @@ class _viewAllMyPermissionMobileState extends State<viewAllMyPermissionMobile> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 25.h,),
+                      SizedBox(height: 50.h,),
                        Center(child: Text('Izin Saya', style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
                         ),)),
-                      SizedBox(height: 25.h,),
+                      SizedBox(height: 5.h,),
                       SizedBox(
                                 width: (MediaQuery.of(context).size.width),
                                 height: (MediaQuery.of(context).size.height - 100.h),
